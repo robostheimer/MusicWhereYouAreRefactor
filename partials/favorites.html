@@ -1,0 +1,33 @@
+<section id="fav_holder" ng-swipe-left="goBack()" >
+
+	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
+
+	<div id="spot_headline">
+		<h4 style="margin-top:15px;"><span style="color:#979797">Your</span> Favorites</h4>
+	</div>
+	<div id="iframe_holder">
+		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+	</div>
+	<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.spot_arr, location);">
+		<div aria-hidden="true" data-icon="c" class="button_icon"></div>
+		<div class="button_txt">
+			Save Playlist to Spotify
+		</div>
+	</button>
+	<div class="clear"></
+	</div>
+	<div ng-repeat="song in songs track by $index " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true">
+		<div class="close" id="close{{song.tracks[0].foreign_id.split(':')[2]}}" aria-hidden="true" data-icon="x" ng-click= "removeFav(song.tracks[0].foreign_id.split(':')[2]); "></div>
+		<p class="info" id="pinfo{{song.num_id}}">
+			{{song.title}}
+			<br>
+			{{song.artist_name}}
+		</p
+		><a class="spotter" href="spotify:track:{{song.tracks[0].foreign_id.split(':')[2]}}" ><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
+		<a ><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
+		<a ng-click="removeFav(song.tracks[0].foreign_id.split(':')[2])"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
+		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a><div style="clear:both;margin-bottom:-15px;"></div>
+	</div>
+
+</section>
+<!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

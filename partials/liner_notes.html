@@ -1,0 +1,7 @@
+<section id="spot_holder"  >
+			<div class="spot_icon" aria-hidden="true" data-icon="T"></div>
+			<div id="spot_headline"><h4><span style="color:#979797">Your</span> GeoMix</h4>  </div>
+			<div id="iframe_holder"><iframe id="spot_frame" theme="light" view="coverart" ng-src="{{spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe></div>
+			<div  ng-repeat="song in songs" class="red" id="song_spot{{$index}}"><div class="close" id="close{{$index}}" aria-hidden="true" data-icon="x"></div><p class="info" id="pinfo{{$index}}">{{song.title}}<br>{{song.artist_name}}</p><a class="spotter" href="http://open.spotify.com/track/{{songs.tracks[0].foreign_id.split(':')[2]}}" target="_blank"><div class="spot_link_spot" id="spot{{index}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a><a><div id="favorite{{index}}" class="spot_link favorite favorite_on" title="songs.tracks[0].foreign_id.split(':')[2]" aria-hidden="true" data-icon="t"></div></a><a><div style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a><div style="clear:both;margin-bottom:-15px;"></div></div>
+
+		</section>

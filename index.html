@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" ng-app="MusicWhereYouAreApp">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1">
+		<title>Music Where You Are Angular</title>
+		<link href='http://fonts.googleapis.com/css?family=Indie+Flower|Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Josefin+Sans:400,600,700,400italic,600italic,700italic' rel='stylesheet' type='text/css'>
+		<link rel ="stylesheet" href="/MusicWhereYouAre/font.css">
+		<link rel ="stylesheet" href="style.css">
+
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+		<script src="bower_components/ui-utils/ui-utils.min.js"></script>
+		<script src="bower_components/angular-touch/angular-touch.min.js"></script>
+		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather,visualization&sensor=false&language=en&v=3.13"></script>
+		<script src="js/app.js"></script>
+		<script src="js/services.js"></script>
+		<script src="js/controllers.js"></script>
+		<script src="js/directives.js"></script>
+		<script src="js/filters.js"></script>
+		<script src="js/animation.js"></script>
+		<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+		<script src="/js/angular-leaflet-directive.min.js"></script>
+		<style>
+			section#contact {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				margin: 0px;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 11px;
+			}
+			section#contact ul li {
+				list-style-type: none;
+				display: inline;
+				margin-right: 7px;
+			}
+			section#contact ul {
+				margin: 0px;
+				padding: 0px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body >
+
+		<section id="contact">
+			<ul>
+				<li>
+					<a href="mailto:robert.ostheimer@cityblinking.com"><img border="none" src="/MusicWhereYouAre/genre_icons/mail.svg" alt="email"/></a>
+				</li>
+				<li>
+					<a href="https://twitter.com/robostheimer" target="_blank"><img border="none" src="/MusicWhereYouAre/genre_icons/twitter.svg" alt="email"/></a>
+				</li>
+			</ul>
+
+		</section>
+
+		<!--<div  ng-controller="controlSymbol" class="menu" ng-hide="menuPos==false;" ng-click="changeMenu()" >
+
+		<a ng-href="#/playlist/{{location}}" ><div aria-hidden="true" data-icon="A"  ></div></a>
+		</div>
+
+		<div  ng-controller="controlSymbol" class="menu_Marg" ng-hide="menuPos==true" ng-click="changeMenu()" >
+		<a ng-href="#/playlist/{{location}}" ><div aria-hidden="true" data-icon="A"  ></div></a>
+		</div>-->
+		<header>
+
+		</header>
+
+		<section id="whereyouat" ng-controller="formController">
+			<form novalidate class="simple-form" id="search" >
+				<input type="text"  name="find music" id="findmusic" placeholder="Type Your Location"  class="text"  ng-model="location" ng-enter="controlForm(location)" ng-change="hintShower(location)">
+
+			</form>
+			<div class="search"  aria-hidden="true" data-icon="e" ng-click="controlForm(location)" ></div>
+
+			<div class="hint" ng-hide="showHint==false" class="animate-show">
+				<div ng-click="showHint=false" class="closer">
+					<strong>X</strong>
+				</div>
+				<div ng-click="closeHint"  ng-repeat="hint in finalHints">
+					<a ng-click="closeHint" ng-href="#/map/{{hint.cityhref}}*{{hint.statehref}}">{{hint.city}}, {{hint.state}}, {{hint.country}}</a>
+				</div>
+				<div ng-repeat="hint in finalHints"  ng-click="closeHint" >
+					<a ng-click="closeHint" ng-href="#/map/{{hint.statehref}}">{{hint.state}}, {{hint.country}}</a>
+				</div>
+			</div>
+
+		</section>
+
+		<div style="clear:both"></div>
+		<!-- <ul id="chooser">
+
+		<li class="musicwhereyouare active" id="music_where" ></li>
+		<li class="geomix inactive" id="geomix" ></li>
+		<li class="folowwme inactive" id="follow_me" ></li>
+		-->
+		</ul>
+
+		<div ng-view view-animation >
+
+		</div>
+		<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
+			<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
+			<div style="width:95px; margin:auto"><img src="/MusicWhereYouAre/no_mwya.png" alt="nothing doing music-wise where you are"/>
+			</div>
+			<p>
+				And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+			</p>
+			<p>
+				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+			</p>
+			<p>
+				That or check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
+			</p>
+
+		</section>
+		<section id="map-area" ng-hide="noSongs==true" class="animate-show">
+			<div mwya-map='mwya-map' id='map-canvas' latitude="34" longitude="-89.384294" zoom="{{zoom}}">
+				<div style="width:100px; margin:auto"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+				</div>
+			</div>
+			
+		</section>
+<div ng-include="'partials/icons.html'"></div>
+		<div style="clear:both"></div>
+
+		<section class="attribute">
+			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
+			<br/>
+			Powered By: <img src="/MusicWhereYouAre/genre_icons/echonest.svg" alt="echonest"/><img src="/MusicWhereYouAre/genre_icons/wikimedia.png" alt="wikimedia"/><img src="/MusicWhereYouAre/genre_icons/spotify_green.svg" alt="spotify"/>
+		</section>
+	</body>
+</html>

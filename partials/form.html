@@ -1,0 +1,13 @@
+<section id="whereyouat">
+			<form novalidate class="simple-form" id="search" >
+					<input type="text"  name="find music" id="findmusic" placeholder="City, ST or ST"  class="text"  ng-model="location" ng-enter="controlForm(location)">
+			</form>
+			<div class="search"  aria-hidden="true" data-icon="e" ng-click="controlForm(location)" ></div>
+			<section id="icon_holder" >
+			<a ng-href="#/genres/{{location}}"><div class="open_div" aria-hidden="true" data-icon="W"></div></a>
+			<a ng-href="#/playlist/{{location}}"><div class="open_div_spot" aria-hidden="true" data-icon="T"></div></a>
+			<a ng-href="#/favorites/{{location}}"><div class="open_div_fav" aria-hidden="true" data-icon="t"></div></a>
+		</section>
+		</section>
+
+		<div style="clear:both"></div>
