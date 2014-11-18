@@ -205,14 +205,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					
 				}
 				////////////////////Local Storage////////////////////////
-				var ls_leaveOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
+				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('removeOutArr'));
 				var ls_str=''
-				if(ls_leaveOut!=null)
+				if(ls_removeOut!=null)
 				{
-					for (var xx=0; xx<ls_leaveOut.length; xx++)
+					for (var xx=0; xx<ls_removeOut.length; xx++)
 					{
-						lsTitleArr.push(ls_leaveOut[xx].song);
-						lsIdArr.push(ls_leaveOut[xx].id);
+						lsTitleArr.push(ls_removeOut[xx].song);
+						lsIdArr.push(ls_removeOut[xx].id);
 					}
 
 				}
@@ -1395,55 +1395,104 @@ return{
 MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
+		
+		
 		runFavorites : function(songs)
 		{
 			
+			var newArr=[];
+			
+			if(localStorage.getItem('removeOut')!=null)
+			{
+				var removeOut=localStorage.getItem('removeOut');
+				removeOut = removeOut.split(',');
+				
+			}
+			else
+			{
+				var removeOut=['placeholder'];
+			}
+			
+			
+			
+			//localStorage.removeItem('FavoriteArr');
+			
+			if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
+			{
+				favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+				var existingFavorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));;
+			}
+			else
+			{
+				favorite =[];
+			}
+			
+					    if(existingFavorite == null || localStorage.getItem('FavoriteArr')=="") existingFavorite = [];	
+					    
+					    
+					    			   
 			for(var x=0; x<songs.length; x++)
 			{
 				if(songs[x].favorite=='on')
 				{
-					var existingFavorite = JSON.parse(localStorage.getItem("FavoriteArr"));
-					    if(existingFavorite == null) existingFavorite = [];
-					   					   
-					    localStorage.setItem("FavoriteArr", JSON.stringify(songs[x]));
-					    existingFavorite.push(songs[x]);
-					    localStorage.setItem("FavoriteArr", JSON.stringify(existingFavorite));
+				for(var o=0; o<removeOut.length; o++)
+					{	
+					 for(var i=0; i<favorite.length; i++)
+					 	{
+						 	if(existingFavorite[i].tracks[0].foreign_id.split(':')[2]!= songs[x].tracks[0].foreign_id.split(':')[2] && existingFavorite[i].tracks[0].foreign_id.split(':')[2]!=removeOut[o])
+						 	{	
+						    newArr.push(favorite[i]);
+						    //
+						     }
+					   }
+					    
+						  
+							
+							if(removeOut[o]!=songs[x].tracks[0].foreign_id.split(':')[2])
+							  {
+							  newArr.push(songs[x]);
+							  songs[x].favorite='on';
+							  localStorage.setItem("FavoriteArr", JSON.stringify(newArr));
+							  }
+							  else
+							  {
+							  songs[x].favorite='off';
+							  var index = removeOut.indexOf(songs[x].tracks[0].foreign_id.split(':')[2]);
+							  if (index > -1) {
+								removeOut.splice(index, 1);
+								localStorage.setItem('removeOut', removeOut);
+								}
+							  }
+						} 
+					    
+					    
 						//songs[x].favorite='off';			    
 				}
-				else{
+				else
+				{
+				
+					var fav = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+					var new_arr=[];
+					if(fav ==null) fav=[];
 					
-					
-					var ls= jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
-					var newFavorite =[];
-					if(ls!=null)
+					for(var u=0; u<fav.length; u++)
 					{
-					for(var i=0; i<ls.length; i++)
-					{
-						
-						if(ls[i].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')!=songs[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g,''))
+						if(songs[x].favorite=='off' && songs[x].title==fav[u].title)
 						{
-							console.log(ls[i].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')+':'+songs[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g,''))
-							//songs[x].favorite='on';
-							ls[i].favorite='on';
-							newFavorite.push(ls[i]);
+							
+							fav.splice(u, 1);
 						}
-						else{
-						ls[i].favorite='off';	
-						
-						
-						}
-					}
+					}	
+					localStorage.setItem('FavoriteArr', JSON.stringify(fav))
 					
-					localStorage.setItem('FavoriteArr', JSON.stringify(newFavorite));
-					}
-					else
-					{
-						newFavorite=[];
-					}
+					
 				}
 				
-			}	
+			}
+			
+							
 		}
+		
 	};
 
 }]);

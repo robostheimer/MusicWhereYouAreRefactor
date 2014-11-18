@@ -77,6 +77,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	$scope.latitudeObj = {};
 	$scope.longitudeObj = {};
 	
+	
 	var id_str='';
 		$scope.leaveOut = [];
 		$scope.location = $routeParams.location.replace(/\*/g, ', ');
@@ -132,6 +133,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era).then(function(data) {
 						$rootScope.songs_root = {};
 						$scope.songs = data.data.response.songs;
+						//$scope.songs.spot_str='';
 						Favorites.runFavorites($scope.songs);
 						$rootScope.songs_root = data.data.response.songs;
 						if($scope.songs.spot_arr.length==0)
@@ -222,14 +224,22 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	
 	$scope.switchFavorite=function(id)
 	{
-		$scope.favoritesArr=[];
+		//$scope.favoritesArr=[];
+		
 		if($scope.songs[id].favorite=='off')
 		{
 			$scope.songs[id].favorite='on'
 		}
 		else{
+			
 			$scope.songs[id].favorite='off';
+			
+			localStorage.setItem('removeOut', $scope.songs[id].tracks[0].foreign_id.split(':')[2]);
+			
 		}
+		
+		
+	
 		Favorites.runFavorites($scope.songs);
 		/*for(var x=0; x<$scope.songs.length; x++)
 		{
@@ -773,6 +783,8 @@ function($scope, $http, runSymbolChange, Favorites) {
 var FavoritesControllers = angular.module('FavoritesControllers', [])
 FavoritesControllers.controller('LoadFav', ['$scope', '$http', 'runSymbolChange', '$routeParams', '$location','$sce','retrieveLocation', 'PlaylistCreate', 'MapCreate','$rootScope','Favorites',
 function($scope, $http, runSymbolChange, $routeParams, $location, $sce,retrieveLocation, PlaylistCreate, MapCreate, $rootScope, Favorites) {
+	var removeArr=[];
+	$scope.location=$routeParams.location;
 	$scope.leaveOut = [];
 	$scope.runApp = function()
 	{
@@ -839,16 +851,20 @@ function($scope, $http, runSymbolChange, $routeParams, $location, $sce,retrieveL
 				$scope.songs[i].closeButton = true;
 				$scope.leaveOut.push($scope.songs[i].tracks[0].foreign_id.split(':')[2]);
 				
+				localStorage.setItem('removeOut', $scope.leaveOut);
+				
 
 				
 			}
 			else if(!$scope.leaveOut.toString().replace(/\W/g,'').match($scope.songs[i].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')))
 				{
 				$scope.spot_arr.push($scope.songs[i].tracks[0].foreign_id.split(':')[2]);
+				//localStorage.setItem('FavoriteArr', $scope.spot_arr);
 				$scope.songs[i].favorite='on';	
 				}
 				
 			}
+			
 			Favorites.runFavorites($scope.songs);
 			$scope.songs.spot_str='https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.spot_arr.toString();
 			$scope.songs.spot_str=$sce.trustAsResourceUrl($scope.songs.spot_str);		
@@ -863,21 +879,38 @@ function($scope, $http, runSymbolChange, $routeParams, $location, $sce,retrieveL
 	runSymbolChange.changeSymbol();
 	//$scope.runApp();
 	$scope.songs =[];
-	$scope.songs= jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+	$scope.songs_repeater= jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+	
+	var txt ='';
+	if($scope.songs_repeater!=null)
+	{
+		for(var x=0; x<$scope.songs_repeater.length; x++)
+		{
+			
+			if(!txt.replace(/\W/g, '').match($scope.songs_repeater[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g, '')))
+			{
+				$scope.songs.push($scope.songs_repeater[x]);
+			}
+			txt+=$scope.songs_repeater[x].tracks[0].foreign_id.split(':')[2];
+		}
+	}
 	$scope.spot_arr=[];
-	$scope.songs.spot_str='';
+	//$scope.songs.spot_str='';
+	if($scope.songs!=null)
+	{
+		$scope.songs.spot_str='';
 	for(var x=0; x<$scope.songs.length; x++)
 	{
 		$scope.spot_arr.push($scope.songs[x].tracks[0].foreign_id.split(':')[2]);
 		$scope.songs[x].favorite='on';
 	}
-	if($scope.songs.length>0)
-	{
+	
 	$scope.songs.spot_str='https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.spot_arr.toString();
 	$scope.songs.spot_str=$sce.trustAsResourceUrl($scope.songs.spot_str);
 	}
 	else
 	{
+		$scope.songs=[]
 		$scope.songs.spot_str=''
 	}
 	$scope.location_link = $routeParams.location;	
