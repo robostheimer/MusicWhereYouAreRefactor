@@ -510,7 +510,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background: #C53526;
 }
 
-.EraInput {
+.EraInput, #selector_genre input {
 	font-size: 13px;
 	padding: 4px;
 	margin-bottom: 5px;
@@ -520,6 +520,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	padding:3px;
 	margin-bottom:10px;
 	background:#ececed;
+}
+#selector_genre{margin-top:5px;}
+#selector_genre input {
+	width:240px; float:left; margin-top:1px; padding:5px;line-height:27px;background:white;	border: 1px dotted #ccc;
 }
 .years{font-size: 30px; width:290px; margin:auto; color:#c53526; padding:15px;}
 
@@ -1596,6 +1600,8 @@ input[type="checkbox"]:hover + label div.world {
 
 #geolocation_alert{overflow-y:scroll}
 
+.sharer{width:320px; position:fixed; background:white; border: 1px dotted #ccc; height:60px; opacity:.95; bottom:0; left:0%}
 
+.genre_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:5px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
 
 .clear{clear:both}

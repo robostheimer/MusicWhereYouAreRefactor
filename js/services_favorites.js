@@ -160,13 +160,13 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 								location_rp2=states[yy].abbreviation;
 							}
 							
-							else 
+							/*(else 
 							{
 								location_rp1 = location_rp;
 								location_rp2=location_rp;
 								
 								
-							}
+							}*/
 						}
 					}
 				}
@@ -205,7 +205,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					
 				}
 				////////////////////Local Storage////////////////////////
-				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
+				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('removeOutArr'));
 				var ls_str=''
 				if(ls_removeOut!=null)
 				{
@@ -222,8 +222,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					lsIdArr=[];
 				}
 				
-				
-				/*var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+				var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
 				if(ls_favorite!=null)
 				{
 					for (var yy=0; yy<ls_favorite.length; yy++)
@@ -234,7 +233,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				else
 				{
 					lsIdFavArr=[];
-				}*/
+				}
 				
 				///////////////////////End Local Storage/////////////////////
 				
@@ -275,7 +274,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							songs.songsArr.push(songs[x]);
 							songs.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
 							songs.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-							songs.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
 							//songs.push(songs[x]);
 							
 							//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
@@ -283,7 +281,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							
 							artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
 							
-							songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+							songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><div  class="spot_link infob favorite" id="infobox_favorite"+x title="'+songs[x].tracks[0].foreign_id.split(':')[2]+'" aria-hidden="true" data-icon="u"></div></a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 							
 								}
 							
@@ -320,7 +318,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						songs.songsArr.push(songs[x]);
 						songs.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
 						songs.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-						songs.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
 						//songs.push(songs[x]);
 						
 						//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
@@ -328,7 +325,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						
 						artistlocation=$routeParams.location;
 						
-						songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+						songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><div  class="spot_link infob favorite" id="infobox_favorite"+x title="'+songs[x].tracks[0].foreign_id.split(':')[2]+'" aria-hidden="true" data-icon="u"></div></a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 						
 			
 								
@@ -350,7 +347,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					}
 				}	
 				
-				songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_str;
+				songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_playlist.toString();
 				
 				songs.spot_str = $sce.trustAsResourceUrl(songs.spot_str);
 			
@@ -518,7 +515,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						
 						artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
 						
-						location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+						location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><div  class="spot_link infob favorite" id="infobox_favorite"+x title="'+songs[x].tracks[0].foreign_id.split(':')[2]+'" aria-hidden="true" data-icon="u"></div></a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 						
 							}
 						
@@ -546,7 +543,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					
 					artistlocation=$routeParams.location;
 					
-					location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+					location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><div  class="spot_link infob favorite" id="infobox_favorite"+x title="'+songs[x].tracks[0].foreign_id.split(':')[2]+'" aria-hidden="true" data-icon="u"></div></a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 					
 		
 							
@@ -1038,8 +1035,8 @@ function($q, $rootScope, $http, $sce, $location) {
 	};	
 }]);
 
-MusicWhereYouAreApp.factory("loadGenreCheckData", ['$routeParams','$http',
-function($routeParams, $http){
+MusicWhereYouAreApp.factory("loadGenreCheckData", ['$routeParams',
+function($routeParams){
 	return {
 			  getGenre: function() {
 				
@@ -1052,6 +1049,7 @@ function($routeParams, $http){
 			var d=new Date();	
 			var Era=[{era: {checked : false,isSelected : false, state: 'off',  era: 'twentyten', year_begin: '2010', year_end: d.getFullYear()}},{era: {checked : false,isSelected : false, state: 'off',  era: 'twenty', year_begin: '2000', year_end:'2009'}},{era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenninty', year_begin: '1990', year_end:'1999'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteeneighty', year_begin: '1980', year_end:'1989'}},{era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenseventy', year_begin: '1970', year_end:'1979'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteensixty', year_begin: '1960', year_end:'1969'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenfifty', year_begin: '1950', year_end:'1959'}},{era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenforty', year_begin: '1940', year_end:'1949'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenthrity', year_begin: '1930', year_end:'1939'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteentwenty', year_begin: '1920', year_end:'1929'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteenten', year_begin: '1910', year_end:'1919'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'nineteen', year_begin: '1900', year_end:'1909'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'eighteenninty', year_begin: '1890', year_end:'1899'}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'eighteeneighty', year_begin: '1880', year_end:'1889'}},{era: {checked : false,isSelected : false, state: 'off',  era: 'eighteenseventy', year_begin: '1870', year_end:''}}, {era: {checked : false,isSelected : false, state: 'off',  era: 'eighteensixty', year_begin: '1860', year_end:'1869'}}];	
 	
+	console.log(Era);
 	return Era;
 	},
 	
@@ -1063,19 +1061,7 @@ function($routeParams, $http){
 	return Mode;
 	},
 	
-	loadEchonestStyles:function()
-	{
-		var url ='http://developer.echonest.com/api/v4/artist/list_terms?api_key=3KFREGLKBDFLWSIEC&format=json&type=style'
-     			
-     			
-     			return $http.get(url).then(function(result)
-     			{
-     				var genres= result.data.response.terms
-     				
-     				return genres;
-     			});
-     			
-	}		  
+			  
 	
 };
 }]);
@@ -1413,10 +1399,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		
 		runFavorites : function(songs)
 		{
-			var text='';
-			if(localStorage.getItem('removeStar')!=null)
+			
+			var newArr=[];
+			
+			if(localStorage.getItem('removeOut')!=null)
 			{
-				var removeOut=localStorage.getItem('removeStar');
+				var removeOut=localStorage.getItem('removeOut');
 				removeOut = removeOut.split(',');
 				
 			}
@@ -1426,124 +1414,100 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			}
 			
 			
+			
+			//localStorage.removeItem('FavoriteArr');
+			
 			if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
 			{
-				var favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+				favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
 				var existingFavorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));;
 			}
 			else
 			{
-				var favorite =[];
+				favorite =[];
 			}
-			//console.log(favorite);
 			
-			if(existingFavorite == null || localStorage.getItem('FavoriteArr')=="") existingFavorite = [];	
-			for(var y=0; y<removeOut.length; y++)
-			{
-				for (var z=0; z<songs.length; z++)
-				{
-					if(songs[z].tracks[0].foreign_id.split(':')[2]==removeOut[y])
-					{
-						songs[z].favorite='off';
-						var index=removeOut.indexOf(songs[z].tracks[0].foreign_id.split(':')[2]);
-					}
-				}
-			}
-			if($location.path().match("playlist"))
-						{
-							
-						removeOut=[];
-						removeOut=['placeholder'];		
-						}
-				localStorage.setItem('removeStar', (removeOut));
-			
-			
+					    if(existingFavorite == null || localStorage.getItem('FavoriteArr')=="") existingFavorite = [];	
+					    
+					    
+					    			   
 			for(var x=0; x<songs.length; x++)
-			{	
-				
-				
-				if(favorite.length!=0)
-				{	
-					for(var i=0; i<favorite.length; i++)
-					{
-
-				 		if(songs[x].favorite=='off' && songs[x].tracks[0].foreign_id.split(':')[2]==favorite[i].tracks[0].foreign_id.split(':')[2])
-							{
-								favorite.splice(i, 1);
-								songs[x].favorite='off';
-							}	
-						else if(songs[x].favorite=='on' &&songs[x].tracks[0].foreign_id.split(':')[2]!=favorite[i].tracks[0].foreign_id.split(':')[2])
-						{
-  							favorite.push(songs[x]);
-							//console.log(favorite);
-							  //localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
-							  songs[x].favorite='on';
-						}
+			{
+				if(songs[x].favorite=='on')
+				{
+				for(var o=0; o<removeOut.length; o++)
+					{	
+					 if(existingFavorite>0)
+					 {
+						 for(var i=0; i<favorite.length; i++)
+						 	{
+							 	if(existingFavorite[i].tracks[0].foreign_id.split(':')[2]!= songs[x].tracks[0].foreign_id.split(':')[2] && existingFavorite[i].tracks[0].foreign_id.split(':')[2]!=removeOut[o])
+							 	{	
+							    newArr.push(favorite[i]);
+							     }
+						   }
+					  }  
+						  
 							
-						}
-						
-					}	
-				
+							if(removeOut[o]!=songs[x].tracks[0].foreign_id.split(':')[2])
+							  {
+							  newArr.push(songs[x]);
+							  songs[x].favorite='on';
+							  localStorage.setItem("FavoriteArr", JSON.stringify(newArr));
+							  }
+							  else
+							  {
+							  songs[x].favorite='off';
+							  var index = removeOut.indexOf(songs[x].tracks[0].foreign_id.split(':')[2]);
+							  if (index > -1) {
+								removeOut.splice(index, 1);
+								localStorage.setItem('removeOut', removeOut);
+								}
+							  }
+						} 
+					    
+					    
+						//songs[x].favorite='off';			    
+				}
 				else
 				{
-					if(songs[x].favorite=='off' )
-							{
-								
-								favorite.splice(i, 1);
-								 songs[x].favorite='off';
-								//console.log(favorite);
-								//localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
-							}	
-						else if(songs[x].favorite=='on')
-						{
-  							favorite.push(songs[x]);
-  							 songs[x].favorite='on';
-							//console.log(favorite);
-							  //localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
-						}
-					
-				}
-				/*else
-				{
 				
-					var fav = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
-					var favorite=[];
-					if(fav ==null) fav=[];
-					
-					for(var u=0; u<fav.length; u++)
+					var existingFavorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+					$rootScope.fav=[];
+					text='';
+					if(existingFavorite ==null) existingFavorite=[];
+					for(var r=0; r<existingFavorite.length; r++)
 					{
-						if(songs[x].favorite=='off' && songs[x].title==fav[u].title)
+						if(!text.match(existingFavorite[r].tracks[0].foreign_id.split(':')[2]))
 						{
 							
-							fav.splice(u, 1);
+							$rootScope.fav.push(existingFavorite[r]);
+													}
+						text+=	existingFavorite[r].tracks[0].foreign_id.split(':')[2];
+					}
+					
+					for(var u=0; u<$rootScope.fav.length; u++)
+					{
+						if(songs[x].tracks[0].foreign_id.split(':')[2]==$rootScope.fav[u].tracks[0].foreign_id.split(':')[2])
+						{
+							if($rootScope.fav.length>1)
+							{
+							$rootScope.fav.splice(u, 1);
+							console.log($rootScope.fav[u].title);
+							}
+							
 						}
 					}	
-					localStorage.setItem('FavoriteArr', JSON.stringify(fav))
+					//console.log($rootScope.fav);
+					//console.log(localStorage);
+					localStorage.setItem('FavoriteArr', JSON.stringify($rootScope.fav));
 					
 					
-				}*/
+				}
 				
 			}
 			
-			var finalArr=[];
-			
-			for(var t=0; t<favorite.length; t++)
-				{
-					
-						if(!text.replace(/\W/g, '').match(favorite[t].tracks[0].foreign_id.split(':')[2]))
-						{
-							finalArr.push(favorite[t]);
 							
-						}
-					
-					text+=favorite[t].tracks[0].foreign_id.split(':')[2];
-					//console.log(finalArr)
-				}
-			
-			
-			 localStorage.setItem("FavoriteArr", JSON.stringify(finalArr));	
-			// console.log(removeOut);
-			// console.log(jQuery.parseJSON(localStorage.FavoriteArr));			
 		}
 		
 	};
@@ -1798,3 +1762,4 @@ function($q, $rootScope, $http, $sce, $location, States) {
 		};
 	
 }]);	
+

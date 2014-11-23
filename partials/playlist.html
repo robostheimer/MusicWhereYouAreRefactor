@@ -16,7 +16,7 @@
 	</button>
 	<div class="clear"></
 	</div>
-	<div ng-repeat="song in songs.songsArr " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true">
+	<div ng-repeat="song in songs.songsArr " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true" draggable = "true">
 		<div class="close" id="close{{song.tracks[0].foreign_id.split(':')[2]}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.tracks[0].foreign_id.split(':')[2])"></div>
 		<p class="info" id="pinfo{{song.num_id}}">
 			{{song.title}}
@@ -27,7 +27,9 @@
 		<a ng-click="switchFavorite(song.num_id)"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
 		<a ng-click="switchFavorite(song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
 		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a><div style="clear:both;margin-bottom:-15px;"></div>
+	
 	</div>
-
+	<br><br></br>
+	<div class="sharer"></div>
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->
