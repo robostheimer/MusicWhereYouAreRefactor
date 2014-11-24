@@ -102,7 +102,8 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 			}
 			
 	
-	$scope.runCycle = function() {
+	$scope.runCycle = function(start_number, counter) {
+		
 			
 			if ($routeParams.location.split('*').length > 1) {
 				$scope.zoom = 10;
@@ -111,19 +112,24 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 				$scope.zoom = 6;
 			}
 		
-			
-
-		if (LocationDataFetch.count==0) {
+		$scope.start_number = start_number;	
+		$scope.ratio = .05*counter
+		
+		$scope.counter = counter;
+		
+		if (LocationDataFetch.count==0) 
+		{
 			$rootScope.mapOpening = true;
 			
-			retrieveLocation.runLocation(replacePatterns(location_comp), 'lat').then(function(data) {
+				retrieveLocation.runLocation(replacePatterns(location_comp), 'lat',$scope.ratio ).then(function(data) {
 					
 				$scope.latitudeObj = data;
 				$rootScope.latitudeObj_root = data;
 				
 				//$rootScope.locationdata=$rootScope.latitudeObj_root.location;
 				$scope.latitude = $scope.latitudeObj.latitude;
-				retrieveLocation.runLocation(replacePatterns($scope.location), 'long').then(function(data) {
+				retrieveLocation.runLocation(replacePatterns($scope.location), 'long', $scope.ratio).then(function(data) {
+					
 					$rootScope.longitudeObj_root = {};
 					$scope.longitudeObj = data;
 					$rootScope.longitudeObj_root = data;
@@ -131,16 +137,31 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 					$scope.longitude = $scope.longitudeObj.longitude;
 					$scope.geolocation = [$scope.latitudeObj, $scope.longitudeObj];
 					//console.log($scope.geolcication);
-					
-					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era).then(function(data) {
+					console.log(jQuery.parseJSON(localStorage.FavoriteArr));	
+					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era, start_number).then(function(data) {
 						$rootScope.songs_root = {};
 						$scope.songs = data.data.response.songs;
+						
+						
 						//$scope.songs.spot_str='';
-						Favorites.runFavorites($scope.songs);
+						//Favorites.runFavorites($scope.songs);
+						console.log(jQuery.parseJSON(localStorage.FavoriteArr));	
 						$rootScope.songs_root = data.data.response.songs;
-						if($scope.songs.spot_arr.length==0)
+						if($scope.songs.spot_arr.length<1)
 						{
+							$scope.counter=$scope.counter+1;
+							
+							if($scope.counter<=5)
+							{
+								
+								LocationDataFetch.count=0;
+								$scope.runCycle(0, $scope.counter);
+								
+							}
+							else
+							{
 							$rootScope.noSongs=true;
+							}
 						}
 						else{	
 						MapCreate.runMap($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.songs.final_loc_arr, $scope.songs.spot_arr);
@@ -151,6 +172,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 				});
 
 			});
+			
 		}
 		else if (location_comp.replace('*', ', ').replace(/_/g,' ').toLowerCase() != $rootScope.longitudeObj_root.location.replace(/_/g, ' ').toLowerCase() && locationdatacount!=0) {
 		
@@ -159,7 +181,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 			$rootScope.era ='';
 			$rootScope.start_year='';
 			$rootScope.end_year='';
-			$scope.runCycle();
+			$scope.runCycle(0, 1);
 				
 			} else if (LocationDataFetch.count > 0) {
 			
@@ -171,7 +193,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 			$scope.latitudeObj = $rootScope.latitudeObj_root;
 			$scope.longitudeObj = $rootScope.longitudeObj_root;
 			$scope.songs = $rootScope.songs_root;
-			Favorites.runFavorites($scope.songs);
+			//Favorites.runFavorites($scope.songs);
 			
 			}
 		locationdatacount = LocationDataFetch.count += 1;
@@ -215,7 +237,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 					
 					}
 				
-			$scope.runCycle();	
+			$scope.runCycle(0, 1);	
 			
 		}	
 		//console.log($scope.spot_arr.length);	
@@ -235,11 +257,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 		else{
 			
 			$scope.songs[id].favorite='off';
-			//$rootScope.removeOut.push($scope.songs[id]);
 			
-			//console.log($rootScope.removeOut);
-			
-			//localStorage.setItem('removeOut', $scope.songs[id].tracks[0].foreign_id.split(':')[2]);
 			
 	}
 		
@@ -247,38 +265,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	
 		var favorite = Favorites.runFavorites($scope.songs);
 		
-		/*for(var x=0; x<$scope.songs.length; x++)
-		{
-			if($scope.songs[x].favorite=='on')
-			{
-				$scope.favoritesArr.push($scope.songs[x]);
-				var existingFavorite = JSON.parse(localStorage.getItem("FavoriteArr"));
-				    if(existingFavorite == null) existingFavorite = [];
-				   					   
-				    localStorage.setItem("FavoriteArr", JSON.stringify($scope.songs[x]));
-				    existingFavorite.push($scope.songs[x]);
-				    localStorage.setItem("FavoriteArr", JSON.stringify(existingFavorite));
-			}
-			else{
-				var ls= jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
-				var newFavorite =[];
-				if(ls!=null)
-				{
-				for(var i=0; i<ls.length; i++)
-				{
-					if(ls[i].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')!=$scope.songs[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g,''))
-					{
-						newFavorite.push(ls[i]);
-					}
-				}
-				localStorage.setItem('FavoriteArr', JSON.stringify(newFavorite));
-				}
-				else
-				{
-					newFavorite=[];
-				}
-			}
-		}*/
+			
 		
 		
 	};
@@ -289,63 +276,23 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 		runSymbolChange.changeSymbol();
 	};
 	
-	$scope.runCycle();
+	$scope.moreSongs=function(number)
+	{
+		//var fav = jquery.parseJSON(localStorage.getItem('FavoriteArr'));
+		LocationDataFetch.count=0;
+		$scope.runCycle(number, 1);
+		//localStorage.setItem('FavoriteArr', fav);
+		//Favorites.runFavorites($scope.songs);
+
+	};
+	
+	
+
+	$scope.runCycle(0,1);
 	
 }])
 
-/*
- .controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation', '$location', '$routeParams', '$q', 'runSymbolChange','PlaylistCreate','$sce',
- function($scope, $rootScope, retrieveLocation, $location, $routeParams, $q, runSymbolChange, PlaylistCreate, $sce) {
-
- $rootScope.noSongs=false;
- $rootScope.mapOpening=true;
- $scope.location = $routeParams.location;
- $scope.leaveOut=[];
- $scope.location = $scope.location.replace(/\* /g, ', ');
- //$scope.$$phase || $scope.$apply();
- if($routeParams.location.split('*')>1)
- {
- $scope.zoom = 11;
- }
- else
- {
- $scope.zoom=6;
- }
- retrieveLocation.runLocation(replacePatterns($scope.location), $rootScope.genres);
- $scope.icons = $rootScope.icons;
-
- runSymbolChange.changeSymbol();
- $scope.song_str='';
- $rootScope.showHint=false;
-
- $scope.removeSong = function(id)
- {
- $scope.spot_arr=[];
- for (var i=0; i<$rootScope.songs.length; i++)
- {
- if(id==$rootScope.songs[i].id)
- {
- $rootScope.songs[i].closeButton=true;
- $scope.leaveOut.push($rootScope.songs[i].num_id);
-
- }
- else
- {
- $scope.spot_arr.push($rootScope.songs[i].tracks[0].foreign_id.split(':')[2])
-
- }
- }
- $rootScope.songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.spot_arr.toString();
- $rootScope.songs.spot_str = $sce.trustAsResourceUrl($rootScope.songs.spot_str);
- console.log($scope.leaveOut);
- };
- $scope.goBack = function() {
-
- $location.path('map/' + $scope.location.replace(', ','*'));
- };
-
- }])
- */.controller('Spotify', ['$scope', '$location', '$rootScope', 'runSymbolChange', '$routeParams',
+.controller('Spotify', ['$scope', '$location', '$rootScope', 'runSymbolChange', '$routeParams',
 function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 	$scope.songs_arr = [];
 	$scope.SavePlaylist = function(arr, title) {
@@ -529,6 +476,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 	
 	///////////////////////Fix this; this is a mess.... Turn it into a service that can be called here and in the retrieve location controller/////////////////////////////
 	
+	
 	$scope.buttons = [{name:'genres', state:'shower', classy:'button_on'}, {name:'eras', state:'hider', classy:'button_off'}, {name:'moods', state:'hider', classy:'button_off'}]
 	$scope.noPickedGenre=false;
 	$scope.runButtons = function(id)
@@ -613,7 +561,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 		$scope.end_year=$rootScope.end_year;
 		$scope.start_year = $rootScope.start_year;
 	}
-	$scope.runApp = function()
+	$scope.runApp = function(start_number, counter)
 	{
 	$rootScope.mapOpening = true;	
 	if ($routeParams.location.split('*').length > 1) {
@@ -622,16 +570,19 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 			} else {
 				$scope.zoom = 6;
 			}
-
-			
-			retrieveLocation.runLocation(replacePatterns($scope.location), 'lat').then(function(data) {
+		$scope.start_number = start_number;	
+		
+		$scope.counter=counter;
+		$scope.ratio = .05*counter;
+		
+			retrieveLocation.runLocation(replacePatterns($scope.location), 'lat', $scope.ratio).then(function(data) {
 					
 				$scope.latitudeObj = data;
 				$rootScope.latitudeObj_root = data;
 				
 				//$rootScope.locationdata=$rootScope.latitudeObj_root.location;
 				$scope.latitude = $scope.latitudeObj.latitude;
-				retrieveLocation.runLocation(replacePatterns($scope.location), 'long').then(function(data) {
+				retrieveLocation.runLocation(replacePatterns($scope.location), 'long', $scope.ratio).then(function(data) {
 					$rootScope.longitudeObj_root = {};
 					$scope.longitudeObj = data;
 					$rootScope.longitudeObj_root = data;
@@ -640,13 +591,25 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 					$scope.geolocation = [$scope.latitudeObj, $scope.longitudeObj];
 					
 
-					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era).then(function(data) {
+					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era, start_number).then(function(data) {
 						$rootScope.songs_root = {};
 						$scope.songs = data.data.response.songs;
 						$rootScope.songs_root = data.data.response.songs;
-						if($scope.songs.spot_arr.length==0)
+						if($scope.songs.spot_arr.length<1)
 						{
+							
+							$scope.counter=$scope.counter+1;
+							
+							if($scope.counter<=10)
+							{
+								
+								$scope.runApp(0, $scope.counter);
+								
+							}
+							else
+							{
 							$rootScope.noSongs=true;
+							}
 						}
 						else{	
 						MapCreate.runMap($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.songs.final_loc_arr, $scope.songs.spot_arr);
@@ -683,7 +646,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 		$scope.genre_str += $rootScope.genres;
 		$scope.location = $scope.location.replace(/\*/g, ', ');
 
-		$scope.runApp();
+		$scope.runApp(0, 1);
 		$scope.genre_hash = $location.path() + '/' + $rootScope.genres;
 	};
 	
@@ -732,7 +695,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 		$scope.era_str += $rootScope.era;
 		$scope.location = $scope.location.replace(/\*/g, ', ');
 
-		$scope.runApp();
+		$scope.runApp(0,1);
 		$scope.era_hash = $location.path() + '/' + $rootScope.genres;
 	};
 	
@@ -748,9 +711,9 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 	$scope.noPickedGenre=false
 	loadGenreCheckData.loadEchonestStyles().then(function(result){
 	var availableGenres = result;
-	var genreArr=[]
-	$rootScope.genres=''	
-	$rootScope.genresSans=[]
+	var genreArr=[];
+	
+	//$rootScope.genres=''	
 	if(genre.match(', '))
 	{
 		var genreArr=genre.split(', ');
@@ -769,13 +732,14 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 				if(availableGenres[x].name.toLowerCase()==(genreArr[u].replace().toLowerCase()))
 				{
 					$rootScope.genres+='****'+genreArr[u];
-					$rootScope.genresSans.push(genreArr[u])
+					
 					$scope.noPickedGenre=false;
-					$scope.runApp();
+					$scope.runApp(0,1);
 				}
 			}
 		}
-	
+	$rootScope.genresSans = $rootScope.genres.split('****');	
+	$rootScope.genresSans.shift();
 	if($rootScope.genres.length==0)
 	{
 		$scope.noPickedGenre=true;
@@ -786,7 +750,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 	
 	$scope.toggleGenre=function(genre)
 	{
-		$rootScope.genres='';
+		//$rootScope.genres='';
 		var index = $rootScope.genresSans.indexOf(genre);
 		if(index>-1)
 		{
@@ -798,15 +762,15 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 			for(var x=0; x<$rootScope.genresSans.length; x++)
 			{
 				
-				$rootScope.genres+='****'+$rootScope.genresSans[x];	
+				$rootScope.genres='****'+$rootScope.genresSans[x];	
 	
 			}
-			$scope.runApp();
+			$scope.runApp(0,1);
 		}
 		else
 		{
 			$rootScope.genres='';
-			$scope.runApp();
+			$scope.runApp(0,1);
 		}
 		
 	};
@@ -833,7 +797,7 @@ function($scope, $routeParams, retrieveLocation,LocationDataFetch, PlaylistCreat
 //////////////////////////create Genre Service out of this function - run it in locationHash and here///////////////////
 	if($('#map-canvas').html().match('loading.gif"') )
 	{
-	$scope.runApp();
+	$scope.runApp(0,1);
 	}
 	runSymbolChange.changeSymbol();
 	
@@ -860,50 +824,7 @@ function($scope, $http, runSymbolChange, $routeParams, $location, $sce,retrieveL
 	$scope.leaveOut = [];
 	$scope.d = new Date();
 	$scope.date = $scope.d.getMonth() + '/' + $scope.d.getDate() + '/' + $scope.d.getFullYear();
-	$scope.runApp = function() {
-		if ($('#map-canvas').html().match('loading.gif')) {
-			$rootScope.mapOpening = true;
-			if ($routeParams != null) {
-				if ($routeParams.location.split('*').length > 1) {
-					$scope.zoom = 10;
-
-				} else {
-					$scope.zoom = 6;
-				}
-			} else {
-				$scope.zoom = 6;
-			}
-			retrieveLocation.runLocation(replacePatterns($scope.location), 'lat').then(function(data) {
-
-				$scope.latitudeObj = data;
-				$rootScope.latitudeObj_root = data;
-				$scope.latitude = $scope.latitudeObj.latitude;
-				retrieveLocation.runLocation(replacePatterns($scope.location), 'long').then(function(data) {
-					$rootScope.longitudeObj_root = {};
-					$scope.longitudeObj = data;
-					$rootScope.longitudeObj_root = data;
-
-					$scope.longitude = $scope.longitudeObj.longitude;
-					$scope.geolocation = [$scope.latitudeObj, $scope.longitudeObj];
-
-					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era).then(function(data) {
-						//$rootScope.songs_fav = {};
-						$scope.songs_playlist = data.data.response.songs;
-						console.log($scope.songs_playlist)
-						//$rootScope.songs_root = data.data.response.songs;
-						if ($scope.songs_playlist.spot_arr.length == 0) {
-							$rootScope.noSongs = true;
-						} else {
-							MapCreate.runMap($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.songs_playlist.final_loc_arr, $scope.songs_playlist.spot_arr);
-							$rootScope.mapOpening = false;
-						}
-					});
-
-				});
-
-			});
-		}
-	};
+	
 	
 	$scope.removeFav = function(id) {
 		$scope.spot_arr = [];
@@ -952,7 +873,7 @@ function($scope, $http, runSymbolChange, $routeParams, $location, $sce,retrieveL
 	};
 	
 	runSymbolChange.changeSymbol();
-	$scope.runApp();
+	
 	$scope.songs =[];
 	$scope.save_arr = [];
 

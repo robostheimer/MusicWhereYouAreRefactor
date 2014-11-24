@@ -29,7 +29,17 @@
 		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a><div style="clear:both;margin-bottom:-15px;"></div>
 	
 	</div>
+	<br>
+	
+	
 	<br><br></br>
-	<div class="sharer"></div>
+	<div class="sharer" >
+		<button class="more_button" ng-hide="start_number<87" ng-click="moreSongs((start_number-87))" ng-enter="moreSongs((start_number-87))">
+		<div class=button_txt>« Back </div>
+	</button>
+	<button class="more_button" ng-click="moreSongs((start_number+87))" ng-enter="moreSongs((start_number+87))">
+		<div class=button_txt>More Songs »</div>
+	</button>
+	</div>
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

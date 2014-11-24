@@ -377,6 +377,7 @@ ul#chooser li, #chooser li div.inactive {
 .info_button{width:220px;}
 .spot_button{width:295px;}
 .button_on, .button_off:hover{width:80px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.more_button{width:70px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left;  cursor:pointer}
 .button_off{width:80px;color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
 .info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
@@ -1600,8 +1601,8 @@ input[type="checkbox"]:hover + label div.world {
 
 #geolocation_alert{overflow-y:scroll}
 
-.sharer{width:320px; position:fixed; background:white; border: 1px dotted #ccc; height:60px; opacity:.95; bottom:0; left:0%}
+.sharer{width:300px; position:fixed; background:white; border: 1px dotted #ccc; height:40px; opacity:.95; bottom:0; left:0%; padding:10px;}
 
-.genre_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:5px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
+.genre_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:6px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
 
 .clear{clear:both}

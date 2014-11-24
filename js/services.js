@@ -81,13 +81,12 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	
 
 	return {
-		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, index, genres, era){
+		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, index, genres, era, start_number){
 			var lsTitleArr=[];
 			var lsIdArr=[];
 			var lsTitleStr='';
 			var lsIdStr='';
 			var lsIdFavArr=[];
-			
 		 	var genresSplit = genres.split('**');
 		 	var eraSplit=era.split('**');
 		 	var finalgenres = '';
@@ -106,10 +105,10 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 
 		 	if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=87&start='+index+'&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&&bucket=song_currency';//sort=song_hotttnesss-desc
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=87&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&&bucket=song_currency&start='+start_number;
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=87&start='+index+'&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&&bucket=song_currency'+finalgenres+era;//sort=song_hotttnesss-desc
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=87&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&bucket=song_currency&start='+start_number+finalgenres+era;
 			}
 			
 			return $http.get(url).success(function(data) {
@@ -163,7 +162,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							else 
 							{
 								location_rp1 = location_rp;
-								location_rp2=location_rp;
+								//location_rp2=location_rp;
 								
 								
 							}
@@ -223,7 +222,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				}
 				
 				
-				/*var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+				var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
 				if(ls_favorite!=null)
 				{
 					for (var yy=0; yy<ls_favorite.length; yy++)
@@ -234,7 +233,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				else
 				{
 					lsIdFavArr=[];
-				}*/
+				}
 				
 				///////////////////////End Local Storage/////////////////////
 				
@@ -381,217 +380,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 
 
-/*
- MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
-function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States) {
-	
-
-	return {
-		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, index){
-		
-		 	var genresSplit = $rootScope.Genre.genres.split('**');
-		 	var finalgenres = '';
-		 	for (var i=0; i<genresSplit.length; i++)
-		 	{
-		 		
-		 		if(genresSplit.length>0&& genresSplit[i]!="")
-		 		{
-		 		finalgenres +='&style='+genresSplit[i];
-		 		}
-		 		
-		 	}
-		 	$rootScope.songs = [];
-		 	$rootScope.songs.spot_arr = [];
-		 	$rootScope.spot_playlist=[];
-			var location_arr = [];
-			var final_loc_arr=[];
-			$rootScope.lat_min = lat_min;
-			$rootScope.long_min = long_min;
-			$rootScope.spot_str = '';
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=87&start='+index+'&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.35&&bucket=song_currency'+finalgenres;//sort=song_hotttnesss-desc
-
-			$http.get(url).success(function(data) {
-				
-				var songs = data.response.songs;
-				
-				var song_str = '';
-				var location_str = '';
-				var location_rp = $routeParams.location;
-				var states = States.createStateObj();
-				//var countries = States.createCountriesObj
-				if(location_rp.split('*').length==1)
-				{
-					///StateAB/////////
-					if(location_rp.length==2)
-					{
-						
-						for(var yy=0; yy<states.length; yy++)
-						{
-							
-							if(location_rp.toLowerCase() ==states[yy].abbreviation.toLowerCase())
-							{
-								location_rp1 = states[yy].name;
-								location_rp2=states[yy].abbreviation;
-								
-							}
-						
-						}
-					}
-					else
-					{
-						//////////////State///////////
-						//location_rp = location_rp.replace('*',', ');
-						for(var yy=0; yy<states.length; yy++)
-						{
-							
-							if(location_rp.replace(/_/g, ' ').toUpperCase() ==states[yy].name)
-							{
-								location_rp1 = states[yy].name;
-								location_rp2=states[yy].abbreviation;
-							}
-							
-							
-						}
-					}
-				}
-				else
-				{
-					 var location_rpS =location_rp.split('*')[1];
-					////////////////City Region/////////////////
-					 if(location_rpS.length==2)
-					{
-						
-						for(var yy=0; yy<states.length; yy++)
-						{
-							if(location_rpS ==states[yy].abbreviation)
-							{
-								location_rp1 = states[yy].name;
-								location_rp2=states[yy].abbreviation;
-								
-							}
-						}
-					}
-					else
-					{
-						//location_rp = location_rp.replace('*',', ');
-						for(var yy=0; yy<states.length; yy++)
-						{
-							if(location_rpS.toUpperCase() ==states[yy].name)
-							{
-								location_rp1 = states[yy].name;
-								location_rp2=states[yy].abbreviation;
-								
-							}
-						}
-					
-					}
-					
-					
-				}
-				
-				for (var x = 0; x < songs.length; x++) {
-					
-					var songtitle=songs[x].title
-					///////////////////City Region//////////////////////
-						if(location_rp.split('*').length==1)
-						{
-							
-						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' ')))
-							{
-							if((songs[x].artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp1.replace(/\W/g, '').toUpperCase()))||(songs[x].artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp2.replace(/\W/g, '').toUpperCase())))
-						{
-							
-									
-							if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].tracks[0].foreign_id.split(':')[2] == null)
-							{
-							x=x+1;
-							}
-						songs[x].closeButton=false;
-						songs[x].num_id=x;
-						
-						$rootScope.songs.spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-						$rootScope.spot_playlist.push(songs[x].tracks[0].foreign_id);
-						$rootScope.songs.push(songs[x]);
-						
-						//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-						song_str += songtitle;
-						
-						artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
-						
-						location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
-						
-							}
-						
-						}
-					}
-					else{
-						//////////////////////////State////////////////////////
-						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' ')))
-						{
-							
-								
-							
-						if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].tracks[0].foreign_id.split(':')[2] == null)
-						{
-						x=x+1;
-						}
-					songs[x].closeButton=false;
-					songs[x].num_id=x;
-					$rootScope.spot_playlist.push(songs[x].tracks[0].foreign_id);
-					$rootScope.songs.spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-					$rootScope.songs.push(songs[x]);
-					
-					//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-					song_str += songtitle;
-					
-					artistlocation=$routeParams.location;
-					
-					location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
-					
-		
-							
-						}
-					}
-				}
-				location_arr.sort();
-				for (var r=0; r<location_arr.length; r++)
-				{
-					if(!location_str.match(location_arr[r].split('@@')[0]))
-					{
-					final_loc_arr.push('%%'+location_arr[r]);
-					location_str += location_arr[r].split('@@')[0];
-					}
-					else
-					{
-						final_loc_arr.push(location_arr[r].split('@@')[1].split('&&')[1]);
-						
-					}
-				}	
-				
-				$rootScope.songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.songs.spot_arr.toString();
-				$rootScope.songs.spot_str = $sce.trustAsResourceUrl($rootScope.songs.spot_str);
-				var deferred = $q.defer();
-				deferred.promise.then(function() {
-					if($rootScope.spot_playlist==0)
-					{
-						
-						$rootScope.noSongs=true;
-						
-					}
-					else
-					{
-					MapCreate.runMap(zoom, lat, long, final_loc_arr, $rootScope.songs.spot_arr);
-					$rootScope.noSongs=false;
-					}
-				});
-				deferred.resolve();
-			});
-		 	}
-	};
-}]);
- */
-
-
 
 MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
 function($q,  $http, $sce, $rootScope) {
@@ -599,7 +387,6 @@ function($q,  $http, $sce, $rootScope) {
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
 		map;
-		//$('#map-canvas').show();
 		
 		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
@@ -663,7 +450,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 	//////////////////////MAKE WORK for LOWERCASE
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
-		runLocation : function(location, latorlng) {
+		runLocation : function(location, latorlng, ratio) {
 			var location = location.replace('*',', ');
 			var lat_min;
 			var long_min;
@@ -717,8 +504,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 									
 								}
 							geolocation.latitude=lats/data.data.rows.length;
-							geolocation.lat_min = data.data.rows[0][0] - .05;
-							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + .05;
+							geolocation.lat_min = data.data.rows[0][0] - ratio;
+							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 							geolocation.location = location;
 						} else {
 							$rootScope.noSongs=true;
@@ -738,8 +525,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 									
 								}
 							geolocation.longitude=longs/data.data.rows.length;;
-							geolocation.long_min = data.data.rows[0][0] - .05;
-							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + .05;
+							geolocation.long_min = data.data.rows[0][0] - ratio;
+							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 							geolocation.location = location;
 						} else {
 							$rootScope.noSongs=true;
@@ -784,8 +571,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						return	$http.get(lat_url).then(function(data){
 							if (data.data.rows != null) {
 								geolocation.latitude=data.data.rows[0][0];
-								geolocation.lat_min = data.data.rows[0][0] - .05;
-								geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + .05;
+								geolocation.lat_min = data.data.rows[0][0] - ratio
+								geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 								geolocation.location = location;
 							} else {
 								$rootScope.noSongs=true;
@@ -799,13 +586,13 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						return	$http.get(long_url).then(function(data){
 							if (data.data.rows != null) {
 								geolocation.longitude=data.data.rows[0][0];
-								geolocation.long_min = data.data.rows[0][0] - .05;
-								geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + .05;
+								geolocation.long_min = data.data.rows[0][0] - ratio;
+								geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 								geolocation.location = location;
 							} else {
 								$rootScope.noSongs=true;
 							}
-							
+							console.log(geolocation)
 							return (geolocation);
 						});
 						}
@@ -820,191 +607,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 }]);
 
 
-/*MusicWhereYouAreApp.factory("retrieveLocation", ['$q', '$rootScope', '$http', '$sce', '$window', 'PlaylistCreate', 'MapCreate', 'HashCreate','$location','States',
-function($q, $rootScope, $http, $sce, $window, PlaylistCreate, MapCreate, HashCreate,$location, States) {
-	//////////////////////MAKE WORK for LOWERCASE
-	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
-	return {
-		runLocation : function(location) {
-			var location = location;
-			var lat_min;
-			var long_min;
-			var long_max;
-			var lat_max;
-			var currentLat;
-			var currentLong;
-			var lats = Number();
-			var longs = Number();
-			
-			
-			if (location.split(' ').length > 1 && location.match(',')) {
-				var zoom = 10;
-				///////city+full state//////
-				if (location.split(',')[1].replace(' ', '').length > 2) {
-					var locationSplit = location.split(',');
-					var loc1 = toTitleCase(locationSplit[0]);
-					var loc2 = toTitleCase(locationSplit[1].replace(' ', ''))
-				}	
-				else
-				{
-					location = location.replace('_', ' ');
-					var ab = location.split(', ')[1].split(' ')[0].toUpperCase();
-					states = States.createStateObj();
-					
-					for(var x=0; x<states.length; x++)
-					{
-						
-						if(states[x].abbreviation==ab)
-						{
-							var state =(states[x].name);
-							
-							var locationSplit = location.split(',');
-							var loc1 = toTitleCase(locationSplit[0]);
-							var loc2 = toTitleCase(state);
-							
-						}
-					}
-					
-				}	
 
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					$http.get(lat_url).success(function(data) {
-						if (data.rows != null) {
-							for(var i=0; i<data.rows.length;i++)
-							{
-								lats += parseFloat(data.rows[i][0]);
-								
-							}
-							
-							currentLat = lats/data.rows.length;
-							$rootScope.noSongs=false
-							lat_min = data.rows[0][0] - .20;
-							lat_max = data.rows[(data.rows.length-1)][0] + .20;
-
-							$http.get(long_url).success(function(data) {
-								if (data.rows != null) {
-
-									for(var j=0; j<data.rows.length;j++)
-										{
-											longs += parseFloat(data.rows[j][0]);
-											
-										}
-									currentLong = longs/data.rows.length;
-
-									long_min = data.rows[0][0] - .20;
-									long_max = data.rows[(data.rows.length-1)][0] + .20;
-									location = locationReplace(location);
-
-									var hashy = $location.path().split('/')[1];
-									var index=0;
-									$rootScope.location_link = location
-									if(($rootScope.long_min!=long_min && $rootScope.lat_min!=lat_min) || $rootScope.genres!="")
-									{
-										if(!$location.path().match('\/info\/'))
-										{
-										$location.path( hashy + '/'+location);		
-										}
-									PlaylistCreate.runPlaylist(zoom, currentLat,currentLong,lat_min,lat_max,long_min, long_max, index);
-									
-									}
-								}
-
-							});
-
-						} else {
-							$rootScope.noSongs=true;
-													}
-					}).error(function(data, status, headers, config) {
-						
-					});
-
-				}  else {
-				var zoom = 6;
-				///Full State
-				if(location.length==2)
-				{
-					var ab = location.toUpperCase();
-					states = States.createStateObj();
-					
-					for(var x=0; x<states.length; x++)
-					{
-						
-						if(states[x].abbreviation==ab)
-						{
-							var location =(states[x].name.toLowerCase());
-							
-							
-						}
-					}
-				}
-				else {
-					var location =location;
-				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					
-
-					location = toTitleCase(location);
-					$http.get(lat_url).success(function(data) {
-						if (data.rows != null) {
-							for(var i=0; i<data.rows.length;i++)
-							{
-								lats += parseFloat(data.rows[i][0]);
-								
-							}
-							currentLat = lats/data.rows.length;
-							$rootScope.noSongs=false
-							lat_min = data.rows[0][0] - .1;
-							lat_max = data.rows[(data.rows.length-1)][0] + .1;
-
-							$http.get(long_url).success(function(data) {
-								if (data.rows != null) {
-
-									for(var j=0; j<data.rows.length;j++)
-										{
-											longs += parseFloat(data.rows[j][0]);
-											
-										}
-									
-									currentLong = longs/data.rows.length;
-
-									long_min = data.rows[0][0] - .05;
-									long_max = data.rows[(data.rows.length-1)][0] + .05;
-
-									location = locationReplace(location)
-
-									var hashy = $location.path().split('/')[1];
-									$rootScope.location_link = location
-									//$location.path( hashy + '/' + location);
-									$rootScope.location_link = location
-									var index=0;
-									if(($rootScope.long_min!=long_min && $rootScope.lat_min!=lat_min) || $rootScope.genres!="")
-									{
-									if(!$location.path().match('\/info\/'))
-										{
-										$location.path( hashy + '/'+location);		
-										}
-									PlaylistCreate.runPlaylist(zoom, currentLat,currentLong,lat_min,lat_max,long_min, long_max, index);
-									}
-								}
-
-							});
-
-						} else {
-							$rootScope.noSongs=true;
-						}
-					}).error(function(data, status, headers, config) {
-						
-					});
-
-					
-
-				} 
-			}
-	};
-	
-}]);*/
 
 MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location',
 function($q, $rootScope, $http, $sce, $location) {
@@ -1475,9 +1078,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						else if(songs[x].favorite=='on' &&songs[x].tracks[0].foreign_id.split(':')[2]!=favorite[i].tracks[0].foreign_id.split(':')[2])
 						{
   							favorite.push(songs[x]);
-							//console.log(favorite);
-							  //localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
-							  songs[x].favorite='on';
+							songs[x].favorite='on';
 						}
 							
 						}
@@ -1498,30 +1099,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						{
   							favorite.push(songs[x]);
   							 songs[x].favorite='on';
-							//console.log(favorite);
-							  //localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
 						}
 					
 				}
-				/*else
-				{
 				
-					var fav = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
-					var favorite=[];
-					if(fav ==null) fav=[];
-					
-					for(var u=0; u<fav.length; u++)
-					{
-						if(songs[x].favorite=='off' && songs[x].title==fav[u].title)
-						{
-							
-							fav.splice(u, 1);
-						}
-					}	
-					localStorage.setItem('FavoriteArr', JSON.stringify(fav))
-					
-					
-				}*/
 				
 			}
 			
@@ -1537,13 +1118,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						}
 					
 					text+=favorite[t].tracks[0].foreign_id.split(':')[2];
-					//console.log(finalArr)
+					
 				}
 			
 			
 			 localStorage.setItem("FavoriteArr", JSON.stringify(finalArr));	
-			// console.log(removeOut);
-			// console.log(jQuery.parseJSON(localStorage.FavoriteArr));			
+		
 		}
 		
 	};
