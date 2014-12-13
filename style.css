@@ -130,15 +130,15 @@ animate-show.ng-hide-add,
 
 
 @font-face {
-	font-family: 'MusicWhereIAM';
-	src: url('/fonts/MusicWhereIAM.eot?w8796i');
-	src: url('/fonts/MusicWhereIAM.eot?#iefixw8796i') format('embedded-opentype'), url('/fonts/MusicWhereIAM.woff?w8796i') format('woff'), url('/fonts/MusicWhereIAM.ttf?w8796i') format('truetype'), url('/fonts/MusicWhereIAM.svg?w8796i#MusicWhereIAM') format('svg');
+	font-family: 'MusicWhereYouAre';
+	src: url('/fonts/MusicWhereIAm.eot?w8796i');
+	src: url('/fonts/MusicWhereIAm.eot?#iefixw8796i') format('embedded-opentype'), url('/fonts/MusicWhereIAm.woff?w8796i') format('woff'), url('/fonts/MusicWhereIAm.ttf?w8796i') format('truetype'), url('/fonts/MusicWhereYouAre.svg?w8796i#MusicWhereYouAre') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
 [data-icon]:before {
-	font-family: 'MusicWhereIAM';
+	font-family: 'MusicWhereYouAre';
 	content: attr(data-icon);
 	speak: none;
 	font-weight: normal;
@@ -373,16 +373,6 @@ ul#chooser li, #chooser li div.inactive {
 #info-area #videosbox div{float:left; margin-right:15px;}
 #info-area #videosbox div iframe {width:225px; }
 #info-area #newsbox div{width:90%}
-.info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
-.info_button{width:220px;}
-.spot_button{width:295px;}
-.button_on, .button_off:hover{width:80px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
-.more_button{width:70px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left;  cursor:pointer}
-.button_off{width:80px;color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
-.info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
-.info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
-.button_icon{float:left;margin-top:4px;  width:20px; font-size:20px;}
-.button_txt{float:left: margin-right;10px; font-family: 'Indie Flower', Arial;}
 
 #info-area #artist_holder{width:97%; height:100%;  overflow-y:scroll}
 
@@ -571,6 +561,18 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	margin-left: 0px;
 	margin-right: 10px;
 }
+.info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
+.info_button{width:220px;}
+.spot_button{width:295px;}
+.button_on, .button_off:hover{width:80px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.more_button{width:70px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left;  cursor:pointer}
+.share_button{float:left; margin-top: 10px; color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;   cursor:pointer}
+ #spot_holder .share_button .button_txt,#fav_holder .share_button .button_txt{margin-left:5px;  margin-right:5px; margin-top:2px; margin-bottom:2px;}
+.button_off{width:80px;color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
+.info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
+.button_icon{float:left;margin-top:4px;  width:20px; font-size:20px;}
+.button_txt{float:left; margin-right;10px; font-family: 'Indie Flower', Arial;}
 
 .gray:hover, .red {
 	background-color: #c53526;
@@ -1601,8 +1603,17 @@ input[type="checkbox"]:hover + label div.world {
 
 #geolocation_alert{overflow-y:scroll}
 
-.sharer{width:300px; position:fixed; background:white; border: 1px dotted #ccc; height:40px; opacity:.95; bottom:0; left:0%; padding:10px;}
+.sharer{width:300px; height:33px; position:fixed; background:white; border: 1px dotted #ccc; border-top:1px solid #C53526; opacity:.95; bottom:0; left:0%; padding:10px;}
 
 .genre_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:6px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
 
 .clear{clear:both}
+.share{position:absolute; left: 275px; bottom:10px; font-size:1.25em; margin-top:0px; z-index:999}
+.share_box{border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px; padding:20px; background:white; z-index:100000; position:absolute; bottom:50px;width:255px; left:20px;box-shadow: 5px 5px 20 #ececec; }
+.share_box div.social_media{float:left;}
+div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
+.share_box div.state_on{color:#C53526; border:none; font-size:29px; background:white; margin-bottom:7px;margin-right:12px;border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
+.share_box div.state_off{cursor:pointer; color:white;  font-size:29px;background:#C53526; border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;margin-bottom:7px; margin-right:12px;}
+.share_box form textarea{ float:left;width:205px; font-size:11px;}
+
+.viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}

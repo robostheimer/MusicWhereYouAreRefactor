@@ -14,15 +14,14 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
  'sidebarAnimate',
  'Symbol' ,
  'ngTouch',
- 
- 
- 
+ 'angulartics', 
+ 'angulartics.google.analytics'
 ]);
 
 MusicWhereYouAreApp.config(['$compileProvider',
 function($compileProvider)
 {
-	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|uri|spotify):/);
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|uri|spotify|json):/);
 }]);
 
 
@@ -104,13 +103,33 @@ MusicWhereYouAreApp.config(['$routeProvider',
         animation: 'from-top'
       }).  
       
+      when('/calendar/:location', 
+     {
+        templateUrl: 'partials/calendar.html',
+       // controller: 'loadInfo',
+        animation: 'from-top'
+      }).  
    
+     when('/calendar/', 
+     {
+        templateUrl: 'partials/calendar.html',
+       // controller: 'loadInfo',
+        animation: 'from-top'
+      }).  
     when('/genres/:location/:genre',
     {
     	templateUrl:'partials/genres.html',
     	controller:'GenreController',
     	animation: 'from-left'
     }).
+    when('/playlist/:location/:qs',
+    {
+    	
+    	templateUrl:'partials/playlist.html',
+    	controller:'hashedLocation',
+    	animation: 'from-left'
+    }).
+    
       otherwise({
         redirectTo: '/map'
       });

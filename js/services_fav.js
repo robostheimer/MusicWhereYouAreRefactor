@@ -97,7 +97,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 		
 		 		if(genresSplit.length>0&& genresSplit[i]!="")
 		 		{
-		 		finalgenres +='&style='+genresSplit[i];
+			 		if(genresSplit[i]!='holiday')
+			 		{	
+			 		finalgenres +='&style='+genresSplit[i];
+			 		}
+			 		else
+			 		{
+			 			finalgenres+='&song_type=christmas';
+			 		}
 		 		}
 		 		
 		 	}
@@ -1016,7 +1023,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
 		
 		
-		runFavorites : function(songs)
+		/*runFavorites : function(songs)
 		{
 			var text='';
 			if(localStorage.getItem('removeStar')!=null)
@@ -1126,6 +1133,21 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			
 			 localStorage.setItem("FavoriteArr", JSON.stringify(finalArr));	
 		
+		}*/
+		
+		addFavorites:function()
+		{
+			if(localStorage.getItem('BlogArr')!=null && localStorage.getItem('FavoriteArr')!='')
+			{
+				var favorites = jQuery.parseJSON(localStorage.getItem('FavoriteArr	'))
+				//favorites.blogHider=false;
+			}
+			else
+			{
+				favorites=[];
+				//favorites.blogHider=true;
+			}
+			return favorites;
 		}
 		
 	};

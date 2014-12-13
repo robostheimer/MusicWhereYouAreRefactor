@@ -14,10 +14,15 @@
 			<!--
 			<span ng-model='genre_class.state'  class='{{genre_class.classy}}' ng-class="{iconequalizer12: genre_class.state=='off',boxyge: genre_class.state=='on'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>-->
 		</div></a>
+		
 		<a ng-href="{{favorite_class.href}}">
 		<div class="open_div_fav">
 			<span ng-model='favorite_class.state' class='icon {{favorite_class.classy}}' ng-class="{iconsong: favorite_class.state=='off',boxyfa: favorite_class.state=='on'}" ng-click="changeClass(favorite_class.state, favorite_class, 'iconfavorite','favorites', 'favorites')"></span>
 		</div></a>
+		<a ng-href="{{calendar_class.href}}">
+		<div class="open_div" style="margin-right:7px;">
+			<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar')"></span>
+			</div></a>
 <!--<div class="clear"></div>
 		<a ng-href="{{jukebox_class.href}}">
 		<div class="open_div" style="margin-right:7px;">
