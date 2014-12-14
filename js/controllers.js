@@ -151,9 +151,15 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 							$rootScope.songs_root = {};
 							$scope.songs = data.data.response.songs;
 							
+							for(var z=0; z<$scope.songs.length; z++)
+				 	 		{
+				 	 			$scope.songs[z].favorite = 'off';
+				 	 			Favorites.checkFavorites($scope.songs[z]);	
+				 	 		}
+				 	 		
 							//$scope.songs.spot_str='';
 							//Favorites.runFavorites($scope.songs);
-							$rootScope.songs_root = data.data.response.songs;
+							$rootScope.songs_root =$scope.songs;
 
 							///
 
@@ -179,11 +185,12 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 							$scope.shareBox=false;
 							console.log(result);
 							$scope.songs = result;
-							
+						
 							for(var b=0; b<$scope.songs.length; b++)
 							{
 								$scope.songs[b].num_id=b;
-								
+								$scope.songs[b].favorite='off'
+								Favorites.checkFavorites($scope.songs[b]);	
 							}
 							$scope.songs.pop()
 						
@@ -216,8 +223,17 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			$scope.latitudeObj = $rootScope.latitudeObj_root;
 			$scope.longitudeObj = $rootScope.longitudeObj_root;
 			$scope.songs = $rootScope.songs_root;
-			//Favorites.runFavorites($scope.songs);
-
+			
+		
+			
+			for(var zz=0; zz<$scope.songs.length; zz++)
+			{
+				$scope.songs[zz].favorite='off';
+				
+				Favorites.checkFavorites($scope.songs[zz]);	
+			}
+			
+			
 		}
 		locationdatacount = LocationDataFetch.count += 1;
 	};
@@ -270,15 +286,47 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 	$scope.switchFavorite = function(id) {
 		//$scope.favoritesArr=[];
 		
-		if ($scope.songs[id].favorite == 'off') {
-			$scope.songs[id].favorite = 'on';
-		} else {
-
-			$scope.songs[id].favorite = 'off';
-
+		var songId=[];
+		if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
+		{
+			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
+		
 		}
+		else
+		{
+			var songFav=[]; 
+		}
+		
+		//console.log(jQuery.parseJSON(localStorage.FavoriteArr));		
+		
+		if($scope.songs[id].favorite=='off')
+			{
+				
+				$scope.songs[id].favorite='on';
+				songFav.push( $scope.songs[id]);
+				
+				localStorage.setItem('FavoriteArr',  JSON.stringify(songFav));
+				$scope.favorites = Favorites.addFavorites();
+				
+			}
+			else{
+				for(var x=0; x<songFav.length; x++)
+				{
+					songId.push(songFav[x].tracks[0].foreign_id.split(':')[2]);
+				}
+				var index=songId.indexOf($scope.songs[id].tracks[0].foreign_id.split(':')[2]);
+				songFav.splice(index, 1);
+				localStorage.setItem('FavoriteArr',  JSON.stringify(songFav));
+				$scope.songs[id].favorite='off';
+				
 
-		var favorite = Favorites.runFavorites($scope.songs);
+			}
+		
+		
+		
+			
+
+	
 
 	};
 
@@ -342,6 +390,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 
 	
 	$scope.runCycle(0, 1);
+	Favorites.addFavorites();
 
 }]).controller('Spotify', ['$scope', '$location', '$rootScope', 'runSymbolChange', '$routeParams',
 function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
@@ -651,9 +700,10 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 				PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era, start_number).then(function(data) {
 					$rootScope.songs_root = {};
 					$scope.songs = data.data.response.songs;
+					
 					$rootScope.songs_root = data.data.response.songs;
 					if ($scope.songs.spot_arr.length < 1) {
-
+						
 						$scope.counter = $scope.counter + 1;
 
 						if ($scope.counter <= 10) {
@@ -674,7 +724,9 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		});
 
 	};
-
+	
+	
+	
 	$scope.checkGenre = function(genre) {
 
 		for (var x = 0; x < $scope.Genre.length; x++) {
@@ -744,6 +796,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		$scope.noPickedGenre = false
 		loadGenreCheckData.loadEchonestStyles().then(function(result) {
 			var availableGenres = result;
+			availableGenres.push({name:'holiday'});
 			var genreArr = [];
 
 			//$rootScope.genres=''
@@ -754,7 +807,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 			}
 			for (var x = 0; x < availableGenres.length; x++) {
 				for (var u = 0; u < genreArr.length; u++) {
-					//onsole.log(availableGenres[x].name.toLowerCase())
+					
 
 					if (availableGenres[x].name.toLowerCase() == (genreArr[u].replace().toLowerCase())) {
 						$rootScope.genres += '****' + genreArr[u];
@@ -762,6 +815,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 						$scope.noPickedGenre = false;
 						$scope.runApp(0, 1);
 					}
+					
 				}
 			}
 			$rootScope.genresSans = $rootScope.genres.split('****');
@@ -835,6 +889,9 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	$scope.moreHider=true;
 	$scope.backHider=true;
 	$scope.viewall=false;
+	Favorites.addFavorites();
+	
+	
 	$scope.runApp = function(start_number, counter) {
 		if ($('#map-canvas').html().match('loading.gif')) {
 			$rootScope.mapOpening = true;
@@ -866,6 +923,10 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 					PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era, start_number).then(function(data) {
 						//$rootScope.songs_fav = {};
 						$scope.songs_playlist = data.data.response.songs;
+						for(var x=0; x<0; x++)
+						{
+							$scope.songs_playlist.song_id=x;
+						}
 						$scope.moreSongs(0, 25);
 						//$rootScope.songs_root = data.data.response.songs;
 						if ($scope.songs_playlist.spot_arr.length == 0) {
@@ -882,36 +943,61 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		}
 	};
 
-	$scope.removeFav = function(id) {
-		$scope.spot_arr = [];
-
-		for (var i = 0; i < $scope.songs.length; i++) {
-			if (id == $scope.songs[i].tracks[0].foreign_id.split(':')[2]) {
-
-				$scope.songs[i].favorite = 'off';
-				$scope.songs[i].closeButton = true;
-				$scope.leaveOut.push($scope.songs[i].tracks[0].foreign_id.split(':')[2]);
-			} else if (!$scope.leaveOut.toString().replace(/\W/g, '').match($scope.songs[i].tracks[0].foreign_id.split(':')[2].replace(/\W/g, ''))) {
-				$scope.spot_arr.push($scope.songs[i].tracks[0].foreign_id.split(':')[2]);
-				$scope.songs[i].favorite = 'on';
+	$scope.switchFavorite = function(id) {
+		//$scope.favoritesArr=[];
+		
+		var songId=[];
+		if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
+		{
+			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
+		
+		}
+		else
+		{
+			var songFav=[]; 
+		}
+		
+		//console.log(jQuery.parseJSON(localStorage.FavoriteArr));		
+		
+		if($scope.songs[id].favorite=='off')
+			{
+				
+				$scope.songs[id].favorite='on';
+				songFav.push( $scope.songs[id]);
+				
+				localStorage.setItem('FavoriteArr',  JSON.stringify(songFav));
+				
+				
 			}
+			else{
+				for(var x=0; x<songFav.length; x++)
+				{
+					
+					songId.push($scope.songs[id].tracks[0].foreign_id.split(':')[2]);
+				}
+				
+				var index=songId.indexOf($scope.songs[id].tracks[0].foreign_id.split(':')[2]);
+				
+				songFav.splice(index, 1);
+				localStorage.setItem('FavoriteArr',  JSON.stringify(songFav));
+	
+				$scope.songs[id].favorite='off';
+				$scope.songs[id].closeButton=true;
+				console.log(jQuery.parseJSON(localStorage.FavoriteArr));
+				if($scope.songs.length<1)
+				{
+					$scope.getFav=false;
+				}	
+			
+			}
+		
+		
+		
+			
 
-		}
-		localStorage.setItem('removeStar', $scope.leaveOut);
+	
 
-		Favorites.runFavorites($scope.songs);
-		var fav = localStorage.getItem('FavoriteArr');
-		if (fav == null)
-			fav = [];
-		if (fav.length == 2 || fav == null) {
-			$scope.getFav = false;
-			localStorage.setItem('FavoriteArr', '[]');
-		}
-		$scope.songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.spot_arr.toString();
-
-		$scope.songs.spot_str = $sce.trustAsResourceUrl($scope.songs.spot_str);
 	};
-
 	$scope.goBack = function() {
 
 		$location.path('map/' + $scope.location.replace(', ', '*'));
@@ -1068,6 +1154,9 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		$scope.songs.spot_str = ''
 	}
 	$scope.location_link = $routeParams.location;
+	
+	
+	
 }]);
 
 var LinerNotesControllers = angular.module('LinerNotesControllers', [])

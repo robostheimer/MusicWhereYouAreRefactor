@@ -97,7 +97,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 		
 		 		if(genresSplit.length>0&& genresSplit[i]!="")
 		 		{
-		 		finalgenres +='&style='+genresSplit[i];
+			 		if(genresSplit[i]!='holiday')
+			 		{	
+			 		finalgenres +='&style='+genresSplit[i];
+			 		}
+			 		else
+			 		{
+			 			finalgenres+='&song_type=christmas';
+			 		}
 		 		}
 		 		
 		 	}
@@ -108,7 +115,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=25&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=25&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
 			}
 			
 			return $http.get(url).success(function(data) {
@@ -897,7 +904,7 @@ return{
      			artistsongs.spot_url=[];
      			artistsongs.spot_url_button=[];
      			
-     			for(var i=0; i<87; i++)
+     			for(var i=0; i<25; i++)
      			{
      				
      				artistsongs.spot_url.push(artistsongs.tracks[i].href.replace('spotify:track:', ''));
@@ -1015,120 +1022,63 @@ MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', 
 function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
 		
-		
-		runFavorites : function(songs)
+		addFavorites:function()
 		{
-			var text='';
-			if(localStorage.getItem('removeStar')!=null)
+			if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
 			{
-				var removeOut=localStorage.getItem('removeStar');
-				removeOut = removeOut.split(',');
+				//console.log(jQuery.parseJSON(localStorage.getItem('FavoriteArr')))
+				var favorites = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+				//console.log(favorites)
 				
+				//favorites.blogHider=false;
 			}
 			else
 			{
-				var removeOut=['placeholder'];
+				favorites=[];
+				//favorites.blogHider=true;
 			}
+			for(var x=0; x<favorites.length; x++)
+				{
+					favorites[x].id=x;
+					favorites[x].num_id=x;
+				}
+			localStorage.setItem('FavoriteArr', JSON.stringify(favorites));
 			
+			//return favorites;
+			
+		},
+		checkFavorites: function(obj)
+		{
 			
 			if(localStorage.getItem('FavoriteArr')!=null && localStorage.getItem('FavoriteArr')!='')
 			{
-				var favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
-				var existingFavorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));;
+				var favoritesArr = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+				
 			}
 			else
 			{
-				var favorite =[];
+				favoritesArr=[];
+				//favorites.blogHider=true;
 			}
 			
-			if(existingFavorite == null || localStorage.getItem('FavoriteArr')=="") existingFavorite = [];	
-			
-			for(var y=0; y<removeOut.length; y++)
+			for(var x=0; x<favoritesArr.length; x++)
 			{
-				for (var z=0; z<songs.length; z++)
+				favoritesArr[x].id=x;
+				favoritesArr[x].favorite='off';
+				
+				if(favoritesArr[x].tracks[0].foreign_id.split(':')[2]==obj.tracks[0].foreign_id.split(':')[2])
 				{
-					if(songs[z].tracks[0].foreign_id.split(':')[2]==removeOut[y])
-					{
-						songs[z].favorite='off';
-						var index=removeOut.indexOf(songs[z].tracks[0].foreign_id.split(':')[2]);
-					}
+					obj.favorite='on';
+					
 				}
-			}
-			if($location.path().match("playlist"))
-						{
-							
-						removeOut=[];
-						removeOut=['placeholder'];		
-						}
-				localStorage.setItem('removeStar', (removeOut));
-			
-			
-			for(var x=0; x<songs.length; x++)
-			{	
 				
-				
-				if(favorite.length!=0)
-				{	
-					for(var i=0; i<favorite.length; i++)
-					{
 
-				 		if(songs[x].favorite=='off' && songs[x].tracks[0].foreign_id.split(':')[2]==favorite[i].tracks[0].foreign_id.split(':')[2])
-							{
-								favorite.splice(i, 1);
-								songs[x].favorite='off';
-							}	
-						else if(songs[x].favorite=='on' &&songs[x].tracks[0].foreign_id.split(':')[2]!=favorite[i].tracks[0].foreign_id.split(':')[2])
-						{
-  							favorite.push(songs[x]);
-							songs[x].favorite='on';
-						}
-							
-						}
-						
-					}	
-				
-				else
-				{
-					if(songs[x].favorite=='off' )
-							{
-								
-								favorite.splice(i, 1);
-								 songs[x].favorite='off';
-								//console.log(favorite);
-								//localStorage.setItem("FavoriteArr", JSON.stringify(favorite));
-							}	
-						else if(songs[x].favorite=='on')
-						{
-  							favorite.push(songs[x]);
-  							 songs[x].favorite='on';
-						}
-					
-				}
-				
-				
 			}
-			
-			var finalArr=[];
-			
-			for(var t=0; t<favorite.length; t++)
-				{
-					
-						if(!text.replace(/\W/g, '').match(favorite[t].tracks[0].foreign_id.split(':')[2]))
-						{
-							finalArr.push(favorite[t]);
-							
-						}
-					
-					text+=favorite[t].tracks[0].foreign_id.split(':')[2];
-					
-				}
-			
-			
-			 localStorage.setItem("FavoriteArr", JSON.stringify(finalArr));	
-		
 		}
 		
 	};
+	
+	
 
 }]);
 
