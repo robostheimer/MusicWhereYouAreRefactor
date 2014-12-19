@@ -1,25 +1,27 @@
 
 	<section id="icon_holder" ng-controller="controlSymbol" >
-		<a ng-href="{{map_class.href}}">
-		<div class="open_div_spot">
+		<a><div class="open_div"><span class= "icon iconarrowleft3" ng-click="toggleIcons()" ng-hide = "hideIcons==false"></span></div></a>
+		<a><div class="open_div"><span class= "icon iconarrow-right2" ng-click="toggleIcons()" ng-hide = "hideIcons==true"></span></div></a>
+		<a ng-href="{{map_class.href}}" ng-hide="hideIcons==true">
+		<div class="open_div_spot" ng-hide="">
 			<span ng-model='map_class.state'  class='icon {{map_class.classy}}' ng-class="{iconsong: map_class.state=='off', boxyma: map_class.state=='on'}"  ng-click="changeClass(map_class.state, map_class, 'iconmap', 'map', 'map')"></span>
 		</div></a>
-		<a ng-href="{{playlist_class.href}}">
+		<a ng-href="{{playlist_class.href}}" ng-hide="hideIcons==true">
 		<div class="open_div_spot">
 			<span ng-model='playlist_class.state'  class='{{playlist_class.classy}}' ng-class="{iconsong: playlist_class.state=='off', boxypl: playlist_class.state=='on'}"  ng-click="changeClass(playlist_class.state, playlist_class, 'iconsong', 'playlist', 'playlist')"></span>
 		</div></a>
-		<a ng-href="{{genre_class.href}}">
+		<a ng-href="{{genre_class.href}}" ng-hide="hideIcons==true">
 		<div class="open_div">
 			<span ng-model='genre_class.state'  class='icon {{genre_class.classy}}' ng-class="{boxyge: genre_class.state=='on', iconequalizer12: genre_class.state=='off'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>
 			<!--
 			<span ng-model='genre_class.state'  class='{{genre_class.classy}}' ng-class="{iconequalizer12: genre_class.state=='off',boxyge: genre_class.state=='on'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>-->
 		</div></a>
 		
-		<a ng-href="{{favorite_class.href}}">
+		<a ng-href="{{favorite_class.href}}" ng-hide="hideIcons==true">
 		<div class="open_div_fav">
 			<span ng-model='favorite_class.state' class='icon {{favorite_class.classy}}' ng-class="{iconsong: favorite_class.state=='off',boxyfa: favorite_class.state=='on'}" ng-click="changeClass(favorite_class.state, favorite_class, 'iconfavorite','favorites', 'favorites')"></span>
 		</div></a>
-		<a ng-href="{{calendar_class.href}}">
+		<a ng-href="{{calendar_class.href}}" ng-hide="hideIcons==true">
 		<div class="open_div" style="margin-right:7px;">
 			<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar')"></span>
 			</div></a>

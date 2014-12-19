@@ -2,7 +2,15 @@
 /* CSS Document */
 /*Animations*/
 
-animate-show.ng-hide-add, 
+.icon_holder .ng-hide{
+	 -webkit-transition:all linear 0.5s;
+  -moz-transition:all linear 0.5s;
+  -o-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+  display:block!important;
+}
+
+.animate-show.ng-hide-add, 
 .animate-show.ng-hide-remove {
   -webkit-transition:all linear 0.5s;
   -moz-transition:all linear 0.5s;
@@ -60,7 +68,7 @@ animate-show.ng-hide-add,
 }
 
 .from-left,
-.from-right {
+ {
   position: absolute;
   left: 0;
   top: 0;
@@ -93,7 +101,14 @@ animate-show.ng-hide-add,
   left: -100%;
 }
 
+.from-right {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 
+}
 .from-right.ng-enter {
   left: 100%;
 }
@@ -411,6 +426,7 @@ div.label{ border-bottom: 1px dotted #ccc;padding:10px;margin-bottom:2px; }
 div.button{cursor:pointer;}
 div.button:hover{background-color:#c53526;; color:white; }
 
+#info-area h3{margin:0; padding:0}
 
 
 .gm-style .gm-style-iw, .gm-style .gm-style-iw a, .gm-style .gm-style-iw span, .gm-style .gm-style-iw label, .gm-style .gm-style-iw div {
@@ -585,6 +601,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 .gray:hover .spot_link, .red .spot_link, .gray:hover .spot_link_fav, .red .spot_link_fav, .gray:hover .spot_link_spot, .red .spot_link_spot {
 	color: #f0f0f0;
 }
+.gray:hover a{color:white}
+.gray a:hover{color:white}
 
 .gray, .red:hover {
 	background-color: #ffffff;
@@ -692,7 +710,7 @@ gm-style p.info {
 	float:right;
 	padding-bottom: 0;
 	bottom:50px;
-	right:16px;
+	right:0;
 	background:white;
 	opacity: .85;
 	border:1px dotted #ccc;
@@ -1011,7 +1029,7 @@ margin-left: 290px;
 }
 
 
-}
+
 @media screen and (min-width: 641px) and (max-width: 799px) {
 #info-area #videosbox div iframe {width:200px; }
 
@@ -1025,7 +1043,7 @@ margin-left: 290px;
 		margin-bottom: 0px;
 		
 	}
-
+.event_description{width:75%}
 }
 
 @media screen and (min-width: 481px) and (max-width: 640px) {
@@ -1037,14 +1055,16 @@ margin-left: 290px;
 #info-area p.intro img {border: 1px solid #ccc; height:150px;}
 #info-area .spot{display:none} 
 .hint{
- margin-top:3;margin-left:10px;z-index:7000000000; max-height:300px; overflow-y:scroll
+ margin-top:3;margin-left:10px;z-index:7000000000; max-height:300px; overflow-y:scroll}
 #iframe_holder{display:none}
 #search {
 		width: 80%;
 		margin-bottom: 0px;
 		
 	}
-}
+
+
+
 
 
 #info-area p.intro{float:right;padding:10px;margin:10px;margin-top:35px;border:1px solid #ccc;padding-bottom:5px;}
@@ -1112,10 +1132,11 @@ header{float:left; margin-left:15px;}
 #info-area .button_txt{display:none}
 #iframe_holder{display:none}
 #search {
-		width: 83%%;
+		width: 83%;
 		margin-bottom: 0px;
 		
 	}
+		
 }
 
 
@@ -1617,3 +1638,5 @@ div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
 .share_box form textarea{ float:left;width:205px; font-size:11px;}
 
 .viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}
+.event_image{float:left; padding:10px;}
+.event_description{float:left; width:64%; font-size: .6em; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:0; padding-top:10px; padding:bottom:10px; padding-right:10px;}

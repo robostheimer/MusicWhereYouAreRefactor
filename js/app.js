@@ -15,7 +15,9 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
  'Symbol' ,
  'ngTouch',
  'angulartics', 
- 'angulartics.google.analytics'
+ 'angulartics.google.analytics',
+ 'Events',
+ 
 ]);
 
 MusicWhereYouAreApp.config(['$compileProvider',
@@ -72,6 +74,12 @@ MusicWhereYouAreApp.config(['$routeProvider',
     	controller:'hashedLocation',
     	 animation: 'from-left'
     }).
+     when('/playlist/',
+    {
+    	templateUrl:'partials/playlist.html',
+    	controller:'hashedLocation',
+    	 animation: 'from-left'
+    }).
      when('/playlist/:location',
     {
     	templateUrl:'partials/playlist.html',
@@ -106,16 +114,36 @@ MusicWhereYouAreApp.config(['$routeProvider',
       when('/calendar/:location', 
      {
         templateUrl: 'partials/calendar.html',
-       // controller: 'loadInfo',
-        animation: 'from-top'
+        controller: 'LoadEvents',
+        animation: 'from-left'
       }).  
    
      when('/calendar/', 
      {
         templateUrl: 'partials/calendar.html',
-       // controller: 'loadInfo',
-        animation: 'from-top'
+       controller: 'LoadEvents',
+        animation: 'from-left'
       }).  
+      
+     when('/events/:location/:artist', 
+     {
+        templateUrl: 'partials/events.html',
+        controller: 'LoadBandEvents',
+        animation: 'from-left'
+      }). 
+       when('/events/:location/', 
+     {
+        templateUrl: 'partials/events.html',
+        controller: 'LoadBandEvents',
+        animation: 'from-left'
+      }).  
+   
+     when('/events/', 
+     {
+        templateUrl: 'partials/events.html',
+       controller: 'LoadBandEvents',
+        animation: 'from-left'
+      }).   
     when('/genres/:location/:genre',
     {
     	templateUrl:'partials/genres.html',

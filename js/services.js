@@ -616,14 +616,15 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 
 
 
-MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location',
-function($q, $rootScope, $http, $sce, $location) {
+MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
+function($q, $rootScope, $http, $sce, $location, $routeParams) {
 	return{
 			runHash : function(lat, lng) {
 			
 			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+.05) + "+AND+Lat>=" + (lat - .05) + "+AND+Long<=" + (lng+.05) + "+AND+Long>=" + (lng -.05) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
 			$http.get(url).success(function(data) {
 				if (data.rows != null) {
+					var deferred = $q.defer();
 					var city = data.rows[0][0];
 					var state = data.rows[0][1];
 					if (city.split(' ') > 1) {
@@ -642,6 +643,7 @@ function($q, $rootScope, $http, $sce, $location) {
 
 				//window.location.href = '#'/hashy + '/' + location;
 				$location.path(hashy+'/'+location.replace(/ /g, '_'));
+				
 				
 			});
 		}
@@ -1330,6 +1332,29 @@ function($q, $rootScope, $http, $sce, $location, States) {
 		};
 	
 }]);	
+
+MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
+	return{
+			getGeoEvents: function(location)
+			{
+				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&location='+location+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json').then(function(results)
+				{
+					
+					return results;
+				});
+			},
+			
+			getArtistEvents: function(artist)
+			{
+				return $http.get('http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist='+artist+'&api_key=174019d04974adad421f3fb19681277e&limit=25&format=json').then(function(results)
+				{
+					
+					return results;
+				});
+			}
+	};
+}]);
 
 
 MusicWhereYouAreApp.factory("ShareSongs", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',

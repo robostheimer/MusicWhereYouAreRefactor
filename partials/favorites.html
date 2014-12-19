@@ -31,7 +31,9 @@
 		<a class="spotter" href="spotify:track:{{song.tracks[0].foreign_id.split(':')[2]}}"><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 		
 		<a ng-click="switchFavorite(song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
-		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a><div style="clear:both;margin-bottom:-15px;"></div>
+		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
+		<a href="#/events/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
+		<div style="clear:both;margin-bottom:-15px;"></div>
 	</div>
 	</div>
 <br>
@@ -71,11 +73,12 @@
 		</a>
 			</form>
 			<form class="{{sm_btns[1].classy}}">
-				<textarea maxlength="140" rows="9" >Check out my playlist from #MusicWhereYouAre {{short_url}}. You can also learn about the music where you are.</textarea>
-			<a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text=Check out my playlist from %23MusicWhereYouAre {{short_url}}. Also learn about the music where you are.&url={{short_url}}" target="_blank" ><div class="button_txt">
-				Share on Twitter »
+				<textarea maxlength="160" rows="9" ng-model="message"> </textarea>
+				
+			<a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" ><div class="button_txt">
+				Share on Twitter » 
 			</div>
-		</a>
+		</a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
 			</form>
 			<form class="{{sm_btns[2].classy}}">
 				<textarea rows="9" >Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!}</textarea>
