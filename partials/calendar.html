@@ -5,9 +5,10 @@
 	<h4><span style="color:#979797">Upcoming Concerts for</span> {{location}}</h4><br>
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
-	
-		<div ng-show="noEvents==true"><h3>There are no shows scheduled for {{location}}.</h3></div>
+		
+		<div ng-show="noShows==true"><h3>There are no shows scheduled for this {{location}}.</h3></div>
 		<div class="event_holder">
+		
 		
 	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loading==true">
 		<div class="event_image info"><img src="{{event.venue.image[1]['#text']}}"/></div>

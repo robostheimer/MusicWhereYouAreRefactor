@@ -14,7 +14,7 @@
 			
 				<h6 class="event_description" style="margin:0;"><a href="{{event.url}}" target="_blank">{{artist}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
-					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br style="margin-bottom:5px;"> </span><br>
+					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br> </span><br>
 					Date: {{event.startDate}}<br>
 					Address:{{event.venue.location.street}}<br>
 					City: {{event.venue.location.city}}, {{event.venue.location.country}}<br>

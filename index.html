@@ -41,23 +41,15 @@
 		</script>!-->
 
 		<script>
-		  (function(i, s, o, g, r, a, m) {
-				i['GoogleAnalyticsObject'] = r;
-				i[r] = i[r] ||
-				function() {
-					(i[r].q = i[r].q || []).push(arguments)
-				}, i[r].l = 1 * new Date();
-				a = s.createElement(o), m = s.getElementsByTagName(o)[0];
-				a.async = 1;
-				a.src = g;
-				m.parentNode.insertBefore(a, m)
-			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-			ga('create', 'UA-33891154-1', 'cityblinking.com');
-			//ga('send', 'pageview');
+  ga('create', 'UA-57261483-1', 'auto');
+  //ga('send', 'pageview');
 
-		
-		</script>
+</script>
 
 		<script src="js/app.js"></script>
 		<script src="js/services.js"></script>
@@ -145,8 +137,8 @@
 		<div ng-view view-animation >
 
 		</div>
-		<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
-			<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
+		<!--<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
+			<!--<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
 			<div style="width:95px; margin:auto"><img src="/MusicWhereYouAre/no_mwya.png" alt="nothing doing music-wise where you are"/>
 			</div>
 			
@@ -161,8 +153,8 @@
 				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
 			</p>
 
-		</section>
-		<section id="map-area" ng-hide="noSongs==true" class="animate-show">
+		</section>-->
+		<section id="map-area" class="animate-show">
 			<div mwya-map='mwya-map' id='map-canvas' latitude="34" longitude="-89.384294" zoom="{{zoom}}">
 				<div style="width:100px; margin:auto"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
 				</div>

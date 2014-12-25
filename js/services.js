@@ -39,6 +39,7 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 		},
 
 		handle_errors : function(error) {
+			alert('Uh Oh, Looks like there\'s NO Music Where You Are.  At Least not the type of Music You are Looking for.  And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."  To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can. You might try enabling GPS on your device or clicking on the map icon in the lower righthand corner and type in a city and state/region in the field at the top of the page.');
 			currentLat = 41.5;
 			currentLong = 91.6
 			lat_min = currentLat - .1;
@@ -1338,7 +1339,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 	return{
 			getGeoEvents: function(location)
 			{
-				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&location='+location+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json').then(function(results)
+				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&lat='+$rootScope.latitudeObj_root.latitude +'&long='+$rootScope.longitudeObj_root.longitude+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json&distance=41.5').then(function(results)
 				{
 					
 					return results;

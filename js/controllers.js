@@ -1261,7 +1261,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 				PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, '0', $rootScope.genres, $rootScope.era, start_number).then(function(data) {
 					$rootScope.songs_root = {};
 					$scope.songs = data.data.response.songs;
-					
+					$scope.runEvents();
 					$rootScope.songs_root = data.data.response.songs;
 					if ($scope.songs.spot_arr.length < 1) {
 						
@@ -1297,9 +1297,6 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	$scope.loading=true;
 	$scope.location = 'Finding your location...';
 	getLocation.checkGeoLocation()
-		
-	
-	
 	}
 	else{
 	$scope.location = $routeParams.location.replace(/\*/, ', ').replace(/_/g, ' ');
@@ -1309,14 +1306,16 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	}
 	}
 	
-	
+	$scope.runEvents = function()
+	{
 	$scope.eventData=false;
 	$scope.loading=true;
-	 Events.getGeoEvents($scope.location).then(function(result){
+	 Events.getGeoEvents($scope.location.split(',')[0]).then(function(result){
 		//$scope.events =[];
-		if(JSON.stringify(result).match('error'))
+		if(JSON.stringify(result).match('We could not find any upcoming events based on your specified location'))
 		{	
 			$scope.noShows =true;
+			console.log($scope.noShows)
 		}
 		else{
 			$scope.noShows =false;
@@ -1331,6 +1330,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 			$scope.events=(result.data.events.event);	
 			}
 			$scope.events=(result.data.events.event);
+			
 			for(var t=0; t<$scope.events.length; t++)
 			{
 				if(typeof $scope.events[t].artists.artist=='string')
@@ -1364,15 +1364,16 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		
 				//console.log($scope.date);
 				
+				
 			}
 		}
 		$scope.eventData=true;
 		$scope.loading=false;
 	 });
 	
-			
+		};	
 	
-	
+	$scope.runApp(0,1);
 }]);
 
 Events.controller('LoadBandEvents', ['$scope', '$q','$http', 'runSymbolChange', '$routeParams', '$location', '$sce', 'retrieveLocation', 'PlaylistCreate', 'MapCreate', '$rootScope', 'Events',
@@ -1448,6 +1449,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	}
 	$scope.eventBandData=false;
 	$scope.loading=true;
+
 	 Events.getArtistEvents($scope.artist).then(function(result){
 			//$scope.shows=[];
 
@@ -1467,7 +1469,8 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 			{
 			$scope.shows=result.data.events.event;	
 			}
-			$scope.noEvents =false
+			$scope.noEvents =false;
+			$scope.shows.performers=[]
 			for(var t=0; t<$scope.shows.length; t++)
 			{
 				
@@ -1476,6 +1479,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 				{
 					$scope.shows[t].artists.artist=[$scope.shows[t].artists.artist]
 				}
+				
 				
 				$scope.date=new Date($scope.shows[t].startDate);
 				$scope.hours =$scope.date.getHours();
