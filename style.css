@@ -163,7 +163,14 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-#whereyouat{float:left; margin-top:25px;width:75%;}
+
+#country_form{width:260px; background:white; border:1px solid #cccccc; min-height:50px;z-index:100000000000; position:absolute; left:30%; padding:10px;top:30%; border:1px solid #C53526;box-shadow: 5px 5px 50px #ececec;font-family:'Arvo',Tahoma,Arial, sans-serif; font-weight:400;font-size:12px;
+ }
+ #count_form p{margin-top:10px;}
+#country_form input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
+
+
+#whereyouat{float:left; margin-top:30px;width:75%;}
 h5{color:#c53526; font-size:1.1em;  margin:0px; padding:0px;line-height:1em; margin-top:.7em;}
 .ui-view{height:100%}
 .clear_border{clear:both; border-bottom: 1px dotted #ececec;margin-top:5px;}
@@ -259,6 +266,8 @@ body {
 	height: 85%;
 	margin: 0;
 	padding: 0;
+	width:100%;
+	overflow-x:hidden;
 }
 header {
 	
@@ -519,7 +528,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 .EraInput, #selector_genre input {
 	font-size: 13px;
-	padding: 4px;
 	margin-bottom: 5px;
 	border: 1px dotted #333333;
 	width: 290px;
@@ -527,6 +535,12 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	padding:3px;
 	margin-bottom:10px;
 	background:#ececed;
+}
+#song_form input, #selector_genre input.searchy
+{
+width:265px;
+float:left;
+padding:3px;
 }
 #selector_genre{margin-top:5px;}
 #selector_genre input {
@@ -547,7 +561,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 #genre_holder, #spot_holder, #fav_holder {
 	box-shadow: 5px 5px 50px #ececec;
 	width: 300px;
-	display: block;
+	display: block;	
 	position: absolute;
 	z-index: 10000;
 	border: 1px solid #dadada;
@@ -561,11 +575,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	z-index: 100;
+	margin-left:5px;
 }
-#genre_holder {
+#genre_holder, #spot_holder .result_btn {
 	font-size: .8em;
 	
 }
+#spot_holder .result_btn{font-size:.55em}
+#spot_holder .on, #genre_holder .on{background:#C53526; color:white}
+#spot_holder .off, #genre_holder .off{background:white; color:#C53526}
+#genre_holder .tags_holder, #spot_holder .tags_holder{max-height:250px; overflow-y:scroll;width:300px; }
+.instruction{font-size:.6em; margin-bottom:10px; width:280px; float:left;}
 #spot_holder p.info, #fav_holder p.info #spot_holder p #fav_holder p {
 	margin-left: 0px;
 	font-size: 1em;
@@ -580,15 +600,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 .info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
 .info_button{width:220px;}
 .spot_button{width:295px;}
-.button_on, .button_off:hover{width:80px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.button_on, .button_off:hover{color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .more_button{width:70px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left;  cursor:pointer}
 .share_button{float:left; margin-top: 10px; color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;   cursor:pointer}
  #spot_holder .share_button .button_txt,#fav_holder .share_button .button_txt{margin-left:5px;  margin-right:5px; margin-top:2px; margin-bottom:2px;}
-.button_off{width:80px;color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.button_off{color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
 .info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
 .button_icon{float:left;margin-top:4px;  width:20px; font-size:20px;}
 .button_txt{float:left; margin-right;10px; font-family: 'Indie Flower', Arial;}
+
+#spot_holder .button_on, #spot_holder .button_off{font-size:.5em; margin-bottom:10px;}
 
 .gray:hover, .red {
 	background-color: #c53526;
@@ -1005,7 +1027,7 @@ margin-left: 290px;
 }
 
 
-@media screen and (min-width: 801px) and (max-width: 1000px) {
+@media screen and (min-width: 801px) and (max-width: 1024px) {
 	
 #artist_info ul{ font-size:1em}
 #info-area .intro-image{float:left;  margin-right:15px;max-width:200px;overflow:hidden}
@@ -1025,7 +1047,11 @@ margin-left: 290px;
 		margin-bottom: 0px;
 		
 	}
-	
+#country_form{
+left: 25%;
+top: 30%;
+}
+
 }
 
 
@@ -1044,6 +1070,11 @@ margin-left: 290px;
 		
 	}
 .event_description{width:75%}
+#country_form{
+left: 25%;
+top: 20%;
+}
+
 }
 
 @media screen and (min-width: 481px) and (max-width: 640px) {
@@ -1091,6 +1122,11 @@ margin-left: 290px;
 		margin-bottom: 0px;
 		
 	}
+#country_form{
+left: 25%;
+top: 20%;
+}
+	
 }
 /*Look at TAS for how to reset the boxes so the items are vertical;*/
 @media screen and (max-width: 480px) {
@@ -1136,6 +1172,10 @@ header{float:left; margin-left:15px;}
 		margin-bottom: 0px;
 		
 	}
+
+#country_form{left:15px; top:30%}
+
+
 		
 }
 
@@ -1626,8 +1666,8 @@ input[type="checkbox"]:hover + label div.world {
 
 .sharer{width:300px; height:33px; position:fixed; background:white; border: 1px dotted #ccc; border-top:1px solid #C53526; opacity:.95; bottom:0; left:0%; padding:10px;}
 
-.genre_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:6px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
-
+.result_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:6px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
+.result_btn sup{font-family:Arial, Helvetica, Tahoma, san-serif; font-size:13px; padding:3px;font-weight:bold}
 .clear{clear:both}
 .share{position:absolute; left: 275px; bottom:10px; font-size:1.25em; margin-top:0px; z-index:999}
 .share_box{border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px; padding:20px; background:white; z-index:100000; position:absolute; bottom:50px;width:255px; left:20px;box-shadow: 5px 5px 20 #ececec; }
@@ -1637,6 +1677,8 @@ div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
 .share_box div.state_off{cursor:pointer; color:white;  font-size:29px;background:#C53526; border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;margin-bottom:7px; margin-right:12px;}
 .share_box form textarea{ float:left;width:205px; font-size:11px;}
 
+
+
 .viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}
 .event_image{float:left; padding:10px;}
-.event_description{float:left; width:64%; font-size: .6em; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:0; padding-top:10px; padding:bottom:10px; padding-right:10px;}
+.event_description{float:left; width:64%; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:10px;  padding:bottom:10px; padding-right:10px;}

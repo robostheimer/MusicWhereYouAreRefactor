@@ -17,6 +17,7 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
  'angulartics', 
  'angulartics.google.analytics',
  'Events',
+ 'Country'
  
 ]);
 
@@ -24,21 +25,32 @@ MusicWhereYouAreApp.config(['$compileProvider',
 function($compileProvider)
 {
 	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|uri|spotify|json):/);
-}]);
+}])
 
+.config(function($sceDelegateProvider) {
+ $sceDelegateProvider.resourceUrlWhitelist([
+   // Allow same origin resource loads.
+   'self',
+   // Allow loading from our assets domain.  Notice the difference between * and **.
+   'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:**']);
+ })
 
-MusicWhereYouAreApp.config(['$routeProvider',
+.config(['$routeProvider',
   
   function($routeProvider) {
     $routeProvider.
     
+       when('/country', {
+        templateUrl: 'partials/country.html',
+        controller: 'addCountry'
+      }).
        when('/favorites', {
         templateUrl: 'partials/favorites.html',
         controller: 'LoadFav'
       }).
         when('/genres', {
         templateUrl: 'partials/genres.html',
-        //controller: 'PlaylistData'
+        controller:'GenreController',
       }).
        
        when('/info', {

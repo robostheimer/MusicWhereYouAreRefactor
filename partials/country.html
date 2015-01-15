@@ -1,0 +1,16 @@
+	<section id="country_form"  ng-show="noCountry==true;">
+			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="close()"></div>
+			<p>
+				For Music Where You Are to be able to find Spotify songs that are available in your location, please enter your 2 letter country code in this dialog box. If you would prefer not to limit your playlist to Spotify, click the 'X' inthe top-right corner.  To clear you country setting, click on the settings icon and click on the "Reset Country" button in the top-left of the page.
+			</p>
+			<form>
+				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country)">
+				<button class="button_on" ng-click="setCountry(country)" ng-enter="setCountry(country)">
+
+					<div class="button_txt" >
+						Submit
+					</div>
+				</button>
+			</form>
+			<div class="clear"></div>
+		</section>

@@ -1,6 +1,7 @@
 <section id="spot_holder" ng-swipe-left="goBack()" >
-
+	
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
+	
 
 	<div id="spot_headline">
 		<h4 style="margin-top:15px;"><span style="color:#979797">Your</span> GeoMix</h4>
@@ -18,10 +19,26 @@
 			Save Playlist to Spotify
 		</div>
 	</button>
-	<div class="clear">
-		</
+	
+	<button class="{{buttons[0].classy}}"  ng-click="runButtons('artists')" ng-swipe-left="goBack()">
+
+		<div class="button_txt">
+			&nbsp;Artists From Your Location&nbsp;
+		</div>
+	</button>
+	<button class="{{buttons[1].classy}}" ng-click="runButtons('songs')" >
+
+		<div class="button_txt">
+			&nbsp;Songs About Your Location <sup>beta</sup>&nbsp;
+		</div>
+	</button>
+
+	
+	<div class="clear" >
+		
 	</div>
-	<div ng-repeat="song in songs.songsArr " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true" draggable = "true">
+		<div class="{{buttons[0].state}}">
+	<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true" draggable = "true">
 		<div class="close" id="close{{song.tracks[0].foreign_id.split(':')[2]}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.tracks[0].foreign_id.split(':')[2])"></div>
 		<p class="info" id="pinfo{{song.num_id}}">
 			{{song.title}}
@@ -31,10 +48,52 @@
 		><a class="spotter" href="spotify:track:{{song.tracks[0].foreign_id.split(':')[2]}}" ><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 		<a ng-click="switchFavorite(song.num_id)"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
 		<a ng-click="switchFavorite(song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
-		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
-		<a href="#/events/{{location_link}}/{{song.artist_name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
+		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
+		<a href="#/events/{{location_link}}/{{song.artist_name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
 		<div style="clear:both;margin-bottom:-15px;"></div>
 
+	</div>
+	</div>
+	
+	<div  class="{{buttons[1].state}}" >
+		<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
+		
+		<input type="text"  name="song_form" id="findmusic" placeholder="Add a landmark, person, cultural figure, etc."  class="text"   ng-model="searchterm" ng-enter="lookUpTag(searchterm)" ng-show="noPickedGenre==false">
+			<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpTag(searchterm)"   ng-show="noPickedGenre==false"></div>
+			<div class="clear"><div>
+			</form>
+			
+			<div class="instruction">Create your own playlist by searching terms about your current location (or really anything...).  Below are some suggestions based on your geolocation</div>
+			<div class="closey" ng-show="tagShower==false" ng-click="toggleTagsBox()" aria-hidden="true" data-icon="~"></div>
+			<div class="clear"></div>
+			
+			<div class="tags_holder" ng-show="tagShower==true;">
+				<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in tags track by $index" ng-click="toggleTag(tag)">{{tag.title}} <sup>x</sup></div>
+				
+				<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in wikiTags track by $index" ng-click="toggleTag(tag)">{{tag.title}} <sup>x</sup></div>
+				<div class="closey" aria-hidden="true" data-icon="x" ng-click="toggleTagsBox()" ng-show="tagShower==true;"></div>
+				
+				<div ng-show="">Oh Snap! Your location does not have any tags available (according to Wikipedia at least) no tags are available for this location. You can add your own tags using the search field above. </div>
+				
+			
+			</div>
+			<div ng-repeat="song in lookUpSongs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
+		<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id)"></div>
+		<p class="info" id="pinfo{{song.num_id}}">
+			{{song.name}}
+			<br>
+			{{song.artists[0].name}}
+		</p
+		><a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.id}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
+		<a ng-click="switchFavorite(song.num_id)"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
+		<a ng-click="switchFavorite(lookUPSongs.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
+		<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
+		<a href="#/events/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
+		<div style="clear:both;margin-bottom:-15px;"></div>
+
+	</div>
+
+	</div>		
 	</div>
 	<br>
 
@@ -43,12 +102,13 @@
 	</br>
 </div>
 	<div class="sharer" >
+		
 		<button class="more_button" ng-hide="start_number<25" ng-click="moreSongs((start_number-25))" ng-enter="moreSongs((start_number-25))">
 			<div class=button_txt>
 				« Back
 			</div>
 		</button>
-		<button class="more_button" ng-hide="songs.length<25" ng-click="moreSongs((start_number+25))" ng-enter="moreSongs((start_number+25))">
+		<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs((start_number+25))" ng-enter="moreSongs((start_number+25))">
 			<div class=button_txt>
 				More Songs »
 			</div>

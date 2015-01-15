@@ -2,7 +2,9 @@
 
 /* Services */
 
-//var app = angular.module('ofm.services', []);
+//Checks to see if Geolocation is Activated.  If it is it creates a geolocation variable and sends them as parameters to HashCreate service////
+
+///If Geolocation is not enabled, alerts user to the fact/////////
 MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope',
 function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 	
@@ -12,6 +14,8 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 	var currentLong = -91.6;
 	var deferred = $q.defer();
 	$rootScope.genres='';
+	$rootScope.tags=[];
+	$rootScope.lookUpSongs=[];
 	$rootScope.era='';
 	//$rootScope.location = [];
 	var Geolocation = {
@@ -76,13 +80,14 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 
 
 
-
+/////////////////Runs the geolocations through Echonest and filters results based on type of location (city, region or just region, removes duplicates, etc.)
+////////////////Checks to see if any items in this playlist have been favorites
 MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
 function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States) {
 	
 
 	return {
-		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, index, genres, era, start_number){
+		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
 			var lsTitleArr=[];
 			var lsIdArr=[];
 			var lsTitleStr='';
@@ -123,14 +128,13 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				
 				var songs = data.response.songs;
 				songs.songsArr=[];
-				
-				songs.spot_arr = [];
-			 	songs.spot_playlist=[];
-				songs.location_arr = [];
-				songs.final_loc_arr=[];
-				songs.lat_min = lat_min;
-				songs.long_min = long_min;
-				songs.spot_str = '';
+				songs.songsArr.spot_arr = [];
+			 	songs.songsArr.spot_playlist=[];
+				songs.songsArr.location_arr = [];
+				songs.songsArr.final_loc_arr=[];
+				songs.songsArr.lat_min = lat_min;
+				songs.songsArr.long_min = long_min;
+				songs.songsArr.spot_str = '';
 				var song_str = '';
 				var location_str = '';
 				var location_rp = $routeParams.location;
@@ -280,17 +284,17 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							songs[x].num_id=x;
 							songs[x].id=x;
 							songs.songsArr.push(songs[x]);
-							songs.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
-							songs.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-							songs.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
+							songs.songsArr.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
+							songs.songsArr.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
+							songs.sonsArr.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
 							//songs.push(songs[x]);
 							
 							//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
 							song_str += songtitle;
 							
-							artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
+							//artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
 							
-							songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+							//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 							
 								}
 							
@@ -325,43 +329,44 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						//songs[x].favorite='off'
 						songs[x].id=x;
 						songs.songsArr.push(songs[x]);
-						songs.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
-						songs.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-						songs.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
+						songs.songsArr.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
+						songs.songsArr.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
+						songs.songsArr.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
 						//songs.push(songs[x]);
 						
 						//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
 						song_str += songtitle;
 						
-						artistlocation=$routeParams.location;
+						//artistlocation=$routeParams.location;
 						
-						songs.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+						//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 						
 			
 								
 							}
 					}
 				}
-				songs.location_arr.sort();
-				for (var r=0; r<songs.location_arr.length; r++)
+				/*songs.songsArr.location_arr.sort();
+				for (var r=0; r<songs.songsArr.location_arr.length; r++)
 				{
-					if(!location_str.match(songs.location_arr[r].split('@@')[0]))
+					if(!location_str.match(songs.songsArr.location_arr[r].split('@@')[0]))
 					{
-					songs.final_loc_arr.push('%%'+songs.location_arr[r]);
-					location_str += songs.location_arr[r].split('@@')[0];
+					songs.songsArr.final_loc_arr.push('%%'+songs.songsArr.location_arr[r]);
+					location_str += songs.songsArr.location_arr[r].split('@@')[0];
 					}
 					else
 					{
-						songs.final_loc_arr.push(songs.location_arr[r].split('@@')[1].split('&&')[1]);
+						songs.songsArr.final_loc_arr.push(songs.songsArr.location_arr[r].split('@@')[1].split('&&')[1]);
 						
 					}
-				}	
+				}*/	
 				
-				songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_str;
+				//songs.songsArr.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.songsArr.spot_str;
+				//console.log(songs.songsArr.spot_str)
 				
-				songs.spot_str = $sce.trustAsResourceUrl(songs.spot_str);
+				//songs.songsArr.spot_str = $sce.trustAsResourceUrl(songs.songsArr.spot_str);
 			
-					if(songs.spot_playlist==0)
+					/*if(songs.songsArr.spot_playlist==0)
 					{
 						
 						songs.noSongs=true;
@@ -370,32 +375,29 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					else
 					{
 					songs.noSongs=false;
-					}
+					}*/
 				
 				
 				return songs;
+				
 			});
 		 	},
 		 	
 		 	
 		 	
-		 	sharePlaylist:function()
-		 	{
-		 		
-		 	}
+		 	
 	};
 }]);
 
 
 
-
+/////////////////////Takes multiple variables from the PlaylistCreate function and creates a google map with markers for where the artists are from/////////////////
 MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
 function($q,  $http, $sce, $rootScope) {
 	
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
 		map;
-		
 		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
 			var loc_arr=[];
@@ -459,6 +461,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
 		runLocation : function(location, latorlng, ratio) {
+			$rootScope.lookUpSongs=[];
 			var location = location.replace('*',', ');
 			var lat_min;
 			var long_min;
@@ -895,28 +898,38 @@ return{
 		});	
 		
 	},
-			spotifyRetrieve :function(artistname)
+			lookUpArtist :function(artistname)
 			{
 				
-				var spotifysongs ={}
-				var url = 'http://ws.spotify.com/search/1/track.json?q=artist:'+artistname;
+				
+				var url = 'https://api.spotify.com/v1/search?q="'+artistname+'"&type=artist&limit=1';
 				return $http.get(url).success(function(result)
      			{
-	
-     			artistsongs =result;
-     			artistsongs.spot_url=[];
-     			artistsongs.spot_url_button=[];
+					var artistid= result.artists.items[0].id;
+					return artistid;
+					
+		});	
+			},
+			spotifyRetrieve :function(id)
+			{
+				return $http.get('https://api.spotify.com/v1/artists/'+id+'/top-tracks?country=US').success(function(result){
+						artistsongs =result;
+     					artistsongs.spot_url=[];
+     					artistsongs.spot_url_button=[];
+						console.log(result)
      			
-     			for(var i=0; i<25; i++)
-     			{
-     				
-     				artistsongs.spot_url.push(artistsongs.tracks[i].href.replace('spotify:track:', ''));
-     				artistsongs.spot_url_button.push(artistsongs.tracks[i].href);
-     			}
      			
+     			for(var i=0; i<artistsongs.tracks.length; i++)
+	     			{
+	     				
+	     				artistsongs.spot_url.push(artistsongs.tracks[i].id);
+	     				artistsongs.spot_url_button.push(artistsongs.tracks[i].id);
+	     				
+	     			}
+     			console.log(artistsongs.spot_url);
      			artistsongs.spot_url_str = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+artistsongs.spot_url.toString());
      			return artistsongs;
-		});	
+     			});
 			},
 			
 			relatedRetrieve: function(artistname)
@@ -1448,5 +1461,141 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 
 
 }]);	
+
+
+MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
+	return{
+		getWikiLandmarks: function(location)
+			{
+				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Landmarks%20in%20'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
+				{
+					
+					
+					return results.data;
+				});
+			},
+			getWikiAttractions: function(location)
+			{
+				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Visitor_attractions_in_'+location+'%E2%80%8E&cmtype=page&cmlimit=40&format=json&callback=JSON_CALLBACK').then(function(results)
+				{
+					//console.log(results.data.query.categorymembers)
+					var attractions =results.data.query.categorymembers;
+					for(var x=0; x<attractions.length; x++)
+					{
+						attractions[x].classy="off";
+					}
+					//console.log(attractions);
+					return attractions;
+				});
+			},
+			getWikiCulture: function(location)
+			{
+				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Culture%20of%20'+location+'%E2%80%8E&cmtype=page&cmlimit=5&format=json&callback=JSON_CALLBACK').then(function(results)
+				{
+					//console.log(results.data.query.categorymembers)
+					return results.data;
+				});
+			},
+			
+	};
+}]);
+
+
+MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce',
+function($q, $rootScope, $http, $sce){
+	return{
+		runSpotifySearch : function(searchterm)
+		{
+			
+			if(localStorage.country!=undefined || localStorage.country=='')
+			{
+			var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm+'"&type=track&limit=4&market='+localStorage.country;
+			
+			}
+			else{
+				
+				var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm+'"&type=track&limit=4'			
+			}
+			return $http.get(url).then(function(results)
+			{
+				
+				var songs= results.data.tracks.items;
+				songs.songsStr='';
+				for(var z=0; z<songs.length; z++)
+				{
+					songs.songsStr+=songs[z].id;
+				}
+				return songs;	
+			});
+		},
+		checkSongMarket:function(song)
+		{
+			
+						
+				
+			
+				
+					var songid=song.tracks[0].foreign_id.split(':')[2];
+					
+					
+					return $http.get('https://api.spotify.com/v1/tracks/'+songid).then(function(result){
+					
+					if(localStorage.country!=undefined)
+					{
+						
+						
+							
+							if(result.data.available_markets.toString().toLowerCase().match(localStorage.country.toLowerCase()))
+							{
+								
+								song.avail=true
+								//song.spot_arr.push(song.tracks[0].foreign_id.split(':')[2]);
+							}
+							else if(localStorage.country=="undefined")
+							{
+								song.avail=true;
+								//console.log(song)
+							}
+						
+					}		
+						
+					
+					else {
+						song.avail=false;
+						
+						
+					}
+					//song.spot_str=$sce.trustAsResourceUrl(song.spot_arr.toString())
+					//console.log(song)
+					return song;
+					
+					});
+					
+					
+					
+					
+					
+					
+					
+				
+				
+			
+		
+		},
+	};
+}]);	
+
+MusicWhereYouAreApp.factory("Country",[ '$q', '$rootScope', '$http', '$sce', '$location', '$routeParams', 'PlaylistCreate', 'MapCreate', 'LocationDataFetch', 'getLocation', 'ShareSongs', 'retrieveLocation',
+function($q, $rootScope, $http, $sce, $location, $routeParams, PlaylistCreate, MapCreate, LocationDataFetch, getLocation, ShareSongs, retrieveLocation){
+	return{
+		runPlaylist: function()
+		{
+			
+		}
+		
+	};
+}]);	
+
 
 

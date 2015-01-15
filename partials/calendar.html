@@ -2,7 +2,7 @@
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<br>
-	<h4><span style="color:#979797">Upcoming Concerts for</span> {{location}}</h4><br>
+	<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loading==true">{{location}}</span></h4><br>
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
 		

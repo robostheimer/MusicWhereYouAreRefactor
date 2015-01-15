@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1">
-		
+
 		<meta property="og:title" content="Music Where You Are: A Geolocation-based Music Discovery App" />
-		<meta property="og:description" content="Check out my playlist from Music Where You Are , a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be" /> 
-		<meta property="og:image" content="http://cityblinking.com/MusicWhereYouAre/logo4_sm.png" /> 
+		<meta property="og:description" content="Check out my playlist from Music Where You Are , a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be" />
+		<meta property="og:image" content="http://cityblinking.com/MusicWhereYouAre/logo4_sm.png" />
 		<title>Music Where You Are: A Geolocation-based Music Discovery App</title>
 		<link href='http://fonts.googleapis.com/css?family=Indie+Flower|Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Josefin+Sans:400,600,700,400italic,600italic,700italic' rel='stylesheet' type='text/css'>
@@ -23,6 +23,24 @@
 		<script src ="bower_components/angulartics-0.17.1/src/angulartics-ga.js"></script>
 		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather,visualization&sensor=false&language=en&v=3.13"></script>
 		<!--<script>
+		(function(i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] ||
+		function() {
+		(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date();
+		a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-33891154-1', 'cityblinking.com');
+		ga('send', 'pageview');
+
+		</script>!-->
+
+		<script>
 			(function(i, s, o, g, r, a, m) {
 				i['GoogleAnalyticsObject'] = r;
 				i[r] = i[r] ||
@@ -35,21 +53,10 @@
 				m.parentNode.insertBefore(a, m)
 			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-			ga('create', 'UA-33891154-1', 'cityblinking.com');
-			ga('send', 'pageview');
+			ga('create', 'UA-57261483-1', 'auto');
+			//ga('send', 'pageview');
 
-		</script>!-->
-
-		<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-57261483-1', 'auto');
-  //ga('send', 'pageview');
-
-</script>
+		</script>
 
 		<script src="js/app.js"></script>
 		<script src="js/services.js"></script>
@@ -79,7 +86,7 @@
 		</style>
 	</head>
 	<body >
-		
+
 		<section id="contact">
 			<ul>
 				<li>
@@ -91,15 +98,7 @@
 			</ul>
 
 		</section>
-
-		<!--<div  ng-controller="controlSymbol" class="menu" ng-hide="menuPos==false;" ng-click="changeMenu()" >
-
-		<a ng-href="#/playlist/{{location}}" ><div aria-hidden="true" data-icon="A"  ></div></a>
-		</div>
-
-		<div  ng-controller="controlSymbol" class="menu_Marg" ng-hide="menuPos==true" ng-click="changeMenu()" >
-		<a ng-href="#/playlist/{{location}}" ><div aria-hidden="true" data-icon="A"  ></div></a>
-		</div>-->
+	
 		<header>
 
 		</header>
@@ -137,37 +136,40 @@
 		<div ng-view view-animation >
 
 		</div>
-		<!--<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
-			<!--<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
+		<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
+			<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
 			<div style="width:95px; margin:auto"><img src="/MusicWhereYouAre/no_mwya.png" alt="nothing doing music-wise where you are"/>
 			</div>
-			
+
 			<p>
 				And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
 			</p>
 			<p>
 				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 			</p>
-			<p>Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.</p>
+			<p>
+				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
+			</p>
 			<p>
 				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
 			</p>
 
-		</section>-->
-		<section id="map-area" class="animate-show">
+		</section>
+		<section id="map-area" class="animate-show" ng-hide="noSongs==true">
 			<div mwya-map='mwya-map' id='map-canvas' latitude="34" longitude="-89.384294" zoom="{{zoom}}">
 				<div style="width:100px; margin:auto"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
 				</div>
 			</div>
-			
+
 		</section>
-<div ng-include="'partials/icons.html'"></div>
+		<div ng-include="'partials/icons.html'"></div>
 		<div style="clear:both"></div>
 
 		<section class="attribute">
 			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 			<br/>
-			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com<br>
+			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+			<br>
 			Powered By: <a href="http://echonest.com" target="_blank"><img src="/MusicWhereYouAre/genre_icons/echonest.svg" alt="echonest"/></a><a href="http://commons.wikimedia.org/wiki/Main_Page" target="_blank"><img src="/MusicWhereYouAre/genre_icons/wikimedia.png" alt="wikimedia"/></a><a href="http://spotify.com" target="_blank"><img src="/MusicWhereYouAre/genre_icons/spotify_green.svg" alt="spotify"/></a><a href="http://maps.google.com" target="_blank"><img src="/MusicWhereYouAre/genre_icons/google_maps.png" alt="google maps"/></a><a href="http://last.fm" target="_blank"><img src ="/MusicWhereYouAre/genre_icons/lastfm.png" alt="last.fm"/></a>
 		</section>
 	</body>
