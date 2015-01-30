@@ -16,6 +16,7 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 	$rootScope.genres='';
 	$rootScope.tags=[];
 	$rootScope.lookUpSongs=[];
+	//console.log('geo:'+$rootScope.lookUpSongs)
 	$rootScope.era='';
 	//$rootScope.location = [];
 	var Geolocation = {
@@ -98,6 +99,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	var finalgenres = '';
 		 	var era1='';
 		 	var era2='';
+		 	
 		 	for (var i=0; i<genresSplit.length; i++)
 		 	{
 		 		
@@ -115,13 +117,12 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 		
 		 	}
 		 	songs = {};
-		 
 		 	if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=25&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=20&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=25&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=20&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
 			}
 			
 			return $http.get(url).success(function(data) {
@@ -239,7 +240,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				{
 					for (var yy=0; yy<ls_favorite.length; yy++)
 					{
-						lsIdFavArr.push(ls_favorite[yy].tracks[0].foreign_id.split(':')[2])
+						lsIdFavArr.push(ls_favorite[yy].id)
 					}
 				}
 				else
@@ -259,19 +260,19 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						if(location_rp.split('*').length==1)
 						{
 						/////////////////////////check for song against Local Storage so LeaveOuts are left out///////////////////////////////////	
-						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(songs[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(songs[x].title.toLowerCase().replace(/\W/g,'')))
+						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(songs[x].id.replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(songs[x].title.toLowerCase().replace(/\W/g,'')))
 						{
 							if((songs[x].artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp1.replace(/\W/g, '').toUpperCase()))||(songs[x].artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp2.replace(/\W/g, '').toUpperCase())))
 							{
 							
 									
-							if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].tracks[0].foreign_id.split(':')[2] == null)
+							if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].id == null)
 							{
 							
 							x=x+1;
 							}
 							
-							if(lsIdFavArr.toString().replace(/\W/g, '').match(songs[x].tracks[0].foreign_id.split(':')[2]))
+							if(lsIdFavArr.toString().replace(/\W/g, '').match(songs[x].id))
 								{
 								songs[x].favorite='on';
 								}
@@ -284,17 +285,17 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							songs[x].num_id=x;
 							songs[x].id=x;
 							songs.songsArr.push(songs[x]);
-							songs.songsArr.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
-							songs.songsArr.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-							songs.sonsArr.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
+							songs.songsArr.spot_arr.push("spotify:track:"+songs[x].id);
+							songs.songsArr.spot_playlist.push(songs[x].id);
+							songs.sonsArr.spot_str+=songs[x].id+',';
 							//songs.push(songs[x]);
 							
-							//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
+							//spot_arr.push(songs[x].id);
 							song_str += songtitle;
 							
 							//artistlocation=songs[x].artist_location.location.replace(/ /g, '*');
 							
-							//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+							//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].id+'" target="_blank"><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 							
 								}
 							
@@ -304,18 +305,18 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						//////////////////////////State////////////////////////
 						/////////////////////////check for song against Local Storage so LeaveOuts are left out///////////////////////////////////	
 						
-						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(songs[x].tracks[0].foreign_id.split(':')[2].replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(songs[x].title.toLowerCase().replace(/\W/g,'')))
+						if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(songs[x].id.replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(songs[x].title.toLowerCase().replace(/\W/g,'')))
 						{
 							
 								
 							
-						if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].tracks[0].foreign_id.split(':')[2] == null||ls_str.match(songs[x].tracks[0].foreign_id.split(':')[2]))
+						if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].id == null||ls_str.match(songs[x].id))
 						{
 							
 						x=x+1;
 						}
 						
-						if(lsIdFavArr.toString().replace(/\W/g, '').match(songs[x].tracks[0].foreign_id.split(':')[2]))
+						if(lsIdFavArr.toString().replace(/\W/g, '').match(songs[x].id))
 							{
 							
 							songs[x].favorite='on';
@@ -329,17 +330,17 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						//songs[x].favorite='off'
 						songs[x].id=x;
 						songs.songsArr.push(songs[x]);
-						songs.songsArr.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
-						songs.songsArr.spot_playlist.push(songs[x].tracks[0].foreign_id.split(':')[2]);
-						songs.songsArr.spot_str+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
+						songs.songsArr.spot_arr.push("spotify:track:"+songs[x].id);
+						songs.songsArr.spot_playlist.push(songs[x].id);
+						songs.songsArr.spot_str+=songs[x].id+',';
 						//songs.push(songs[x]);
 						
-						//spot_arr.push(songs[x].tracks[0].foreign_id.split(':')[2]);
+						//spot_arr.push(songs[x].id);
 						song_str += songtitle;
 						
 						//artistlocation=$routeParams.location;
 						
-						//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+						//songs.songsArr.location_arr.push(songs[x].artist_location.location +'@@'+songs[x].artist_location.latitude + ':' + songs[x].artist_location.longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+artistlocation+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 						
 			
 								
@@ -398,6 +399,7 @@ function($q,  $http, $sce, $rootScope) {
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
 		map;
+		
 		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
 			var loc_arr=[];
@@ -416,7 +418,7 @@ function($q,  $http, $sce, $rootScope) {
 			};
 			var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-			var marker_image = '/MusicWhereYouAre/genre_icons/marker_sm.png';
+			var marker_image = '/MusicWhereYouAre/genre_icons/marker_sm.svg';
 			for (var i = 1; i < loc_arr.length; i++) {
 				var LatLng_marker = new google.maps.LatLng(loc_arr[i].split('@@')[1].split(':')[0], loc_arr[i].split('@@')[1].split(':')[1].split('&&')[0]);
 				var geomarker = new google.maps.Marker({
@@ -461,7 +463,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
 		runLocation : function(location, latorlng, ratio) {
-			$rootScope.lookUpSongs=[];
+			//$rootScope.lookUpSongs=[];
 			var location = location.replace('*',', ');
 			var lat_min;
 			var long_min;
@@ -518,6 +520,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 							geolocation.lat_min = data.data.rows[0][0] - ratio;
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 							geolocation.location = location;
+							geolocation.country = data.data.rows[0][3];
 						} else {
 							$rootScope.noSongs=true;
 						}	
@@ -539,6 +542,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 							geolocation.long_min = data.data.rows[0][0] - ratio;
 							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 							geolocation.location = location;
+							geolocation.country = data.data.rows[0][3];
 						} else {
 							$rootScope.noSongs=true;
 						}
@@ -585,6 +589,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 								geolocation.lat_min = data.data.rows[0][0] - ratio
 								geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 								geolocation.location = location;
+								geolocation.country = data.data.rows[0][3];
 							} else {
 								$rootScope.noSongs=true;
 							}	
@@ -600,6 +605,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 								geolocation.long_min = data.data.rows[0][0] - ratio;
 								geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 								geolocation.location = location;
+								geolocation.country = data.data.rows[0][3];
 							} else {
 								$rootScope.noSongs=true;
 							}
@@ -659,7 +665,7 @@ function($routeParams, $http){
 	return {
 			  getGenre: function() {
 				
-			var Genre=[{genre: {checked : false,isSelected : false, state: 'off',  genre: 'avant garde', similarGenres: 'avant garde**avant garde jazz**avant garde metal', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'blues', similarGenres: 'blues**blues guitar**blues revival**blues rock**blues-rock**british blues**chicago blues**classic blues**contemporary blues**country blues**delta blues**electric blues**juke joint blues louisiana blues**memphis blues**modern blues**modern electric blues**new orleans blues**slide guitar blues**soul blues**texas blues', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'classic rock', similarGenres: 'classic rock' , year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre: 'classical', similarGenres: 'classical**classical pop**contemporary classical music**crossover classical**modern classical', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'comedy', similarGenres:'comedy**comedy rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'country', similarGenres: 'country rock**alternative country**country**honky tonk**cowboy punk**classic country**modern country**hillbilly**rockabilly**bluegrass**country pop**outlaw country**pop country**progressive country**texas country', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'drama', similarGenres: 'drama', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'electronic', similarGenres: 'electronic**electro**electro hip hop**electro house**electro rock**electro-funk**electro-industrial**electro jazz**experimental electronic**indie electronic', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'folk', similarGenres: 'folk**acid folk**alternative folk**contemporary folk**country folk**electric folk**folk pop**folk revival**folk rock**folk pop**indie folk**neo folk**pop folk**psychedelic folk**stomp and holler**traditional folk**urban folk', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'hip hop', similarGenres:'hip hop**classic hip hop**rap**west coast hip hop**alternative hip hop**east coast hip hop**electro hip hop**experimental hip hop**independent hip hop**indie hip hop**jazz hip hop**old school hip hop**southern hip hop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',   genre: 'holiday', similarGenres: 'holiday', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'indie', similarGenres: 'indie rock**geek rock**lo fi**math rock**indie folk**indie hip hop**indie**indy', year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre : 'jazz', similarGenres: 'jazz**jazz blues**jazz funk**jazz fusion**jazz hip hop**jazz rock**jazz vocal**latin jazz**modern jazz**new orleans jazz**soul jazz**traditional jazz' , year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: "kid music", similarGenres:'children\'s music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'latin', similarGenres: 'latin**latin jazz**jazz latino**latin alternative**latin folk**latin hip hop**latin pop**latin music**latin rap**latin rock**latin ska', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'new age', similarGenres:'new age**new age music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'motown', similarGenres: 'motown**classic motown**soul**memphis soul**old school soul**soul music**soul', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'pop', similarGenres:'pop 60s pop**80s pop**acoustic pop**alternative pop**pop rock**dance pop**folk pop**jangle pop**pop country**pop punk**pop rap**pop folk**psychedelic pop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'rock', similarGenres: 'rock**punk rock**classic rock**college rock**dance rock**electro rock**folk rock**garage rock**jam band**hard rock**modern rock**psychedelic stoner rock**punk**southern rock**80s rock**90s rock**70s rock**60s rock**alternative rock**acoustic rock**acid rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'soft rock', similarGenres: 'soft rock**easy listening', year_end:''}}, {genre: {checked : false,isSelected : false, state: 'off',  genre: 'world', similarGenres: 'world world music**world beat**world fusion', year_end:''}}];	
+			var Genre=[{genre: {checked : false,isSelected : false, state: 'off',  genre: 'avant garde', similarGenres: 'avant garde**avant garde jazz**avant garde metal', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'blues', similarGenres: 'blues**blues guitar**blues revival**blues rock**blues-rock**british blues**chicago blues**classic blues**contemporary blues**country blues**delta blues**electric blues**juke joint blues louisiana blues**memphis blues**modern blues**modern electric blues**new orleans blues**slide guitar blues**soul blues**texas blues', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'classic rock', similarGenres: 'classic rock' , year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre: 'classical', similarGenres: 'classical**classical pop**contemporary classical music**crossover classical**modern classical', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'comedy', similarGenres:'comedy**comedy rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'country', similarGenres: 'country rock**alternative country**country**honky tonk**cowboy punk**classic country**modern country**hillbilly**rockabilly**bluegrass**country pop**outlaw country**pop country**progressive country**texas country', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'drama', similarGenres: 'drama', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'electronic', similarGenres: 'electronic**electro**electro hip hop**electro house**electro rock**electro-funk**electro-industrial**electro jazz**experimental electronic**indie electronic', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'folk', similarGenres: 'folk**acid folk**alternative folk**contemporary folk**country folk**electric folk**folk pop**folk revival**folk rock**folk pop**indie folk**neo folk**pop folk**psychedelic folk**stomp and holler**traditional folk**urban folk', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'hip hop', similarGenres:'hip hop**classic hip hop**rap**west coast hip hop**alternative hip hop**east coast hip hop**electro hip hop**experimental hip hop**independent hip hop**indie hip hop**jazz hip hop**old school hip hop**southern hip hop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',   genre: 'holiday', similarGenres: 'holiday', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'indie', similarGenres: 'indie rock**geek rock**lo fi**math rock**indie folk**indie hip hop**indie**indy', year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre : 'jazz', similarGenres: 'jazz**jazz blues**jazz funk**jazz fusion**jazz hip hop**jazz rock**jazz vocal**latin jazz**modern jazz**new orleans jazz**soul jazz**traditional jazz' , year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: "kid music", similarGenres:'children\'s music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'latin', similarGenres: 'latin**latin jazz**jazz latino**latin alternative**latin folk**latin hip hop**latin pop**latin music**latin rap**latin rock**latin ska', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'new age', similarGenres:'new age**new age music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'motown', similarGenres: 'motown**classic motown**soul**memphis soul**old school soul**soul music**soul', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'pop', similarGenres:'pop 60s pop**80s pop**acoustic pop**alternative pop**pop rock**dance pop**folk pop**jangle pop**pop country**pop punk**pop rap**pop folk**psychedelic pop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'punk', similarGenres: 'punk**punk rock**acoustic punk**art punk**anarcho punk**classic punk**cowpunk**dance-punk**cyberpunk**emo punk**folk punk**garage punk**hardcore punk**indie punk**old school punk**political punk**skate punk**street punk', year_end:''}},{genre : {checked : false,isSelected : false, state: 'off',  genre: 'rock', similarGenres: 'rock**punk rock**classic rock**college rock**dance rock**electro rock**folk rock**garage rock**jam band**hard rock**modern rock**psychedelic stoner rock**punk**southern rock**80s rock**90s rock**70s rock**60s rock**alternative rock**acoustic rock**acid rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'soft rock', similarGenres: 'soft rock**easy listening', year_end:''}}, {genre: {checked : false,isSelected : false, state: 'off',  genre: 'world', similarGenres: 'world world music**world beat**world fusion', year_end:''}}];	
 	
 	
 	return Genre;
@@ -926,7 +932,6 @@ return{
 	     				artistsongs.spot_url_button.push(artistsongs.tracks[i].id);
 	     				
 	     			}
-     			console.log(artistsongs.spot_url);
      			artistsongs.spot_url_str = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+artistsongs.spot_url.toString());
      			return artistsongs;
      			});
@@ -1055,7 +1060,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			}
 			for(var x=0; x<favorites.length; x++)
 				{
-					favorites[x].id=x;
+					//favorites[x].id=x;
 					favorites[x].num_id=x;
 				}
 			localStorage.setItem('FavoriteArr', JSON.stringify(favorites));
@@ -1079,10 +1084,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			
 			for(var x=0; x<favoritesArr.length; x++)
 			{
-				favoritesArr[x].id=x;
+				//favoritesArr[x].id=x;
 				favoritesArr[x].favorite='off';
 				
-				if(favoritesArr[x].tracks[0].foreign_id.split(':')[2]==obj.tracks[0].foreign_id.split(':')[2])
+				if(favoritesArr[x].id==obj.id)
 				{
 					obj.favorite='on';
 					
@@ -1381,7 +1386,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 			for (var x=0; x<songs.length; x++)
 			{
 				
-				str+=songs[x].title.replace(/&/g, 'and')+'$$$'+songs[x].tracks[0].foreign_id.split(':')[2]+'@@@'+songs[x].artist_name.replace(/&/g, 'and')+'!!!'+songs[x].favorite+'***';
+				str+=songs[x].title.replace(/&/g, 'and')+'$$$'+songs[x].id+'@@@'+songs[x].artist_name.replace(/&/g, 'and')+'!!!'+songs[x].favorite+'***';
 			}
 			//str = encodeURI(str);
 			var url = location.replace(/ /g, '_')+'/'+str.replace(/%20/g, '_').replace(/\//g, '--');
@@ -1396,7 +1401,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 			var location_str = '';
 			return $http.get('/scripps.php?q='+songs_str.replace(/_/g, '%20').replace(/--/g, '/').replace(/ /g, '_')).then(function(result){
 				songs=result.data;
-				songs.spot_arr=[];;
+				songs.spot_arr=[];
+				songs.savSpotArr=[];
 				songs.songsArr=[];
 				songs.spot_str='';
 				songs.location_arr=[];
@@ -1411,10 +1417,11 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 				songs[x].title = songs[x].title.replace(/_/g, ' ').replace(/--/g, '/');
 				songs[x].artist_name = songs[x].artist_name.replace(/_/g, ' ').replace(/--/g, '/');
 				//songs.spot_arr.push('spotify:track'+songs[x].id);
-				songs.location_arr.push(songs[x].location.replace(/_/g, ' ') +'@@'+songs[x].latitude + ':' + songs[x].longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].tracks[0].foreign_id.split(':')[2]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+songs[x].location+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+				songs.location_arr.push(songs[x].location.replace(/_/g, ' ') +'@@'+songs[x].latitude + ':' + songs[x].longitude+'&&<h5>'+songs[x].title+'</h5><p>'+songs[x].artist_name+'</p><a href="spotify:track:'+songs[x].id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+songs[x].location+'/'+songs[x].artist_name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 				songs.spot_str +=songs[x].id+',';
 				songs.songsArr.push(songs[x]);
-				songs.spot_arr.push("spotify:track:"+songs[x].tracks[0].foreign_id.split(':')[2]);
+				songs.song_arr.push(songs[x].id)
+				songs.savSpotArr.push("spotify:track:"+songs[x].id);
 				}
 				songs.spot_str ='https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+songs.spot_str;
 				songs.spot_str = $sce.trustAsResourceUrl(songs.spot_str);
@@ -1463,21 +1470,85 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 }]);	
 
 
-MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
+MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) {
 	return{
-		getWikiLandmarks: function(location)
+		getWikiLandmarks: function(lat,lng, country)
 			{
-				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Landmarks%20in%20'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
+				
+				//var url='http://api.v3.factual.com/t/places-'+ $rootScope.longitudeObj_root.country.toLowerCase()+'?filters={%22category_ids%22:{%22$excludes_any%22:[2,347,308,432,123,384,385,405, 62,40, 235,414, 379, 23, 395,272,219,37,51,417,296,44,47,48,193,177,420,53,429, 375,377,378,380,381,382,383, 386,388,390,391,393,394,397,398,399,400,401,402,404,407,408,409,410,277]}}&include_count=true&limit=20&select=name&KEY=1ZlzUGTss1cocs7sHpIA6ypd3PJIsMs9Fwlth1Du&geo=%7B%22$circle%22:%7B%22$center%22:%5B'+lat+','+lng+'%5D,%22$meters%22:%2025000%7D%7D';		
+				var url='http://api.v3.factual.com/t/places?filters={%22category_ids%22:{%22$excludes_any%22:[2,347,308,432,123,384,385,405, 62,40, 235,414, 379, 23, 395,272,219,37,51,417,296,44,47,48,193,177,420,53,429, 375,377,378,380,381,382,383, 386,388,390,391,393,394,397,398,399,400,401,402,404,407,408,409,410,277]}}&include_count=true&limit=20&select=name&KEY=1ZlzUGTss1cocs7sHpIA6ypd3PJIsMs9Fwlth1Du&geo=%7B%22$circle%22:%7B%22$center%22:%5B'+lat+','+lng+'%5D,%22$meters%22:%2025000%7D%7D';		
+				
+				return $http.get(url).then(function(results)
 				{
 					
 					
 					return results.data;
 				});
 			},
-			getWikiAttractions: function(location)
+			
+		lookUpTag: function(searchterm, number, qs) {
+			////////////////////Local Storage////////////////////////
+				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
+				var ls_str=''
+				var lsTitleArr = [];
+				var lsIdArr=[];
+				if(ls_removeOut!=null)
+				{
+					for (var xx=0; xx<ls_removeOut.length; xx++)
+					{
+						lsTitleArr.push(ls_removeOut[xx].song);
+						lsIdArr.push(ls_removeOut[xx].id);
+					}
+
+				}
+				else
+				{
+					lsTitleArr=[];
+					lsIdArr=[];
+				}
+				
+				
+				var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
+				if(ls_favorite!=null)
+				{
+					for (var yy=0; yy<ls_favorite.length; yy++)
+					{
+						lsIdFavArr.push(ls_favorite[yy].id)
+					}
+				}
+				else
+				{
+					lsIdFavArr=[];
+				}
+				
+				///////////////////////End Local Storage/////////////////////
+		
+				var searchterm = searchterm.replace(/The /g, '')
+					
+					Spotify.runSpotifySearch(searchterm, number,qs).then(function(result) {
+						
+							
+							for(var x=0; x<result.length; x++)
+							{
+								
+							if (!$rootScope.titleArr.toString().replace(/\W/g, '').match(result[x].name.replace(/\W/g,''))&&!lsTitleArr.toString().match(result[x].name)) {
+								result[x].keyword = searchterm;
+								$rootScope.lookUpSongs.push(result[x]);
+								$rootScope.idArr.push(result[x].id);
+								$rootScope.savIdArr.push('spotify:track:'+result[x].id)
+								$rootScope.titleArr.push(result[x].name);
+								
+								}
+							}
+							$rootScope.idStr = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.idArr.toString());
+							
+					});
+	}
+
+			/*getWikiAttractions: function(location)
 			{
-				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Visitor_attractions_in_'+location+'%E2%80%8E&cmtype=page&cmlimit=40&format=json&callback=JSON_CALLBACK').then(function(results)
+				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Visitor_attractions_in_'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
 				{
 					//console.log(results.data.query.categorymembers)
 					var attractions =results.data.query.categorymembers;
@@ -1491,12 +1562,12 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 			},
 			getWikiCulture: function(location)
 			{
-				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Culture%20of%20'+location+'%E2%80%8E&cmtype=page&cmlimit=5&format=json&callback=JSON_CALLBACK').then(function(results)
+				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Culture%20of%20'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
 				{
 					//console.log(results.data.query.categorymembers)
 					return results.data;
 				});
-			},
+			},*/
 			
 	};
 }]);
@@ -1505,18 +1576,43 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce',
 function($q, $rootScope, $http, $sce){
 	return{
-		runSpotifySearch : function(searchterm)
+		
+		runLyricsnMusic: function(searchterm)
 		{
-			
-			if(localStorage.country!=undefined || localStorage.country=='')
+			return $http.jsonp('http://api.lyricsnmusic.com/songs?api_key=548b2523656cf7b2bbf49252673c24&lyrics="'+searchterm+'"&callback=JSON_CALLBACK').then(function(result)
+			{	
+				
+				var LnM_songs = result.data.data
+				
+				
+				return LnM_songs;
+			});
+		},
+		
+		runSpotifySearch : function(searchterm, number, qs_noqs)
+		{
+			if(localStorage.country!=undefined && localStorage.country!='')
 			{
-			var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm+'"&type=track&limit=4&market='+localStorage.country;
-			
+				if(qs_noqs=='yes')
+
+				{
+					var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm.split('[')[0]+'" NOT%20genre:audiobooks,speeches year:1960-2014&type=track&limit='+number+'&market='+localStorage.country;
+				}
+				else{
+					var url='https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+' NOT%20genre:audiobooks,speeches year:1960-2014&type=track&limit='+number+'&market='+localStorage.country
+				}
 			}
 			else{
-				
-				var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm+'"&type=track&limit=4'			
+				if(qs_noqs=='yes')
+				{
+				var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm.split('[')[0]+'" NOT%20genre:audiobooks,speeches year:1980-2014s&type=track&limit='+number
+				}
+				else
+				{
+					var url = 'https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+' NOT%20genre:audiobooks,speeches year:1980-2014s&type=track&limit='+number
+				}			
 			}
+			//console.log(url);
 			return $http.get(url).then(function(results)
 			{
 				
@@ -1529,28 +1625,61 @@ function($q, $rootScope, $http, $sce){
 				return songs;	
 			});
 		},
-		checkSongMarket:function(song)
+		checkSongMarket:function(songs)
 		{
-			
-						
-				
-			
-				
-					var songid=song.tracks[0].foreign_id.split(':')[2];
-					
-					
-					return $http.get('https://api.spotify.com/v1/tracks/'+songid).then(function(result){
-					
-					if(localStorage.country!=undefined)
+					var songsArr=[];
+					var finalSongs=[];
+					var songsArrStr='';
+					for(var x=0; x<songs.length;x++)
 					{
+						songsArr.push(songs[x]);
+						songsArrStr+=songs[x].tracks[0].foreign_id.split(':')[2]+',';
+										
+					}	
+					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
+					var url='https://api.spotify.com/v1/tracks/?ids='+songsArrStr;
+					return $http.get(url).then(function(results){
+					var tracks= results.data.tracks;
+					
+					
+							
+							for(var y=0; y<tracks.length; y++)
+							{
+								if(localStorage.country!=undefined && localStorage.country!="")
+								{
+								tracks[y].favorite='off';
+								tracks[y].num_id=finalSongs.length;
+								tracks[y].artist_location = songsArr[y].artist_location;
+								if(tracks[y].available_markets.toString().match(localStorage.country))
+								{
+									finalSongs.push(tracks[y]);
+									
+								}
+								
+							}
+							else{
+							tracks[y].favorite='off';
+							tracks[y].num_id=finalSongs.length;
+							tracks[y].artist_location = songsArr[y].artist_location;
+							finalSongs.push(tracks[y]);
+							
+							
+							}
+						}
 						
-						
+							return finalSongs;	
+					});
+					
+					
+									
+					/*if(localStorage.country!=undefined)
+					{
 							
 							if(result.data.available_markets.toString().toLowerCase().match(localStorage.country.toLowerCase()))
 							{
 								
 								song.avail=true
-								//song.spot_arr.push(song.tracks[0].foreign_id.split(':')[2]);
+								//song.spot_arr.push(song.id);
 							}
 							else if(localStorage.country=="undefined")
 							{
@@ -1570,7 +1699,7 @@ function($q, $rootScope, $http, $sce){
 					//console.log(song)
 					return song;
 					
-					});
+					});*/
 					
 					
 					
@@ -1585,6 +1714,17 @@ function($q, $rootScope, $http, $sce){
 		},
 	};
 }]);	
+
+MusicWhereYouAreApp.factory("MapParams",[ '$q', '$rootScope', '$http', '$sce',
+function($q, $rootScope, $http, $sce){
+	return{
+		runParams: function()
+		{
+			
+		}
+	};
+}]);
+
 
 MusicWhereYouAreApp.factory("Country",[ '$q', '$rootScope', '$http', '$sce', '$location', '$routeParams', 'PlaylistCreate', 'MapCreate', 'LocationDataFetch', 'getLocation', 'ShareSongs', 'retrieveLocation',
 function($q, $rootScope, $http, $sce, $location, $routeParams, PlaylistCreate, MapCreate, LocationDataFetch, getLocation, ShareSongs, retrieveLocation){

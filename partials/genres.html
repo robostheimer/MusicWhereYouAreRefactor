@@ -1,3 +1,12 @@
+<section class="alert"  ng-show="stillLooking==true;" >
+			
+			<p>
+				Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
+			</p>
+			
+			<div class="clear"></div>
+</section>
+
 <section id="genre_holder" style="padding-top:10px;" >
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">
@@ -123,6 +132,10 @@
 		<div class = "checkbox" ng-class="{isSelected: pop.checked == true}">
 			<input ng-model='pop.checked' ng-click="checkGenre('pop')" type="checkbox" class="check" name="check[]" value="Pop" id="Pop">
 			<label for="Pop"><div class="pop"></div>Pop</label>
+		</div>
+		<div class = "checkbox" ng-class="{isSelected: punk.checked == true}">
+			<input ng-model='punk.checked' ng-click="checkGenre('punk')" type="checkbox" class="check" name="check[]" value="Punk" id="Punk">
+			<label for="Punk"><div class="punk"></div>Punk</label>
 		</div>
 		<div class = "checkbox" ng-class="{isSelected: rock.checked == true}">
 			<input ng-model='rock.checked' ng-click="checkGenre('rock')" type="checkbox" class="check" name="check[]" value="Rock" id="Rock">

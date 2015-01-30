@@ -21,13 +21,13 @@
 	</button>
 	<div class="clear"></
 	</div>
-	<div ng-repeat="song in songs track by $index " class="gray card" id="song_spot{{song.tracks[0].foreign_id.split(':')[2]}}" ng-hide="song.closeButton==true" draggable = "true">
-		<div class="close" id="close{{song.num_id}}" aria-hidden="true" data-icon="x" ng-click= "switchFavorite(song.num_id); "></div>
-		<p class="info" id="pinfo{{song.num_id}}">
-			{{song.title}}
-			<br>
-			{{song.artist_name}}
-		</p>
+	<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
+				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id)"></div>
+				<p class="info" id="pinfo{{song.num_id}}">
+					{{song.name}}
+					<br>
+					{{song.artists[0].name}}
+				</p>
 		<a class="spotter" href="spotify:track:{{song.tracks[0].foreign_id.split(':')[2]}}"><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 		
 		<a ng-click="switchFavorite(song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
