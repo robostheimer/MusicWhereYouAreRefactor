@@ -36,7 +36,7 @@
 	<div ng-hide="loading==true">
 		<div class="{{buttons[0].state}}">
 		<div id="iframe_holder">
-			<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+			<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 		</div>
 		<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savSpotArr, location);">
 			<div aria-hidden="true" data-icon="c" class="button_icon"></div>

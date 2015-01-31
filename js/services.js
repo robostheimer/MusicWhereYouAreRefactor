@@ -713,36 +713,36 @@ MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location', functi
 			var map_class = {};
 			var jukebox_class = {};
 			var roadsoda_class = {};
-			//$scope.menuPos=true;
+			//menuPos=true;
 			genre_class.name = 'genre';
 			genre_class.classy = "iconequalizer12";
 			genre_class.state = 'off';
-			//genre_class.href = '#/genres/' + $scope.location;
+			//genre_class.href = '#/genres/' + location;
 		
 			playlist_class.name = 'playlist';
 			playlist_class.classy = "icon-song";
 			playlist_class.state = 'off';
-			//playlist_class.href = '#/playlist/' + $scope.location;
+			//playlist_class.href = '#/playlist/' + location;
 		
 			favorite_class.name = 'favorite';
 			favorite_class.classy = "iconfavorite";
 			favorite_class.state = 'off';
-			//favorite_class.href = '#/favorites/' + $scope.location;
+			//favorite_class.href = '#/favorites/' + location;
 		
 			map_class.name = 'map';
 			map_class.classy = "iconmap";
 			map_class.state = 'off';
-			//map_class.href = '#/map/' + $scope.location;
+			//map_class.href = '#/map/' + location;
 		
 			jukebox_class.name = 'jukebox';
 			jukebox_class.classy = "jukebox";
 			jukebox_class.state = 'off';
-			//jukebox_class.href = '#/jukebox/' + $scope.location;
+			//jukebox_class.href = '#/jukebox/' + location;
 			
 			roadsoda_class.name = 'roadsoda';
 			roadsoda_class.classy = "roadsoda";
 			roadsoda_class.state = 'off';
-			//roadsoda_class.href = '#/roadsoda/' + $scope.location;
+			//roadsoda_class.href = '#/roadsoda/' + location;
 		
 			icons = [genre_class, playlist_class, favorite_class, map_class, jukebox_class];
 			$rootScope.icons = icons;
@@ -1493,6 +1493,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 				var ls_str=''
 				var lsTitleArr = [];
 				var lsIdArr=[];
+				lsIdFavArr=[];
 				if(ls_removeOut!=null)
 				{
 					for (var xx=0; xx<ls_removeOut.length; xx++)
@@ -1514,7 +1515,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 				{
 					for (var yy=0; yy<ls_favorite.length; yy++)
 					{
-						lsIdFavArr.push(ls_favorite[yy].id)
+						lsIdFavArr.push(ls_favorite[yy].id);
 					}
 				}
 				else
@@ -1573,8 +1574,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 }]);
 
 
-MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce',
-function($q, $rootScope, $http, $sce){
+MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate',
+function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 	return{
 		
 		runLyricsnMusic: function(searchterm)
@@ -1669,49 +1670,60 @@ function($q, $rootScope, $http, $sce){
 						
 							return finalSongs;	
 					});
-					
-					
-									
-					/*if(localStorage.country!=undefined)
-					{
-							
-							if(result.data.available_markets.toString().toLowerCase().match(localStorage.country.toLowerCase()))
-							{
-								
-								song.avail=true
-								//song.spot_arr.push(song.id);
-							}
-							else if(localStorage.country=="undefined")
-							{
-								song.avail=true;
-								//console.log(song)
-							}
-						
-					}		
-						
-					
-					else {
-						song.avail=false;
-						
-						
-					}
-					//song.spot_str=$sce.trustAsResourceUrl(song.spot_arr.toString())
-					//console.log(song)
-					return song;
-					
-					});*/
-					
-					
-					
-					
-					
-					
-					
-				
-				
-			
 		
 		},
+		createPlaylist:function(songlist)
+		{
+			var deferred = $q.defer();
+			
+			
+			var songs={};
+			songs.songs=[];
+			songs.spot_arr=[];
+			songs.savSpotArr=[];
+			songs.artistlocation ='';
+			songs.spot_str='';
+			songs.location_arr=[];
+			for (var x = 0; x < songlist.length; x++) {
+			songs.songs.push(songlist[x]);
+			Favorites.checkFavorites(songlist[x]);
+			songs.spot_arr.push(songlist[x].id);
+			songs.savSpotArr.push('spotify:track:'+songlist[x].id);
+			songs.artistlocation = $routeParams.location;
+
+			songs.location_arr.push(songlist[x].artist_location.location + '@@' + songlist[x].artist_location.latitude + ':' + songlist[x].artist_location.longitude + '&&<h5>' + songlist[x].name + '</h5><p>' + songlist[x].artists[0].name + '</p><a href="spotify:track:' + songlist[x].id + '" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+songs.length></div></a><a><a a href="#/info/' + songs.artistlocation + '/' + songlist[x].artists[0].name.replace('The ', '') + '" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+songs.length  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+			
+			}
+			songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString();
+			songs.spot_strFinal = $sce.trustAsResourceUrl(songs.spot_str);
+			deferred.resolve(songs);
+			return deferred.promise;
+			
+		},
+		createLatLng:function(location_arr, counter, zoom, latitude, longitude, spot_arr)
+		{
+			var deferred = $q.defer();
+			var location_str='';
+			var final_loc_arr=[];
+			
+				for (var r = 0; r < location_arr.length; r++) {
+				if (!location_str.match(location_arr[r].split('@@')[0])) {
+					final_loc_arr.push('%%' + location_arr[r]);
+;
+				} else {
+					final_loc_arr.push(location_arr[r].split('@@')[1].split('&&')[1]);
+
+				}
+				
+				if (r == (location_arr.length - 1 )/*&& (data.data.response.songs.songsArr.length >= 5 || counter == 5)*/){
+					MapCreate.runMap(zoom, latitude, longitude, final_loc_arr, spot_arr);
+					$rootScope.mapOpening = false;
+				}
+			}
+			
+		},
+		
+		
 	};
 }]);	
 
