@@ -217,7 +217,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					
 				}
 				////////////////////Local Storage////////////////////////
-				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
+				/*var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
 				var ls_str=''
 				if(ls_removeOut!=null)
 				{
@@ -246,7 +246,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				else
 				{
 					lsIdFavArr=[];
-				}
+				}*/
 				
 				///////////////////////End Local Storage/////////////////////
 				
@@ -310,7 +310,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 							
 								
 							
-						if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].id == null||ls_str.match(songs[x].id))
+						if(songs[x].title == null || songs[x].artist_location == null||songs[x].artist_location.location==null || songs[x].id == null)
 						{
 							
 						x=x+1;
@@ -1355,9 +1355,10 @@ function($q, $rootScope, $http, $sce, $location, States) {
 MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
 function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 	return{
-			getGeoEvents: function(location)
+			getGeoEvents: function(lat, lng)
 			{
-				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&lat='+$rootScope.latitudeObj_root.latitude +'&long='+$rootScope.longitudeObj_root.longitude+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json&distance=41.5').then(function(results)
+				console.log(lat)
+				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&lat='+lat +'&long='+lng+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json&distance=41.5').then(function(results)
 				{
 					
 					return results;
@@ -1542,6 +1543,10 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 								
 								}
 							}
+							$rootScope.lookUpSongs.reverse();
+							$rootScope.idArr.reverse();
+							$rootScope.savIdArr.reverse();
+							$rootScope.titleArr.reverse();
 							$rootScope.idStr = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.idArr.toString());
 							
 					});

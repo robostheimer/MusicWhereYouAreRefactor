@@ -11,7 +11,7 @@
 		<p>Let's try this again.  Hi There, I'm the place where songs you star live.  I'm pretty lonely here right now.  So go find some good (or at least music you think is good) music and then click the star button. They'll be right here waiting for you to play or save to Spotify.  I'll be waiting and waiting and waiting... well you get the idea.</p> </div>
 	<div ng-hide="getFav==false">
 	<div id="iframe_holder">
-		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songsFav.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 	</div>
 	<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(save_arr, 'Favorites from ' +date);">
 		<div aria-hidden="true" data-icon="c" class="button_icon"></div>
@@ -21,7 +21,7 @@
 	</button>
 	<div class="clear"></
 	</div>
-	<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
+	<div ng-repeat="song in songsFav " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
 				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id)"></div>
 				<p class="info" id="pinfo{{song.num_id}}">
 					{{song.name}}
