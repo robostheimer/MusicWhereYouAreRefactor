@@ -1,3 +1,36 @@
+<section class="alert"  ng-show="stillLooking==true;" >
+			
+			<p>
+				Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
+			</p>
+			
+			<div class="clear"></div>
+		</section>
+		
+<section class="alert"  ng-show="noSongs==true;" >
+			
+			<p>
+				Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+				
+			</p>
+			<p>
+			And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+			</p>
+			<p>
+				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+			</p>
+			<p>
+				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
+			</p>
+			<p>
+				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
+			</p>
+			<div class="clear"></div>
+</section>		
+
+
+
+
 <section id="fav_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
@@ -28,9 +61,9 @@
 					<br>
 					{{song.artists[0].name}}
 				</p>
-		<a class="spotter" href="spotify:track:{{song.tracks[0].foreign_id.split(':')[2]}}"><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
+		<a class="spotter" href="spotify:track:{{song.id}}"><div class="spot_link_spot" id="spot{{song.od}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 		
-		<a ng-click="switchFavorite(song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
+		<a ng-click="switchFavorite(song.id,song.num_id)"><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
 		<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
 		<a href="#/events/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
 		<div style="clear:both;margin-bottom:-15px;"></div>

@@ -106,10 +106,10 @@
 
 		<section id="whereyouat" ng-controller="formController">
 			<form novalidate class="simple-form" id="search" >
-				<input type="text"  name="find music" id="findmusic" placeholder="Type Your Location"  class="text"  ng-model="location" ng-enter="controlForm(location)" ng-change="hintShower(location)" value="{{location}}">
+				<input type="text"  name="find music" id="findmusic" placeholder="Type Your Location"  class="text"  ng-model="location" ng-enter="controlForm(location);closeHint()" ng-change="hintShower(location)" value="{{location}}">
 
 			</form>
-			<div class="search"  aria-hidden="true" data-icon="e" ng-click="controlForm(location)" ></div>
+			<div class="search"  aria-hidden="true" data-icon="e" ng-click="controlForm(location); closeHint()" ></div>
 
 			<div class="hint" ng-hide="showHint==false" class="animate-show">
 				<div ng-click="closeHint()" class="closer">
@@ -137,7 +137,7 @@
 		<div ng-view view-animation >
 
 		</div>
-		<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
+		<!--<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
 			<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
 			<div style="width:95px; margin:auto"><img src="/MusicWhereYouAre/no_mwya.png" alt="nothing doing music-wise where you are"/>
 			</div>
@@ -155,12 +155,19 @@
 				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
 			</p>
 
-		</section>
+		</section>-->
 		<section id="map-area" class="animate-show" ng-hide="noSongs==true">
-			<div mwya-map='mwya-map' id='map-canvas' latitude="34" longitude="-89.384294" zoom="{{zoom}}">
+			<div style="width:100%;height:90%; background:white; position:absolute; z-index:1" ng-hide="loading==false">
 				<div style="width:100px; margin:auto"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+					
 				</div>
 			</div>
+			<div mwya-map='mwya-map' id='map-canvas' latitude="34" longitude="-89.384294" zoom="{{zoom}}" ng-class="{vis:loading==false, no_vis:loading==true}">
+					<div style="width:100px; margin:auto"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+					
+				</div>
+			</div>
+			
 
 		</section>
 		<div ng-include="'partials/icons.html'"></div>

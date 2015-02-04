@@ -307,9 +307,11 @@ header {
 
 .addheight{height:90%; overflow:hidden; margin:15px;}
 .noheight{height:0%;  overflow:hidden;margin:0px;}
+.vis{opacity:1};
+.no_vis{opacity:0}
 #map-canvas, .angular-google-map-container {
 	height: 100%;
-	
+		
 }
 
 #map-canvas{margin: 15px;
