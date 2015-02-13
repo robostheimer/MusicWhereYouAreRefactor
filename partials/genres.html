@@ -8,31 +8,29 @@
 		</section>
 		
 <section class="alert"  ng-show="noSongs==true;" >
-			
-			<p>
-				Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
-				
-			</p>
-			<p>
-			And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
-			</p>
-			<p>
-				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
-			</p>
-			<p>
-				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
-			</p>
-			<p>
-				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
-			</p>
-			<div class="clear"></div>
-</section>		
+
+	<p>
+		Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+
+	</p>
+	<p>
+		And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+	</p>
+	<p>
+		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+	</p>
+	
+	<p>
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
+	</p>
+	<div class="clear"></div>
+</section>
 <section id="genre_holder" style="padding-top:10px;" >
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">
 
 		<div class="button_txt">
-			&nbsp;&nbsp;Genres&nbsp;&nbsp;
+			&nbsp;&nbsp;Settings&nbsp;&nbsp;
 		</div>
 	</button>
 	<button class="{{buttons[1].classy}}" ng-click="runButtons('eras')" >
@@ -61,7 +59,7 @@
 			<div class="search tag_holder"  aria-hidden="true" data-icon="e" ng-click="lookUpGenre(genre)" ng-show="noPickedGenre==false"></div>
 			<div class="clear"><div>
 	
-	<div class="result_btn on" ng-repeat="genre in genresSans" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
+	<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
 		<div ng-model='avant_garde.isSelected' class = "checkbox" ng-class="{isSelected: avant_garde.checked == true}">
 			<input ng-model='avant_garde.checked' ng-click="checkGenre('avant garde')"  type="checkbox" class="check" name="check[]" value="Avant Garde" id="Avant_Garde">

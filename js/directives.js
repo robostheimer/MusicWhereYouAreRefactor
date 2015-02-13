@@ -2,87 +2,121 @@
 
 /* Directives */
 
-MusicWhereYouAreApp.directive('mwyaMap',  function () {
+MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
  return {
- 	 	/*restrict: 'AE',
-    	scope:true,
-    	replace:true,
-    	link: function(scope, elem, attrs)
-    	{
-    		scope.latitude=42;
-    		scope.longitude=-77;
-    		console.log(scope.latitude)
-    		var mapOptions = {
-				center: new google.maps.LatLng(scope.latitude, scope.longitude),
-				zoom : 7,
-				mapTypeId : google.maps.MapTypeId.ROADMAP,
-				draggable : true,
-				 styles: scope.styles
+ 	 	
+    	 restrict: 'AE',
+            replace: true,
+           // template: '<div></div>',
+            scope: true,
+            link: function(scope, element, attrs ) {/*
+				element.addClass('map');
 				
-			};
-			var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    	}*/
- /*       controller: function ($scope) {
-          var map;
+                var myOptions = {
+                    zoom: 12,
+                    center: new google.maps.LatLng(0,0),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    scrollwheel: true
+                };
+                 var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
+                if(attrs.latitude)
+                {
+                	var latitude = attrs.latitude;
+                	myOptions.center=new google.maps.LatLng(attrs.latitude, 0)
+                	alert(latitude)
+                	
+                }
+                else
+                {
+                	var latitude = 30
+                }
+                scope.$watch($rootScope.finalLat, function(latitude) {
+                 	alert('changed')
+                 	alert(attrs.latitude)
+                    map.setCenter(new google.maps.LatLng(attrs.latitude, 0));
+                    alert(myOptions.center)
+                }, true);
+                 map = new google.maps.Map(document.getElementById('map-canvas'), myOptions); 
+				// myOptions.center = new google.maps.LatLng(parseFloat(latitude), 0);
+				 
+                //zoom as attribute
+               /* if(attrs.zoom && parseInt(attrs.zoom)) myOptions.zoom = parseInt(attrs.zoom);
+                //center as attribute
+                if(attrs.latitude){
+                    var latitude = scope.$eval(attrs.latitude);
+                    
+                }
+                if(attrs.longitude)
+                {
+                	var longitude=scope.eval(attrs.longitude)
+                	console.log(longitude)
+                }
+                if(parseFloat(latitude) && parseFloat(longitude))
+                {
+                        myOptions.center = new google.maps.LatLng(parseFloat(scope.latitude), parseFloat(scope.longitude));
+                 }       
+                //maptype as attribute
+                if(attrs.maptype){
+                     switch(attrs.maptype.toLowerCase()){
+                         case 'hybrid':
+                             myOptions.mapTypeId = google.maps.MapTypeId.HYBRID;
+                             break;
+                         case 'roadmap':
+                             myOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
+                             break;
+                         case 'satellite':
+                             myOptions.mapTypeId = google.maps.MapTypeId.SATELLITE;
+                             break;
+                         case 'terrain':
+                             myOptions.mapTypeId = google.maps.MapTypeId.TERRAIN;
+                             break;
+                         default:
+                             myOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
+                             break;
+                     }
+                }
+                if(attrs.scrollwheel){
+                    switch(attrs.scrollwheel.toLowerCase()){
+                        case 'true':
+                            myOptions.scrollwheel = true;
+                            break;
+                        case 'false':
+                            myOptions.scrollwheel = false;
+                            break;
+                        default:
+                            myOptions.scrollwheel = true;
+                            break;
+                    }
+                }
 
-          this.registerMap = function (myMap) {
-            var center = myMap.getCenter(),
-              latitude = center.lat(),
-              longitude = center.lng();
+                var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
+                
+                scope.$watch('latitude', function(latitude, longitude) {
+                    map.setCenter(new google.maps.LatLng(latitude, longitude));
+                }, true);
+                console.log(myOptions);
+               /* google.maps.event.addListener(map, 'drag', function(e) {
+                    var Latlng = map.getCenter();
+                    scope.$apply(function() {
+                        scope.center.lat = Latlng.lat();
+                        scope.center.lon = Latlng.lng();
+                    });
+                });
 
-            map = myMap;
-            $scope.latitude = latitude;
-            $scope.longitude = longitude;
-          };
+                google.maps.event.addListener(map, 'click', function(e) {
+                    scope.$apply(function() {
+                        var myLatlng = new google.maps.LatLng(e.latLng.lat(), e.latLng.lng());
+                        var marker = new google.maps.Marker({
+                            position: myLatlng,
+                            map: map,
+                            title:"Hello World!"
+                        });
+                    });
+                }); // end click listener*/
 
-          $scope.$watch('latitude + longitude', function (newValue, oldValue) {
-            if (newValue !== oldValue) { 
-              var center = map.getCenter(),
-                latitude = center.lat(),
-                longitude = center.lng();
-              if ($scope.latitude !== latitude || $scope.longitude !== longitude)
-                map.setCenter(new google.maps.LatLng($scope.latitude, $scope.longitude));
             }
-          });
-        },
-        link: function (scope, elem, attrs, ctrl) {
-          var mapOptions,
-            latitude = attrs.latitude,
-            longitude = attrs.longitude,
-            controlTemplate,
-            controlElem,
-            map;
-
-          // parsing latLong or setting default location
-          latitude = scope.latitude && parseFloat(latitude, 10) || 37.074688;
-          longitude = scope.longitude && parseFloat(longitude, 10) || -85.384294;
-
-          mapOptions = {
-            zoom: 8,
-            disableDefaultUI: true,
-            center: new google.maps.LatLng(latitude, longitude),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          };
-
-          map = new google.maps.Map(elem[0], mapOptions);
-
-          ctrl.registerMap(map);
-
-          controlTemplate = document.getElementById('whereControl').innerHTML.trim();
-          controlElem = $compile(controlTemplate)(scope);
-          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlElem[0]);
-
-          function centerChangedCallback (scope, map) {
-            return function () {
-              var center = map.getCenter();
-              scope.latitude = center.lat();
-              scope.longitude = center.lng();
-              if(!scope.$$phase) scope.$apply();
-            };
-          }
-          google.maps.event.addListener(map, 'center_changed', centerChangedCallback(scope, map));
-        }*/
-      };
+	
+};
 });
 
 

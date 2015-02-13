@@ -272,8 +272,10 @@ body {
 header {
 	
 	padding: 20px;
-	height: 35px;
-	background-image: url('logo4_sm.png');
+	height: 50px;
+	/*height:35px*/
+	/*change back on Feb 15*/
+	background-image:url(/MusicWhereYouAre/logo_v-day_sm.png);
 	background-repeat: no-repeat;
 	margin-left: 15px;
 	padding-bottom: 0px;
@@ -401,7 +403,7 @@ ul#chooser li, #chooser li div.inactive {
 #info-area #videosbox div iframe {width:225px; }
 #info-area #newsbox div{width:90%}
 
-#info-area #artist_holder{width:97%; height:100%;  overflow-y:scroll}
+#info-area #artist_holder{width:97%; height:98%;  overflow-y:scroll}
 
 #info-area p{ }
 
@@ -494,7 +496,7 @@ input {
 	cursor: pointer;
 	border: 1px solid #ececec;
 }
-#findmusic {
+#findmusic, #artistsearch {
 	font-size: 13px;
 	padding: 4px;
 	margin-bottom: 5px;
@@ -502,7 +504,7 @@ input {
 	width: 100%;
 	height:20px;
 }
-
+#artistsearch {width:50%; float:left;margin-bottom:12px;}
 input[type=range]::-webkit-slider-runnable-track {
     
     height: 10px;
@@ -539,7 +541,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	margin-bottom:10px;
 	background:#ececed;
 }
-#song_form input, #selector_genre input.searchy
+#song_form input, #selector_genre input.searchy #artistsearch input
 {
 width:265px;
 float:left;
@@ -1054,7 +1056,7 @@ margin-left: 290px;
 left: 25%;
 top: 30%;
 }
-
+#info-area #artist_holder{height:93%}
 }
 
 
@@ -1066,7 +1068,8 @@ top: 30%;
 #info-area .intro-image{float:left;  margin-right:15px;max-width:200px;height:auto;overflow:hidden}
 #info-area p.intro img {border: 1px solid #ccc; height:150px;}
 #info-area p.intro{float:right;padding:13px;margin:13px;margin-top:35px;border:1px solid #ccc;padding-bottom:8px;}
-#info-area #artist_holder{width:97%;   overflow-y:scroll}#info-area img.gallery {border: 1px solid #ccc; height:120px;}
+#info-area #artist_holder{width:97%;   overflow-y:scroll}
+#info-area img.gallery {border: 1px solid #ccc; height:120px;}
 #search {
 		width: 75%%;
 		margin-bottom: 0px;
@@ -1077,7 +1080,7 @@ top: 30%;
 left: 25%;
 top: 20%;
 }
-
+#info-area #artist_holder{height:90%}
 }
 
 @media screen and (min-width: 481px) and (max-width: 640px) {
@@ -1098,7 +1101,7 @@ top: 20%;
 	}
 
 
-
+#info-area #artist_holder{height:93%}
 
 
 #info-area p.intro{float:right;padding:10px;margin:10px;margin-top:35px;border:1px solid #ccc;padding-bottom:5px;}
@@ -1177,8 +1180,8 @@ header{float:left; margin-left:15px;}
 	}
 
 #country_form, .alert{left:15px; top:30%}
-
-
+#artistsearch{width:35%}
+#info-area #artist_holder{height:87%}
 		
 }
 

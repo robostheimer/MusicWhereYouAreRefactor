@@ -4,8 +4,8 @@
 				For Music Where You Are to be able to find Spotify songs that are available in your location, please enter your 2 letter country code in this dialog box. If you would prefer not to limit your playlist to Spotify, click the 'X' inthe top-right corner.  To clear you country setting, click on the settings icon and click on the "Reset Country" button in the top-left of the page.
 			</p>
 			<form>
-				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country)">
-				<button class="button_on" ng-click="setCountry(country)" ng-enter="setCountry(country)">
+				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country.toUpperCase())">
+				<button class="button_on" ng-click="setCountry(country.toUpperCase())" ng-enter="setCountry(country.toUpperCase())">
 
 					<div class="button_txt" >
 						Submit

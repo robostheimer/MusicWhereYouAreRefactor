@@ -8,38 +8,36 @@
 		</section>
 		
 <section class="alert"  ng-show="noSongs==true;" >
-			
-			<p>
-				Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
-				
-			</p>
-			<p>
-			And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
-			</p>
-			<p>
-				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
-			</p>
-			<p>
-				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
-			</p>
-			<p>
-				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
-			</p>
-			<div class="clear"></div>
+
+	<p>
+		Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+
+	</p>
+	<p>
+		And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+	</p>
+	<p>
+		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+	</p>
+	
+	<p>
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
+	</p>
+	<div class="clear"></div>
 </section>		
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<br>
-	<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loading==true">{{location}}</span></h4><br>
-		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/></div>
+	<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loadingEvents==true">{{location}}</span></h4><br>
+		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loadingEvents==true"><img src="/MusicWhereYouAre/loading.gif" alt="loadingEvents"/></div>
 		<div class="clear"></div>
 		
 		<div ng-show="noShows==true"><h3>There are no shows scheduled for this {{location}}.</h3></div>
 		<div class="event_holder">
 		
 		
-	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loading==true">
+	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loadingEvents==true">
 		<div class="event_image info"><img src="{{event.venue.image[1]['#text']}}"/></div>
 			
 				<h6 class="event_description" style="margin:0;"><a href="{{event.url}}" target="_blank">{{event.artists.headliner}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>

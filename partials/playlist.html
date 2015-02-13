@@ -19,11 +19,9 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
+
 	<p>
-		Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
-	</p>
-	<p>
-		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
 	</p>
 	<div class="clear"></div>
 </section>
@@ -38,20 +36,21 @@
 
 	<div class="clear"></div>
 	<div>
-		<button class="{{buttons[0].classy}}"  ng-click="runButtons('artists')" ng-swipe-left="goBack()">
+		<button class="{{buttons[0].classy}}"  ng-click="runButtons('artists'); runApp(start_number, counter)" ng-swipe-left="goBack()">
 
-		<div class="button_txt">
-			&nbsp;Artists From Your Location&nbsp;
-		</div>
-	</button>
-	<button class="{{buttons[1].classy}}" ng-click="runButtons('songs')" >
+			<div class="button_txt">
+				&nbsp;Artists From Your Location&nbsp;
+			</div>
+		</button>
+		<button class="{{buttons[1].classy}}" ng-click="runButtons('songs'); runSongAboutSearch()" >
 
-		<div class="button_txt">
-			&nbsp;Songs About Your Location <sup>beta</sup>&nbsp;
-		</div>
-	</button>
-	</div>	
+			<div class="button_txt">
+				&nbsp;Songs About Your Location <sup>beta</sup>&nbsp;
+			</div>
+		</button>
+	</div>
 	<div class="clear" ></div>
+	<div ng-hide="fromShower=="false">
 	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
 	</div>
 	<div ng-hide="loading==true">
@@ -59,7 +58,7 @@
 			<div id="iframe_holder">
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savSpotArr, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
@@ -77,184 +76,189 @@
 					<a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 					<a ng-click="switchFavorite(song.id, song.num_id, 'from')"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
 					<a ng-click="switchFavorite(song.id, song.num_id, 'from')"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
-					<a href="#/info/{{location_link}}/{{song.artist_name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
+					<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
 					<a href="#/events/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
 					<div style="clear:both;margin-bottom:-15px;"></div>
 
 				</div>
 				<div class="sharer" >
 
-		<button class="more_button" ng-hide="start_number<25" ng-click="moreSongs((start_number-25))" ng-enter="moreSongs((start_number-25))">
-			<div class=button_txt>
-				« Back
-			</div>
-		</button>
-		<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs((start_number+25))" ng-enter="moreSongs((start_number+25))">
-			<div class=button_txt>
-				More Songs »
-			</div>
-		</button>
+					<button class="more_button" ng-hide="start_number<25" ng-click="moreSongs((start_number-25))" ng-enter="moreSongs((start_number-25))">
+						<div class=button_txt>
+							« Back
+						</div>
+					</button>
+					<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs((start_number+25))" ng-enter="moreSongs((start_number+25))">
+						<div class=button_txt>
+							More Songs »
+						</div>
+					</button>
 
-		<div class="share_box animate-show" ng-hide="shareBox==false">
-			<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>
-			<div class="social_media">
+					<div class="share_box animate-show" ng-hide="shareBox==false">
+						<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>
+						<div class="social_media">
 
-				<div class="icon-facebook state_{{sm_btns[0].state}}" ng-click = "changeClass(sm_btns[0])"></div>
-				<div class="icon-twitter state_{{sm_btns[1].state}}" ng-click = "changeClass(sm_btns[1])"></div>
-				<div class="icon-googleplus state_{{sm_btns[2].state}}" ng-click = "changeClass(sm_btns[2])"></div>
-			</div>
-			<form class="{{sm_btns[0].classy}}">
-				<textarea rows="9" >Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!</textarea>
-				<a class="share_button" href="https://www.facebook.com/sharer/sharer.php?+s=100+&p[url]={{short_url}}&p[images][0]=http://cityblinking.com/MusicWhereYouAre/logo4_sm.png&p[title]=Music Where You Are&p[summary]=Check+out+my+playlist+from+Music+Where+You+Are+,+a+geolocation-based+music+discovery+app+that+gives+you+music+recommendations+based+on+where+you+are+located.++It's+Music+Where+You+Are,+Music+Where+You+Are+Going,+and+Music+Where+You+Want+To+Be" target="_blank" >
-				<div class="button_txt">
-					Share on Facebook »
-				</div> </a>
-			</form>
-			<form class="{{sm_btns[1].classy}}">
-				<textarea maxlength="160" rows="9" ng-model="message"> </textarea>				
+							<div class="icon-facebook state_{{sm_btns[0].state}}" ng-click = "changeClass(sm_btns[0])"></div>
+							<div class="icon-twitter state_{{sm_btns[1].state}}" ng-click = "changeClass(sm_btns[1])"></div>
+							<div class="icon-googleplus state_{{sm_btns[2].state}}" ng-click = "changeClass(sm_btns[2])"></div>
+						</div>
+						<form class="{{sm_btns[0].classy}}">
+							<textarea rows="9" >Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!</textarea>
+							<a class="share_button" href="https://www.facebook.com/sharer/sharer.php?+s=100+&p[url]={{short_url}}&p[images][0]=http://cityblinking.com/MusicWhereYouAre/logo4_sm.png&p[title]=Music Where You Are&p[summary]=Check+out+my+playlist+from+Music+Where+You+Are+,+a+geolocation-based+music+discovery+app+that+gives+you+music+recommendations+based+on+where+you+are+located.++It's+Music+Where+You+Are,+Music+Where+You+Are+Going,+and+Music+Where+You+Want+To+Be" target="_blank" >
+							<div class="button_txt">
+								Share on Facebook »
+							</div> </a>
+						</form>
+						<form class="{{sm_btns[1].classy}}">
+							<textarea maxlength="160" rows="9" ng-model="message"> </textarea>																			
 				
  <a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" >
+							<div class="button_txt">
+								Share on Twitter »
+							</div> </a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
+						</form>
+						<form class="{{sm_btns[2].classy}}">
+							<textarea rows="9">Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!}</textarea>
+							<a class="share_button" href="https://plus.google.com/share?url={{short_url}}" target="_blank">
+							<div class="button_txt">
+								Share on Google Plus »
+							</div> </a>
+						</form>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+
+					<div class="sharer_icon" ng-show="sharer==false" >
+						<span class='icon share' ng-click="getSongs(songs);"></span>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+		</div>
+		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading_tags==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+		</div>
+		<div ng-hide="aboutShower==false">
+		<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
+			<div id="iframe_holder">
+				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+			</div>
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savIdArr, location);">
+				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
-					Share on Twitter »
-				</div> </a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
+					Save Playlist to Spotify
+				</div>
+			</button>
+			<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
+
+				<input type="text"  name="song_form" id="findmusic" placeholder="Add a landmark, person, etc to your playlist."  class="text"   ng-model="searchterm" ng-enter="lookUpTag(searchterm, 5,'yes', 'user')">
+				<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpTag(searchterm, 5)"   ng-show="noPickedGenre==false"></div>
+				<div class="clear">
+					<div>
 			</form>
-			<form class="{{sm_btns[2].classy}}">
-				<textarea rows="9">Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!}</textarea>
-				<a class="share_button" href="https://plus.google.com/share?url={{short_url}}" target="_blank">
-				<div class="button_txt">
-					Share on Google Plus »
-				</div> </a>
-			</form>
+
+			<!--<div class="instruction">
+			Create your own playlist by searching terms about your current location (or really anything...).  Below are some suggestions based on your geolocation
+			</div>-->
 			<div class="clear"></div>
-		</div>
-		<div class="clear"></div>
+			<div class="closey" ng-show="tagShower==false" ng-click="toggleTagsBox()" aria-hidden="true" data-icon="~"></div>
+			<div class="clear"></div>
 
-		<div class="sharer_icon" ng-show="sharer==false" >
-			<span class='icon share' ng-click="getSongs(songs);"></span>
-		</div>
+			<!--<div class="tags_holder" ng-show="tagShower==true;">
+			<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in tags track by $index" ng-click="toggleTag(tag)">
+			{{tag.title}}
+			</div>
+
+			<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in wikiTags track by $index" ng-click="toggleTag(tag)">
+			{{tag.title}}
+			</div>
+			<div class="closey" aria-hidden="true" data-icon="x" ng-click="toggleTagsBox()" ng-show="tagShower==true;"></div>
+
+			</div>-->
+			<div ng-show="lookUpSongs.length==0">
+				Oh Snap! We were unable to find any songs about your current location. Try adding search terms to the form above to see if that gets you any songs.  If that fails, maybe you should pen a song about this desolate (from a music standpoint) place.
+			</div>
+			<div ng-repeat="song in lookUpSongs track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
+				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'about')"></div>
+				<p class="info" id="pinfo{{song.i}}">
+					{{song.name}}
+					<br>
+					{{song.artists[0].name}}
+					<br>
+					<sup>GeoKeyword: {{song.keyword}}</sup>
+
+				</p
+				><a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.id}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
+
+				<a ng-click="switchFavorite(song.id, song.num_id, 'about')"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
+				<a ng-click="switchFavorite(song.num_id,song.id, 'about')"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
+				<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
+				<a href="#/events/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
+				<div style="clear:both;margin-bottom:-15px;"></div>
 
 			</div>
-			
-		</div>
-		
-	</div>
-	<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
-		<div id="iframe_holder">
-			<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
-		</div>
-		<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savIdArr, location);">
-			<div aria-hidden="true" data-icon="c" class="button_icon"></div>
-			<div class="button_txt">
-				Save Playlist to Spotify
-			</div>
-		</button>
-		<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
-
-			<input type="text"  name="song_form" id="findmusic" placeholder="Add a landmark, person, etc to your playlist."  class="text"   ng-model="searchterm" ng-enter="lookUpTag(searchterm, 5)" ng-show="noPickedGenre==false">
-			<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpTag(searchterm, 5)"   ng-show="noPickedGenre==false"></div>
-			<div class="clear">
-				<div>
-		</form>
-
-		<!--<div class="instruction">
-		Create your own playlist by searching terms about your current location (or really anything...).  Below are some suggestions based on your geolocation
-		</div>-->
-		<div class="clear"></div>
-		<div class="closey" ng-show="tagShower==false" ng-click="toggleTagsBox()" aria-hidden="true" data-icon="~"></div>
-		<div class="clear"></div>
-
-		<!--<div class="tags_holder" ng-show="tagShower==true;">
-		<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in tags track by $index" ng-click="toggleTag(tag)">
-		{{tag.title}}
-		</div>
-
-		<div class="result_btn ng-scope {{tag.classy}}" ng-repeat="tag in wikiTags track by $index" ng-click="toggleTag(tag)">
-		{{tag.title}}
-		</div>
-		<div class="closey" aria-hidden="true" data-icon="x" ng-click="toggleTagsBox()" ng-show="tagShower==true;"></div>
-
-		</div>-->
-		<div ng-show="lookUpSongs.length==0">
-			Oh Snap! We were unable to find any songs about your current location. Try adding search terms to the form above to see if that gets you any songs.  If that fails, maybe you should pen a song about this desolate (from a music standpoint) place.
-		</div>
-		<div ng-repeat="song in lookUpSongs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
-			<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'about')"></div>
-			<p class="info" id="pinfo{{song.i}}">
-				{{song.name}}
-				<br>
-				{{song.artists[0].name}}
-				<br>
-				<sup>GeoKeyword: {{song.keyword}}</sup>
-
-			</p
-			><a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.id}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
-
-			<a ng-click="switchFavorite(song.id, song.num_id, 'about')"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
-			<a ng-click="switchFavorite(song.num_id,song.id, 'about')"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
-			<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
-			<a href="#/events/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
-			<div style="clear:both;margin-bottom:-15px;"></div>
 
 		</div>
+		<div class="sharer" >
 
-	</div>
-	<div class="sharer" >
+			<!--<button class="more_button" ng-hide="count_about==0" ng-click="prevSongsAbout()" ng-enter="prevSongsAbout()">
+				<div class=button_txt>
+					« Back
+				</div>
+			</button>
+			<button class="more_button" ng-hide="moreLookUp==false" ng-click="moreSongsAbout(about_number)" ng-enter="moreSongs((start_number+25))">
+				<div class=button_txt>
+					More Songs »
+				</div>
+			</button>-->
 
-		<button class="more_button" ng-hide="holder.length<15" ng-click="moreSongsAbout()" ng-enter="moreSongs((start_number-25))">
-			<div class=button_txt>
-				« Back
-			</div>
-		</button>
-		<button class="more_button" ng-hide="moreLookUp==false" ng-click="moreSongsAbout(about_number)" ng-enter="moreSongs((start_number+25))">
-			<div class=button_txt>
-				More Songs »
-			</div>
-		</button>
+			<div class="share_box animate-show" ng-hide="shareBox==false">
+				<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>
+				<div class="social_media">
 
-		<div class="share_box animate-show" ng-hide="shareBox==false">
-			<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>
-			<div class="social_media">
-
-				<div class="icon-facebook state_{{sm_btns[0].state}}" ng-click = "changeClass(sm_btns[0])"></div>
-				<div class="icon-twitter state_{{sm_btns[1].state}}" ng-click = "changeClass(sm_btns[1])"></div>
-				<div class="icon-googleplus state_{{sm_btns[2].state}}" ng-click = "changeClass(sm_btns[2])"></div>
-			</div>
-			<form class="{{sm_btns[0].classy}}">
-				<textarea rows="9" >Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!</textarea>
-				<a class="share_button" href="https://www.facebook.com/sharer/sharer.php?+s=100+&p[url]={{short_url}}&p[images][0]=http://cityblinking.com/MusicWhereYouAre/logo4_sm.png&p[title]=Music Where You Are&p[summary]=Check+out+my+playlist+from+Music+Where+You+Are+,+a+geolocation-based+music+discovery+app+that+gives+you+music+recommendations+based+on+where+you+are+located.++It's+Music+Where+You+Are,+Music+Where+You+Are+Going,+and+Music+Where+You+Want+To+Be" target="_blank" >
-				<div class="button_txt">
-					Share on Facebook »
-				</div> </a>
-			</form>
-			<form class="{{sm_btns[1].classy}}">
-				<textarea maxlength="160" rows="9" ng-model="message"> </textarea>				
+					<div class="icon-facebook state_{{sm_btns[0].state}}" ng-click = "changeClass(sm_btns[0])"></div>
+					<div class="icon-twitter state_{{sm_btns[1].state}}" ng-click = "changeClass(sm_btns[1])"></div>
+					<div class="icon-googleplus state_{{sm_btns[2].state}}" ng-click = "changeClass(sm_btns[2])"></div>
+				</div>
+				<form class="{{sm_btns[0].classy}}">
+					<textarea rows="9" >Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!</textarea>
+					<a class="share_button" href="https://www.facebook.com/sharer/sharer.php?+s=100+&p[url]={{short_url}}&p[images][0]=http://cityblinking.com/MusicWhereYouAre/logo4_sm.png&p[title]=Music Where You Are&p[summary]=Check+out+my+playlist+from+Music+Where+You+Are+,+a+geolocation-based+music+discovery+app+that+gives+you+music+recommendations+based+on+where+you+are+located.++It's+Music+Where+You+Are,+Music+Where+You+Are+Going,+and+Music+Where+You+Want+To+Be" target="_blank" >
+					<div class="button_txt">
+						Share on Facebook »
+					</div> </a>
+				</form>
+				<form class="{{sm_btns[1].classy}}">
+					<textarea maxlength="160" rows="9" ng-model="message"> </textarea>									
 				
  <a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" >
-				<div class="button_txt">
-					Share on Twitter »
-				</div> </a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
-			</form>
-			<form class="{{sm_btns[2].classy}}">
-				<textarea rows="9">Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!}</textarea>
-				<a class="share_button" href="https://plus.google.com/share?url={{short_url}}" target="_blank">
-				<div class="button_txt">
-					Share on Google Plus »
-				</div> </a>
-			</form>
+					<div class="button_txt">
+						Share on Twitter »
+					</div> </a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
+				</form>
+				<form class="{{sm_btns[2].classy}}">
+					<textarea rows="9">Check out my playlist from Music Where You Are {{short_url}}, a geolocation-based music discovery app that gives you music recommendations based on where you are located.  It's Music Where You Are, Music Where You Are Going, and Music Where You Want To Be!}</textarea>
+					<a class="share_button" href="https://plus.google.com/share?url={{short_url}}" target="_blank">
+					<div class="button_txt">
+						Share on Google Plus »
+					</div> </a>
+				</form>
+				<div class="clear"></div>
+			</div>
 			<div class="clear"></div>
+
+			<div class="sharer_icon" ng-show="sharer==false" >
+				<span class='icon share' ng-click="getSongs(lookUpSongs);"></span>
+			</div>
+
 		</div>
-		<div class="clear"></div>
-
-		<div class="sharer_icon" ng-show="sharer==false" >
-			<span class='icon share' ng-click="getSongs(lookUpSongs);"></span>
 		</div>
+		<br>
 
-	</div>
-	<br>
-
-	<br>
-	<br>
-	</br>
+		<br>
+		<br>
+		<br>
 	</div>
 
 </section>

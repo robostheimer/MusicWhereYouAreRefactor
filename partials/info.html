@@ -1,9 +1,15 @@
 <section id="info-area"  ng-swipe-up="goBack()" >
+		<form>
+					<input type="text"  name="song_form" id="artistsearch" placeholder="Search for an artist"  class="text"   ng-model="artist" ng-enter="lookUpArtist(artist)" />
+					<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpArtist(artist)"></div>
+					
+			</form>
 	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
-	
+		
 	<div id="intro_image" ng-show="loading==false"></div>
 	<div id="artist_holder" ng-show="loading==false">
+		
 		
 		<div id='artist_info'>
 			<ul  role = "profile_tabs">
@@ -31,7 +37,9 @@
 				</ul>
 				
 			<div id='artist_loader' ng-hide='artistdata ==false'>
+				
 			<div id="boxes">
+				
 			<h4>{{artistinfo.name}}</h4>	
 			<div id="biobox" class="{{buttons.bio.classy}}" aria-labelledby="bio" aria-hidden='{{buttons.bio.state}}' >
 				
