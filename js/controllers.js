@@ -103,10 +103,12 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 	$scope.aboutShower=false;
 	$scope.fromShower=true;
 	songs_for_service = [];
-	
+	$scope.tooMany==true;
+	$scope.holder_arr=[];
+	$scope.btnCount=0;
 	
 
-	$scope.runApp = function(start_number, counter) {				
+	$scope.runApp = function(start_number, counter, type) {				
 		
 		$scope.songs = [];
 		$scope.songs.spot_arr = [];
@@ -116,7 +118,10 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 		$scope.final_loc_arr = [];
 		$scope.shareBox = false;
 		
-
+		if(type=='button')
+		{
+			songs_for_service=[];
+		}
 		$rootScope.trackStorage = localStorage.country;
 		$scope.start_number = start_number;
 		$scope.ratio = .15 * counter;
@@ -153,32 +158,39 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 					}
 					
 					$scope.zoom=Spotify.runRange(finalRange)
-					console.log($scope.zoom)
 					if ($routeParams.qs == undefined) {
 						
 
 						$scope.sharer = false;
 						$scope.shareBox = false;
 
-						PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, $rootScope.genres, $rootScope.era, start_number).then(function(data) {
+						PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, $rootScope.genres, $rootScope.era, $scope.start_number).then(function(data) {
 							//////////////Show or hide MoreButton/////////////////////
 						
 
 							var location_str = '';
-
+							if($scope.counter>2)
+							{
+								$scope.moreHider=true;
+								
+							}
+							else{
+								$scope.moreHider=false;
+							}
 							if (data.data.response.songs.songsArr.length < 5) {
 								$scope.stillLooking = true;
 								$scope.counter = $scope.counter + 1;
 								
 
 								if ($scope.counter <= 5) {
-
 									LocationDataFetch.count = 0;
-									$scope.runApp(0, $scope.counter);
+									$scope.runApp(0, $scope.counter, '');
 									//$rootScope.loading = false;
 								}
 								if ($scope.songs.length == 0 && $scope.counter>5) {
+									
 									$rootScope.noSongs = true;
+									
 									//$scope.stilllooking=false
 								}
 							}
@@ -186,34 +198,30 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 							{
 							Spotify.checkSongMarket(data.data.response.songs.songsArr).then(function(result) {
 								for (var x = 0; x < result.length; x++) {
-									songs_for_service.push(result[x]);
-
-								}
-								Spotify.createPlaylist(songs_for_service).then(function(result) {
 									
-									$scope.songs = result.songs;
-									console.log($scope.songs)
-									;
-									$scope.spot_arr = result.spot_arr;
-									$scope.savSpotArr = result.savSpotArr;
-									artistlocation = result.artistlocation;
-									$scope.songs.location_arr = result.location_arr;
-									$scope.songs.spot_strFinal = result.spot_strFinal;
+									songs_for_service.push(result[x]);
+									$scope.holder_arr.push(result[x]);
+								}
+								
+								//console.log(songs_for_service)
+								Spotify.createPlaylist(songs_for_service).then(function(result) {
+									var allsongs = result.songs.slice(0,60)
+									$scope.songs = result.songs.slice(0,20);
+									$scope.spot_arr = result.spot_arr.slice(0,20);
+									$scope.savSpotArr = result.savSpotArr.slice(0,20);
+									artistlocation = result.artistlocation.slice(0,20);
+									$scope.songs.location_arr = result.location_arr.slice(0,20);
+									$scope.songs.spot_strFinal =$sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.spot_arr.toString());
 									
 									$rootScope.songs_root = $scope.songs;
 									
-									if ($scope.songs.length < 20) {
+									if (allsongs.length < 60 &&data.data.response.songs.length==20) {
 										$scope.start_number = $scope.start_number + 20;
 										LocationDataFetch.count = 0;
-										$scope.runApp($scope.start_number, 1);
+										$scope.runApp($scope.start_number,0,'');
 										
 									} else {
-										$rootScope.loading = false;
-
-										
-										if ($scope.songs.length < 2) {
-											$scope.moreHider = true;
-										}
+										$rootScope.loading = false;										
 										$rootScope.noSongs = false;
 										
 										Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.spot_arr);
@@ -278,7 +286,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			$rootScope.era = '';
 			$rootScope.start_year = '';
 			$rootScope.end_year = '';
-			$scope.runApp(0, 1);
+			$scope.runApp(0, 1, '');
 
 		} else if (LocationDataFetch.count > 0) {
 			
@@ -290,6 +298,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			$scope.latitudeObj = $rootScope.latitudeObj_root;
 			$scope.longitudeObj = $rootScope.longitudeObj_root;
 			$scope.songs = $rootScope.songs_root;
+			$scope.holder_arr=$scope.songs;
 			var lat_range =Math.abs($scope.latitudeObj.lat_max - $scope.latitudeObj.lat_min);
 				
 					var lng_range =Math.abs($scope.longitudeObj.long_max - $scope.longitudeObj.long_max)
@@ -304,7 +313,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 					}
 					
 					$scope.zoom=Spotify.runRange(finalRange)
-					console.log($scope.zoom)
+					
 			$scope.stillLooking = false;						
 			$rootScope.loading = false;		
 			if(LocationDataFetch.count==100000000000)
@@ -412,7 +421,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 
 				}
 
-				$scope.runApp(0, 1);
+				$scope.runApp(0, 1,'');
 
 			}
 		} else {
@@ -441,7 +450,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 
 				}
 
-				$scope.runApp(0, 1);
+				$scope.runApp(0, 1,'');
 
 			}
 		}
@@ -453,8 +462,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 
 	$scope.switchFavorite = function(id, num_id, about_or_from) {
 		//$scope.favoritesArr=[];
-		console.log(about_or_from)
-		var songId = [];
+				var songId = [];
 		if (localStorage.getItem('FavoriteArr') != null && localStorage.getItem('FavoriteArr') != '') {
 			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
 
@@ -465,10 +473,9 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 		//console.log(jQuery.parseJSON(localStorage.FavoriteArr));
 		if (about_or_from == 'from') {
 			if ($scope.songs[num_id].favorite == 'off') {
-				if(id=$scope.songs[num_id].id)
 				$scope.songs[num_id].favorite = 'on';
 				songFav.push($scope.songs[num_id]);
-	
+				console.log(num_id)
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
 				$scope.favorites = Favorites.addFavorites();
 			}
@@ -515,13 +522,33 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 		runSymbolChange.changeSymbol();
 	};
 
-	$scope.moreSongs = function(number) {
+	$scope.moreSongs = function() {
 		//var fav = jquery.parseJSON(localStorage.getItem('FavoriteArr'));
-		
+		$scope.btnCount=$scope.btnCount+1;
+		console.log($scope.btnCount*20+':'+$scope.holder_arr.length)
+		if($scope.holder_arr.length>$scope.btnCount*20)
+		{
+			var index1 = ($scope.btnCount*20);
+			var index2 = ($scope.btnCount*20)+20;
+			$scope.songs = $scope.songs = $scope.holder_arr.slice(index1, index2);
+		}else{
 		LocationDataFetch.count = 0;
 		$scope.songs = [];
-		$scope.runApp(number, 1);
+		
+		$scope.runApp($scope.btnCount*20, 0, 'button');
+		}
 		goToByScrollTop('spot_holder');
+	};
+	$scope.backSongs = function()
+	{
+		//console.log($scope.holder_arr);
+		//console.log($scope.btnCount*20);
+		var index1 = ($scope.btnCount*20)-20;
+		var index2 = ($scope.btnCount*20);
+		console.log(index1+':'+index2);
+		console.log($scope.holder_arr)
+		$scope.btnCount= $scope.btnCount-1;
+		$scope.songs = $scope.holder_arr.slice(index1, index2);
 	};
 	$scope.moreSongsAbout=function()
 	{
@@ -605,11 +632,20 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			else
 			{
 			ShareSongs.getSongs(songs, $routeParams.location).then(function(url){;
-				console.log(url)
+				//console.log(url)
 				
 				ShareSongs.getLongURL(url).then(function(result) {
-					$scope.long_url = result;
-					console.log($scope.long_url)
+					
+					$scope.long_url = result.url;
+					console.log(result.sliced)
+					if(result.sliced=='yes')
+					{
+						$scope.tooMany=true;
+						console.log($scope.tooMany)
+						
+					}
+					//console.log($scope.long_url)
+					//console.log($scope.long_url)
 					ShareSongs.getBitLy($scope.long_url).then(function(result) {
 		
 						$scope.short_url = result;
@@ -659,11 +695,14 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 		{
 			$scope.fromShower=true;
 			$scope.aboutShower=false;
+			$scope.shareBox=false;
 		}
 		else if (id=="songs")
 		{
+			
 			$scope.fromShower=false;
 			$scope.aboutShower=true;
+			$scope.shareBox=false;
 		}
 		for (var c = 0; c < $scope.buttons.length; c++) {
 			if ($scope.buttons[c].name == id) {
@@ -748,7 +787,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			});
 
 			$scope.tagShower = true;
-			$scope.runApp(0, 1);
+			$scope.runApp(0, 1,'');
 			Favorites.addFavorites();
 		} else {
 			//alert($rootScope.new_location);
@@ -1345,9 +1384,10 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 										$rootScope.noSongs = false;
 										
 										Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.spot_arr);
-										LocationDataFetch.count=LocationDataFetch.count + 1
+										LocationDataFetch.count=10000;
 										$scope.stillLooking = false;
 										$rootScope.loading=false;
+										
 										
 									}
 								});
@@ -1562,6 +1602,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	
 	$scope.sharer = false;
 	$scope.shareBox = false;
+	$scope.tooMany=false;
 
 	$scope.sm_btns = [{
 		name : 'facebook',
@@ -1923,24 +1964,34 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	};
 	$scope.getSongs = function(songs) {
 		
-		var url = ShareSongs.getSongs(songs, $routeParams.location);
-		//=url =url.replace(' ', '');
-
-		ShareSongs.getLongURL(url).then(function(result) {
-			$scope.long_url = result;
-			ShareSongs.getBitLy($scope.long_url).then(function(result) {
-
-				console.log($scope.message);
-				$scope.short_url = result;
-				$scope.shareBox = true;
-				$scope.message = 'Check out my playlist from %23MusicWhereYouAre, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
-				$scope.message_link = encodeURIComponent($scope.message);
+		ShareSongs.getSongs($scope.songsFav, $routeParams.location).then(function(url){;
+				//console.log(url)
+				
+				ShareSongs.getLongURL(url).then(function(result) {
+					
+					$scope.long_url = result.url;
+					console.log(result.sliced)
+					if(result.sliced=='yes')
+					{
+						$scope.tooMany=true;
+						console.log($scope.tooMany)
+						
+					}
+					//console.log($scope.long_url)
+					//console.log($scope.long_url)
+					ShareSongs.getBitLy($scope.long_url).then(function(result) {
+		
+						$scope.short_url = result;
+						console.log($scope.short_url)
+						$scope.shareBox = true;
+						
+						$scope.message = 'Check out my playlist from %23MusicWhereYouAre, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
+						$scope.message_link = encodeURIComponent($scope.message);
+					});
+		
+				});
 			});
-
-		});
-
-		$scope.sharer = true;
-
+		
 	};
 	$scope.closeShareBox = function() {
 		$scope.sharer = false;

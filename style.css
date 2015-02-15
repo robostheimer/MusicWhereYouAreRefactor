@@ -164,7 +164,7 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#country_form, .alert {width:260px; background:white; border:1px solid #cccccc; min-height:50px;z-index:100000000000; position:absolute; left:30%; padding:10px;top:30%; border:1px solid #C53526;box-shadow: 5px 5px 50px #ececec;font-family:'Arvo',Tahoma,Arial, sans-serif; font-weight:400;font-size:12px;
+#country_form, .alert {width:260px; background:white; border:1px solid #cccccc; min-height:50px;z-index:100000000000; position:absolute; left:30%; padding:10px;top:30%; border:1px solid #C53526;box-shadow: 5px 5px 50px #cccccc;font-family:'Arvo',Tahoma,Arial, sans-serif; font-weight:400;font-size:12px;
  }
  #count_form p{margin-top:10px;}
 #country_form input, .alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}

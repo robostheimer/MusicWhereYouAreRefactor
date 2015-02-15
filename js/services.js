@@ -124,7 +124,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 			else{
 				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=20&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
 			}
-			
 			return $http.get(url).success(function(data) {
 				
 				var songs = data.response.songs;
@@ -1089,7 +1088,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				if(favoritesArr[x].id==obj.id)
 				{
 					obj.favorite='on';
-					console.log(obj.name)
 					
 				}
 				
@@ -1468,9 +1466,24 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 		{
 			
 			var deferred = $q.defer();
+			if(url.length>2000)
+			{
+				
+				var url= url.slice(0, 2000);
+				var index =url.lastIndexOf('**');
+				url = url.slice(0, index);
+				var urlObj = {'url': 'http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/'), 'sliced':'yes'}
+				
+			}
+			else{
+			
+			var url = (url);
+			var urlObj = {'url': 'http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/'), 'sliced':'no'}
+			}
+			
+			console.log(url+':'+url.length)
 			url ='http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/');
-			url = (url);
-			deferred.resolve(url);
+			deferred.resolve(urlObj);
 			return deferred.promise;
 			
 		},
@@ -1736,6 +1749,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			songs.location_arr=[];
 			for (var x = 0; x < songlist.length; x++) {
 				songlist[x].artists[0].name=findThe(songlist[x].artists[0].name);
+				songlist[x].num_id=x;
 				songs.songs.push(songlist[x]);
 				Favorites.checkFavorites(songlist[x]);
 				songs.spot_arr.push(songlist[x].id);
@@ -1861,24 +1875,24 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			{
 				zoom=10
 			}
-			else if(number>.75 &&number<.9)
+			else if(number>.3 &&number<.9)
 			{
 				zoom=11
 			}
-			else if(number>.4 &&number<.75)
+			else if(number>.2 &&number<.3)
 			{
 				zoom=12
 			}
-			else if(number>=0 &&number<.4) 
+			else if(number>=0 &&number<.2) 
 			{
 				zoom=13
 			}
-			return zoom
+			return zoom;
 		}
 		
 	};
 }]);	
-//////////////////Need to los the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
+//////////////////Need to lose the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
 MusicWhereYouAreApp.factory("SongLength",[ '$q', '$rootScope', '$http', '$sce','Spotify','LocationDataFetch',
 function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 	return{
@@ -1913,7 +1927,6 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 	
 				var lat_range =Math.abs(artistlocations.latitude[artistlocations.latitude.length-1]-artistlocations.latitude[0]);
 				var lng_range = Math.abs(artistlocations.longitude[artistlocations.longitude.length-1]-artistlocations.longitude[0]);
-				console.log(lat_range+':'+lng_range);	
 				if(lat_range>lng_range)
 				{
 					var finalRange=lat_range					

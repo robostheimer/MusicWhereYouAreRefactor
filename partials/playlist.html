@@ -26,6 +26,12 @@
 	<div class="clear"></div>
 </section>
 
+<section class="alert"  ng-show="tooMany==true;">
+			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="tooMany=false"></div>
+			<p>
+				Unfortunately, there were too many songs in your playlist to create a Bit.ly link.  So that you can share at least part of your playlist on Twitter, we have removed songs from the bottom of your playlist. If you would like to share your complete playlist with your friends via email or even Facebook, you can copy the following link and paste it into an email or as a Facebook Status:<br><br> <textarea  rows="9" style="width:97%" >{{long_url.replace('%23','#')}} </textarea>	</p>
+</section>
+
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
@@ -58,7 +64,7 @@
 			<div id="iframe_holder">
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savSpotArr, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
@@ -83,12 +89,12 @@
 				</div>
 				<div class="sharer" >
 
-					<button class="more_button" ng-hide="start_number<25" ng-click="moreSongs((start_number-25))" ng-enter="moreSongs((start_number-25))">
+					<button class="more_button" ng-hide="btnCount==0" ng-click="backSongs()" ng-enter="moreSongs((start_number-25))">
 						<div class=button_txt>
 							« Back
 						</div>
 					</button>
-					<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs((start_number+25))" ng-enter="moreSongs((start_number+25))">
+					<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs()" ng-enter="moreSongs((start_number+25))">
 						<div class=button_txt>
 							More Songs »
 						</div>
@@ -142,10 +148,10 @@
 		</div>
 		<div ng-hide="aboutShower==false">
 		<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
-			<div id="iframe_holder">
+			<div id="iframe_holder" ng-hide="lookUpSongs.length==0">
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savIdArr, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savIdArr, location);" ng-hide="lookUpSongs.length==0">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
