@@ -146,8 +146,8 @@
 
 @font-face {
 	font-family: 'MusicWhereYouAre';
-	src: url('/fonts/MusicWhereIAm.eot?w8796i');
-	src: url('/fonts/MusicWhereIAm.eot?#iefixw8796i') format('embedded-opentype'), url('/fonts/MusicWhereIAm.woff?w8796i') format('woff'), url('/fonts/MusicWhereIAm.ttf?w8796i') format('truetype'), url('/fonts/MusicWhereYouAre.svg?w8796i#MusicWhereYouAre') format('svg');
+	src: url('fonts/MusicWhereIAm.eot?w8796i');
+	src: url('fonts/MusicWhereIAm.eot?#iefixw8796i') format('embedded-opentype'), url('/fonts/MusicWhereIAm.woff?w8796i') format('woff'), url('/fonts/MusicWhereIAm.ttf?w8796i') format('truetype'), url('/fonts/MusicWhereYouAre.svg?w8796i#MusicWhereYouAre') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -213,7 +213,7 @@ a:hover{
 	}
 
 body {
-	font-family: 'Indie Flower', Arial;
+	font-family: 'PT Sans', Arial;
 	font-size: 1.2em
 }
 
@@ -236,18 +236,19 @@ body {
 }
 
 h2, h4, #spot_holder .spot_icon, #fav_holder .spot_icon {
-	font-family: 'Indie Flower', Arial;
+	font-family: 'Bitter', Arial;
 	color: #c53526;
-	font-size: 1.35em;
-	font-weight: bold;
+	font-size: 1.23em;
+	font-weight: normal;
 	margin-top: 5px;
 	margin-left:5px;
 	margin-bottom: 5px;
 	padding-bottom: 0px;
 }
+h3{font-family:PT Sans, san-serif;}
 h2{font-size:1.7em;}
 #spot_holder h4, #spot_holder .spot_icon, #fav_holder h4, #fav_holder .spot_icon #genre_holder h4 {
-	float: left
+	float: left;width: 275px;
 }
 #spot_holder .spot_icon, #fav_holder .spot_icon {
 	margin-top: 20px;
@@ -272,16 +273,16 @@ body {
 header {
 	
 	padding: 20px;
-	height: 50px;
-	/*height:35px*/
+	/*height: 50px;*/
+	height:35px;
 	/*change back on Feb 15*/
-	background-image:url(/MusicWhereYouAre/logo_v-day_sm.png);
+	background-image:url(logo_headphone.png);
 	background-repeat: no-repeat;
 	margin-left: 15px;
 	padding-bottom: 0px;
 	margin-top: 10px;
 	float: left;
-	width: 50px;
+	width: 75px;
 }
 .angular-google-map {
   display: block;
@@ -324,9 +325,9 @@ header {
 	padding: 10px;
 	padding-top: 0px;
 	margin-top: 0px;
-	font-size: 1.0em;
+	font-size: 0.9em;
 	overflow: hidden;
-	font-family: 'indie Flower', Arial;
+	font-family: 'PT Sans', san-serif;
 }
 .info sup{font-size:.3em; font-family:'Arvo',Tahoma,Arial}
 ul#chooser {
@@ -446,7 +447,31 @@ div.button:hover{background-color:#c53526;; color:white; }
 .gm-style .gm-style-iw, .gm-style .gm-style-iw a, .gm-style .gm-style-iw span, .gm-style .gm-style-iw label, .gm-style .gm-style-iw div {
 
 	font-weight: 300;
-	font-family: 'Indie Flower', Arial;
+	font-family: 'PT Sans', san-serif;
+}
+
+.gm-style div, .gm-style span, .gm-style label {
+	text-decoration: none;
+}
+.gm-style {
+	overflow-x: hidden;
+}
+.gm-style-iw {
+	max-height: 130px;
+	overflow: scroll;
+	font-size: 1.1em;
+	overflow-x: hidden;
+	min-width: 120px;
+}
+.gm-style-iw div {
+	overflow: scroll;
+	overflow-x: hidden;
+}
+.gm-style .gm-style-iw, .gm-style .gm-style-iw a, .gm-style .gm-style-iw span, .gm-style .gm-style-iw label, .gm-style .gm-style-iw div {
+
+	font-weight: 300;
+	font-family: 'PT Sans', Arial;
+	
 }
 
 .gm-style div, .gm-style span, .gm-style label {
@@ -467,7 +492,13 @@ div.button:hover{background-color:#c53526;; color:white; }
 	overflow-x: hidden;
 }
 
-
+.gm-style-iw p {
+	margin-top:.5em;
+	font-size:.85em
+}
+.gm-style-iw h5{
+font-size:.95em;	
+}
 
 #search {
 	font-size: 1em;
@@ -487,7 +518,7 @@ input {
 	float: left;
 	background: #c53526;
 	color: #fff;
-	padding: 6px;
+	padding: 7px;
 	padding-bottom: 0px;
 	padding-left: 7px;
 	padding-right: 7px;
@@ -502,7 +533,7 @@ input {
 	margin-bottom: 5px;
 	border: 1px solid #ececec;
 	width: 100%;
-	height:20px;
+	height:18px;
 }
 #artistsearch {width:50%; float:left;margin-bottom:12px;}
 input[type=range]::-webkit-slider-runnable-track {
@@ -549,7 +580,7 @@ padding:3px;
 }
 #selector_genre{margin-top:5px;}
 #selector_genre input {
-	width:240px; float:left; margin-top:1px; padding:5px;line-height:27px;background:white;	border: 1px dotted #ccc;
+	width:240px; float:left; margin-top:1px; padding:5px;line-height:27px;background:white;	border: 1px dotted #ccc;height:16px;
 }
 .years{font-size: 30px; width:290px; margin:auto; color:#c53526; padding:15px;}
 
@@ -593,30 +624,57 @@ padding:3px;
 .instruction{font-size:.6em; margin-bottom:10px; width:280px; float:left;}
 #spot_holder p.info, #fav_holder p.info #spot_holder p #fav_holder p {
 	margin-left: 0px;
-	font-size: 1em;
+	font-size: .9em;
 	margin-bottom: -10px;
 	width: 295px;
+}
+#spot_holder .artist{
+	font-size:.8em;
+	font-family:'PT Sans', san-serif;
+	
+}
+#fav_holder .artist {
+	font-size:.8em;
+	font-family:'PT Sans', san-serif;
+	
 }
 #spot_holder a div, #fav_holder a div {
 	margin: 10px;
 	margin-left: 0px;
 	margin-right: 10px;
 }
+
 .info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
 .info_button{width:220px;}
 .spot_button{width:295px;}
 .button_on, .button_off:hover{color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
-.more_button{width:70px;color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left;  cursor:pointer}
+.more_button{width: 80px;
+color: white;
+background: #c53526;
+padding: 3px;
+margin-bottom: 3px;
+font-size: .6em;
+margin-right: 5px;
+border: 1px dotted #ccc;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-hover: 5px;
+-o-border-radius: 5px;
+float: left;
+cursor: pointer;
+margin-top: 6px;
+padding-top: 6px;
+}
 .share_button{float:left; margin-top: 10px; color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;   cursor:pointer}
  #spot_holder .share_button .button_txt,#fav_holder .share_button .button_txt{margin-left:5px;  margin-right:5px; margin-top:2px; margin-bottom:2px;}
 .button_off{color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
 .info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
-.button_icon{float:left;margin-top:4px;  width:20px; font-size:20px;}
-.button_txt{float:left; margin-right;10px; font-family: 'Indie Flower', Arial;}
+.button_icon{float:left;margin-top:2px;  width:20px; font-size:20px;margin-right:5px}
+.button_txt{float:left; margin-right;10px; font-family: 'PT Sans', sans-serif;}
 
 #spot_holder .button_on, #spot_holder .button_off{font-size:.5em; margin-bottom:10px;}
-
+.gray .close, .red .close{margin-left:86%;}
 .gray:hover, .red {
 	background-color: #c53526;
 	color: #ececec;
@@ -771,103 +829,103 @@ gm-style p.info {
 }
 
 .geomix {
-	background-image: url(/MusicWhereYouAre/genre_icons/Roadtrip_geomix_sm.png);
+	background-image: url(genre_icons/Roadtrip_geomix_sm.png);
 }
 .musicwhereyouare {
-	background-image: url(/MusicWhereYouAre/genre_icons/music_where_you_are_sm.png);
+	background-image: url(genre_icons/music_where_you_are_sm.png);
 }
 .folowwme {
-	background-image: url(/MusicWhereYouAre/genre_icons/follow_me_music_sm.png);
+	background-image: url(genre_icons/follow_me_music_sm.png);
 }
 .addtospot {
-	background-image: url(/MusicWhereYouAre/genre_icons/add_to_spot_sm.png);
+	background-image: url(genre_icons/add_to_spot_sm.png);
 }
 
 
 .avant_garde {
-	background-image: url(/MusicWhereYouAre/genre_icons/avant_garde_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;	
+	background-image: url(genre_icons/avant_garde_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;	
 }
 
 .blues {
-	background-image: url(/MusicWhereYouAre/genre_icons/blues_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/blues_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 .classic_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/classic_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/classic_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 .classical {
-	background-image: url(/MusicWhereYouAre/genre_icons/classical_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/classical_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 .country {
-	background-image: url(/MusicWhereYouAre/genre_icons/country_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/country_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .electronic {
-	background-image: url(/MusicWhereYouAre/genre_icons/electronica_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/electronica_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .folk {
-	background-image: url(/MusicWhereYouAre/genre_icons/folk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/folk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .hip-hop {
-	background-image: url(/MusicWhereYouAre/genre_icons/hip-hop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/hip-hop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .holiday {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/holiday_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/holiday_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .indie {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/indie_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/indie_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .jazz {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/jazz_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/jazz_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .kid_music
  {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/kids_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/kids_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .latin {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/latin_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/latin_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .comedy {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/mic_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/mic_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .new_age {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/new_age_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/new_age_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .pop {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/pop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/pop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .punk {
-	background-image: url(/MusicWhereYouAre/genre_icons/punk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/punk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .motown {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/r&b_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/r&b_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .rock {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .soft_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/soft_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/soft_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 .world {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/world_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/world_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #avant_garde_button:hover .avant_garde, #blues_button:hover .blues, #classic_rock_button:hover .classic_rock, #classical_button:hover .classical, #mic_button:hover .comedy, #country_button:hover .country, #drama_button:hover .drama, #electronic_button:hover .electronic, #folk_button:hover .folk, #hip_hop_button:hover .hip-hop,  #holiday_button:hover .holiday, #indie_button:hover .indie, #jazz_button:hover .jazz, #kid_music_button:hover .childrens_music, #latin_button:hover .latin, #new_age_button:hover .new_age, #motown_button:hover .motown, #pop_button:hover .pop, #rock_button:hover .rock, #soft_rock_button:hover .soft_rock, #world_button:hover .world{background-color:#c53526; background-position:-27px 0px}
 	
@@ -1011,8 +1069,8 @@ gm-style p.info {
 }
 
 
-#artist_info ul{margin:0; padding:0; margin-top:5px; margin-bottom:15px; font:Arial, Helvetica, sans-serif}
-#artist_info ul li, #artist_info ul li .off{display:inline; padding:10px; border-right:1px solid #c53526;padding-bottom:6px; padding-top:6px;}
+#artist_info ul{font-family: 'Bitter', san-serif;margin:0; padding:0; margin-top:5px; margin-bottom:15px; font:Arial, Helvetica, sans-serif}
+#artist_info ul li, #artist_info ul li .off{  display:inline; padding:10px; border-right:1px solid #c53526;padding-bottom:6px; padding-top:6px;}
 #artist_info ul li.on, #artist_info ul li:hover{background-color: #c53526; border: 1px solid #ffffff;color:#ffffff;}
 #artist_info ul li a:hover,#artist_info ul li:hover a, #artist_info ul li.on a {color:white;}
 #artist_loader{background:url(/MusicWhereYouAre/loading.gif") width:100px;)}
@@ -1076,6 +1134,7 @@ top: 30%;
 		
 	}
 .event_description{width:75%}
+
 #country_form, .alert{
 left: 25%;
 top: 20%;
@@ -1136,6 +1195,7 @@ top: 20%;
 }
 /*Look at TAS for how to reset the boxes so the items are vertical;*/
 @media screen and (max-width: 480px) {
+header{width:0px; padding:21px;height:30px;}
 #info-area{padding-top:2.5%; padding-bottom:14%}
 #whereyouat{ float:left; width:55%}
 header{float:left; margin-left:15px;}
@@ -1174,7 +1234,7 @@ header{float:left; margin-left:15px;}
 #info-area .button_txt{display:none}
 #iframe_holder{display:none}
 #search {
-		width: 83%;
+		width: 80%;
 		margin-bottom: 0px;
 		
 	}
@@ -1291,7 +1351,7 @@ border: 1px solid #ececec;
 		width: 300px
 	}
 	h4, #spot_holder .spot_icon {
-		font-family: 'Indie Flower', Arial;
+		
 		color: #c53526;
 		margin-bottom: 0px;
 		padding-bottom: 0px;
@@ -1349,7 +1409,7 @@ border: 1px solid #ececec;
 
 }
 #artist_loader h4{position:absolute; right:0px; font-size:13px;top:0px; background:#C53526; color:white; padding:5px; padding-right:10px; border-top-left-radius:5px; border-bottom-left-radius:5px; -webkit-border-top-left-radius:5px; -webkit-border-bottom-left-radius:5px;-moz-border-top-left-radius:5px; -moz-border-bottom-left-radius:5px;   -o-border-top-left-radius:5px; -o-border-bottom-left-radius:5px;}
-.close, .closey{font-size:12px; position:absolute;padding:5px;margin-left:86%;opacity:1;cursor:pointer; display:none;}
+.close, .closey{font-size:12px; position:absolute;padding:5px;margin-left:89%;opacity:1;cursor:pointer; display:none;}
 .closey{display:block; color:#c53526;}
 .gray:hover .close{display:block}
 .red:hover .close{display:block}
@@ -1401,276 +1461,276 @@ input[type="checkbox"]:checked + label div,input[type="checkbox"]:checked + labe
 
 
 input[type="checkbox"]:checked + label div.avant_garde {
-	background-image: url(/MusicWhereYouAre/genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 input[type="checkbox"]:hover + label div.avant_garde {
-	background-image: url(/MusicWhereYouAre/genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 #selector div.checkbox:hover .avant_garde {
-	background: url(/MusicWhereYouAre/genre_icons/avant_garde_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/avant_garde_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 
 input[type="checkbox"]:checked + label div.blues {
-	background-image: url(/MusicWhereYouAre/genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 input[type="checkbox"]:hover + label div.blues {
-	background-image: url(/MusicWhereYouAre/genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .blues {
-	background: url(/MusicWhereYouAre/genre_icons/blues_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/blues_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.classic_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.classic_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .classic_rock {
-	background: url(/MusicWhereYouAre/genre_icons/classic_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/classic_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.classical {
-	background-image: url(/MusicWhereYouAre/genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.classical {
-	background-image: url(/MusicWhereYouAre/genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .classical {
-	background: url(/MusicWhereYouAre/genre_icons/classical_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/classical_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.country {
-	background-image: url(/MusicWhereYouAre/genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.country {
-	background-image: url(/MusicWhereYouAre/genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .country {
-	background: url(/MusicWhereYouAre/genre_icons/country_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/country_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .drama {
-	background: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.electronic {
-	background-image: url(/MusicWhereYouAre/genre_icons/electronica_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/electronica_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.electronic {
-	background-image: url(/MusicWhereYouAre/genre_icons/electronica_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/electronica_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #selector div.checkbox:hover .electronic {
-	background: url(/MusicWhereYouAre/genre_icons/electronica_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/electronica_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.folk {
-	background-image: url(/MusicWhereYouAre/genre_icons/folk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/folk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.folk {
-	background-image: url(/MusicWhereYouAre/genre_icons/folk_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/folk_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #selector div.checkbox:hover .folk {
-	background: url(/MusicWhereYouAre/genre_icons/folk_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/folk_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.hip-hop {
-	background-image: url(/MusicWhereYouAre/genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.hip-hop {
-	background-image: url(/MusicWhereYouAre/genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .hip-hop {
-	background: url(/MusicWhereYouAre/genre_icons/hip-hop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/hip-hop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.drama {
-	background-image: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/drama_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #selector div.checkbox:hover .drama {
-	background: url(/MusicWhereYouAre/genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.holiday {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.holiday {
-	background-image: url(/MusicWhereYouAre/genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .holiday {
-	background: url(/MusicWhereYouAre/genre_icons/holiday_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/holiday_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.indie {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.indie {
-	background-image: url(/MusicWhereYouAre/genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .indie {
-	background: url(/MusicWhereYouAre/genre_icons/indie_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/indie_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.jazz {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.jazz {
-	background-image: url(/MusicWhereYouAre/genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .jazz {
-	background: url(/MusicWhereYouAre/genre_icons/jazz_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/jazz_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.kid_music {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.kid_music {
-	background-image: url(/MusicWhereYouAre/genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .kid_music {
-	background: url(/MusicWhereYouAre/genre_icons/kids_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/kids_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.latin {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.latin {
-	background-image: url(/MusicWhereYouAre/genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .latin {
-	background: url(/MusicWhereYouAre/genre_icons/latin_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/latin_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.comedy {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.comedy {
-	background-image: url(/MusicWhereYouAre/genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #selector div.checkbox:hover .comedy {
-	background: url(/MusicWhereYouAre/genre_icons/mic_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/mic_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.new_age {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/new_age_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/new_age_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.new_age {
-	background-image: url(/MusicWhereYouAre/genre_icons/new_age_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/new_age_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #selector div.checkbox:hover .new_age {
-	background: url(/MusicWhereYouAre/genre_icons/new_age_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/new_age_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.pop {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.pop {
-	background-image: url(/MusicWhereYouAre/genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .pop {
-	background: url(/MusicWhereYouAre/genre_icons/pop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/pop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.punk {
-	background-image: url(/MusicWhereYouAre/genre_icons/punk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/punk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.punk {
-	background-image: url(/MusicWhereYouAre/genre_icons/punk_rw_sm.png)); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/punk_rw_sm.png)); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .punk {
-	background: url(/MusicWhereYouAre/genre_icons/punk_rw_sm.png)) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/punk_rw_sm.png)) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.motown {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.motown {
-	background-image: url(/MusicWhereYouAre/genre_icons//r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons//r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .motown {
-	background: url(/MusicWhereYouAre/genre_icons//r&b_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons//r&b_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.rock {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .rock {
-	background: url(/MusicWhereYouAre/genre_icons/rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.soft_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.soft_rock {
-	background-image: url(/MusicWhereYouAre/genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .soft_rock {
-	background: url(/MusicWhereYouAre/genre_icons/soft_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/soft_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 input[type="checkbox"]:checked + label div.world {
 
-	background-image: url(/MusicWhereYouAre/genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background-image: url(genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 input[type="checkbox"]:hover + label div.world {
-	background-image: url(/MusicWhereYouAre/genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
+	background-image: url(genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
 }
 #selector div.checkbox:hover .world {
-	background: url(/MusicWhereYouAre/genre_icons/world_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+	background: url(genre_icons/world_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 
 #geolocation_alert{overflow-y:scroll}
 
-.sharer{width:300px; height:33px; position:fixed; background:white; border: 1px dotted #ccc; border-top:1px solid #C53526; opacity:.95; bottom:0; left:0%; padding:10px;}
+.sharer{width:305px; height:33px; position:fixed; background:white; border: 1px dotted #ccc; border-top:1px solid #C53526; opacity:.95; bottom:0; left:0%; padding:10px;}
 
 .result_btn{background:#ffffff;float:left; padding:7px;padding-top:3px; padding-bottom:3px; margin-right:5px;margin-bottom:6px; color:#C53526; border:1px dotted #ccc; cursor:pointer}
 .result_btn sup{font-family:Arial, Helvetica, Tahoma, san-serif; font-size:13px; padding:3px;font-weight:bold}
@@ -1682,9 +1742,10 @@ div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
 .share_box div.state_on{color:#C53526; border:none; font-size:29px; background:white; margin-bottom:7px;margin-right:12px;border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
 .share_box div.state_off{cursor:pointer; color:white;  font-size:29px;background:#C53526; border: 1px dotted #ccc;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;margin-bottom:7px; margin-right:12px;}
 .share_box form textarea{ float:left;width:205px; font-size:11px;}
+.share_box .closey{margin-left:86%}
 
 
 
 .viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}
 .event_image{float:left; padding:10px;}
-.event_description{float:left; width:64%; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:10px;  padding:bottom:10px; padding-right:10px;}
+.event_description{float:left; width:64%; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:10px; margin-bottom:0px;  padding:bottom:10px; padding-right:10px;}

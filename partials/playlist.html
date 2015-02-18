@@ -7,22 +7,13 @@
 	<div class="clear"></div>
 </section>
 
-<section class="alert"  ng-show="noSongs==true;" >
+<section class="alert"  ng-show="errorMessage==true;" >
 
 	<p>
-		Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
 
 	</p>
-	<p>
-		And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
-	</p>
-	<p>
-		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
-	</p>
-
-	<p>
-		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
-	</p>
+	
 	<div class="clear"></div>
 </section>
 
@@ -36,28 +27,26 @@
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 
-	<div id="spot_headline">
-		<h4 style="margin-top:15px;"><span style="color:#979797">Your</span> GeoMix</h4>
-	</div>
+	
 
 	<div class="clear"></div>
-	<div>
+	<div style="margin-top:10px;">
 		<button class="{{buttons[0].classy}}"  ng-click="runButtons('artists'); runApp(start_number, counter)" ng-swipe-left="goBack()">
 
 			<div class="button_txt">
-				&nbsp;Artists From Your Location&nbsp;
+				&nbsp;Artists From Your Location <sup>&nbsp;</sup>&nbsp;
 			</div>
 		</button>
-		<button class="{{buttons[1].classy}}" ng-click="runButtons('songs'); runSongAboutSearch()" >
+		<button class="{{buttons[1].classy}}" ng-click="runButtons('songs'); runSongAboutSearch(start_index, 15)" >
 
 			<div class="button_txt">
-				&nbsp;Songs About Your Location <sup>beta</sup>&nbsp;
+				&nbsp;Songs About Your Location <sup>&nbsp;</sup>&nbsp;
 			</div>
 		</button>
 	</div>
 	<div class="clear" ></div>
 	<div ng-hide="fromShower=="false">
-	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/>
 	</div>
 	<div ng-hide="loading==true">
 		<div class="{{buttons[0].state}}">
@@ -77,7 +66,7 @@
 					<p class="info" id="pinfo{{song.num_id}}">
 						{{song.name}}
 						<br>
-						{{song.artists[0].name}}
+						<span class="artist">{{song.artists[0].name}}</span>
 					</p>
 					<a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 					<a ng-click="switchFavorite(song.id, song.num_id, 'from')"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
@@ -144,7 +133,7 @@
 
 		</div>
 		</div>
-		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading_tags==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/>
+		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading_tags==true"><img src="loading.gif" alt="loading"/>
 		</div>
 		<div ng-hide="aboutShower==false">
 		<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
@@ -160,7 +149,7 @@
 			<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
 
 				<input type="text"  name="song_form" id="findmusic" placeholder="Add a landmark, person, etc to your playlist."  class="text"   ng-model="searchterm" ng-enter="lookUpTag(searchterm, 5,'yes', 'user')">
-				<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpTag(searchterm, 5)"   ng-show="noPickedGenre==false"></div>
+				<div class="search"  aria-hidden="true" data-icon="e" ng-click="runSongAboutSearch(start_index, 5)"  ></div>
 				<div class="clear">
 					<div>
 			</form>
@@ -191,9 +180,9 @@
 				<p class="info" id="pinfo{{song.i}}">
 					{{song.name}}
 					<br>
-					{{song.artists[0].name}}
+					<span class="artist">{{song.artists[0].name}}</span>
 					<br>
-					<sup>GeoKeyword: {{song.keyword}}</sup>
+					<sup>GeoKeyword: {{song.searchterm}}</sup>
 
 				</p
 				><a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.id}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
@@ -209,16 +198,16 @@
 		</div>
 		<div class="sharer" >
 
-			<!--<button class="more_button" ng-hide="count_about==0" ng-click="prevSongsAbout()" ng-enter="prevSongsAbout()">
+			<button class="more_button" ng-hide="prevLookUp==false" ng-click="prevSongsAbout(15)" ng-enter="prevSongsAbout(15)">
 				<div class=button_txt>
 					« Back
 				</div>
 			</button>
-			<button class="more_button" ng-hide="moreLookUp==false" ng-click="moreSongsAbout(about_number)" ng-enter="moreSongs((start_number+25))">
+			<button class="more_button" ng-hide="moreLookUp==false" ng-click="moreSongsAbout(15)" ng-enter="moreSongsAbout(15)">
 				<div class=button_txt>
 					More Songs »
 				</div>
-			</button>-->
+			</button>
 
 			<div class="share_box animate-show" ng-hide="shareBox==false">
 				<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>

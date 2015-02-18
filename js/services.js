@@ -415,10 +415,12 @@ function($q,  $http, $sce, $rootScope) {
 				 styles: styles
 				
 			};
+			
 			var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-			var marker_image = '/MusicWhereYouAre/genre_icons/marker_sm.svg';
+			var iw_content=''
+			var marker_image = 'genre_icons/marker_sm.svg';
 			for (var i = 1; i < loc_arr.length; i++) {
+				iw_content+=('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>'))
 				var LatLng_marker = new google.maps.LatLng(loc_arr[i].split('@@')[1].split(':')[0], loc_arr[i].split('@@')[1].split(':')[1].split('&&')[0]);
 				var geomarker = new google.maps.Marker({
 					position : LatLng_marker,
@@ -1398,12 +1400,66 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 		},
 		createSongsList: function()
 		{
+			var deferred = $q.defer();
 			var songs_str = $routeParams.qs;
-			var songs;
+			var songs=[]
 			var location_str = '';
-			return $http.get('/scripps.php?q='+songs_str.replace(/_/g, '%20').replace(/--/g, '/').replace(/ /g, '_')).then(function(result){
-				songs=result.data;
+			var tmpArr=songs_str.split('**');
+			var tmpIdArr=[]
+			var tmpTitleArr=[];
+			var tmpFavArr=[];
+			var tmpLat=[];
+			var tmpLong=[];
+			var tmpArtistsArr=[]
+			songs.spot_arr=[];
+			songs.savSpotArr=[];
+			songs.songsArr=[];
+			songs.spot_str='';
+			songs.location_arr=[];
+			songs.final_loc_arr=[];
+			songs.spot_arr=[];
+			songs.song_arr=[];
+			//tmpArr=tmpArr.slice(1,21);
+			
+			//console.log(tmpArr);
+			for(var x=0; x<tmpArr.length-1;x++)
+			{
+				tmpTitleArr.push(tmpArr[x].split('{')[0].replace(/_/g, ' '))
+				tmpIdArr.push(tmpArr[x].split('{')[1].split('~')[0]);
+				tmpArtistsArr.push(tmpArr[x].split('~')[1].split('}')[0].replace(/_/g, ' '));
+				tmpFavArr.push(tmpArr[x].split('}')[1].split(']')[0]);
+				tmpLat.push(parseFloat(tmpArr[x].split(']')[1].split(',')[0]));
+				tmpLong.push(parseFloat(tmpArr[x].split(']')[1].split(',')[1]));
+				songs.push({name:tmpTitleArr[x],tracks:{foreign_id:{spotify:{track:tmpIdArr[x]}}},favorite:tmpFavArr[x], artists:{0:{name:tmpArtistsArr[x]}},artist_location:{latitude: tmpLat[x], longitude: tmpLong[x], location:$location.path().split('/')[2].split('/')[0].replace('*', ', ').replace(/_/g, ' ')}});
+				//tmpTitleArr[x]}{tracks:{foreign_id:{spotify:{track:tmpIdArr[x]}}}}
+				songs.location_arr.push($location.path().split('/')[2].split('/')[0].replace('*', ', ')+'@@'+tmpLat[x] + ':' + tmpLong[x]+'&&<h5>'+tmpTitleArr[x]+'</h5><p>'+tmpArtistsArr[x]+'</p><a href="spotify:track:'+tmpIdArr[x]+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+$location.path().split('/')[2].split('/')[0]+'/'+tmpArtistsArr[x].replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+				songs.spot_str +=tmpIdArr[x]+',';
+				songs.songsArr.push(songs[x]);
+				songs.song_arr.push(tmpIdArr[x]);
+				songs[x].id=tmpIdArr[x];
+				songs.savSpotArr.push("spotify:track:"+tmpIdArr[x].id);
+			}	
+			songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE'+songs.spot_str);
 				
+				songs.location_arr.sort();
+				
+				for (var r=0; r<songs.location_arr.length; r++)
+				{
+					if(!location_str.match(songs.location_arr[r].split('@@')[0]))
+					{
+					songs.final_loc_arr.push('%%'+songs.location_arr[r]);
+					location_str += songs.location_arr[r].split('@@')[0];
+					}
+					else
+					{
+						songs.final_loc_arr.push(songs.location_arr[r].split('@@')[1].split('&&')[1]);
+					}
+				}	
+				
+			
+			/*return $http.get('http://cityblinking.com/scripps.php?q='+songs_str.replace(/_/g, '%20').replace(/--/g, '/').replace(/ /g, '_')).then(function(result){*/
+				/*songs=result.data;
+			
 				songs.spot_arr=[];
 				songs.savSpotArr=[];
 				songs.songsArr=[];
@@ -1412,10 +1468,13 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 				songs.final_loc_arr=[];
 				songs.spot_arr=[];
 				songs.song_arr=[];
-				for (var x=0; x<songs.length-1; x++)
+				for (var x=0; x<tmpArr.length-1; x++)
 				{
-				
 				songs[x].tracks=[];
+				songs[x].artist_location ={};
+				songs[x].tracks.push({"foreign_id": "spotify:track:"+tmpArr.split('~')[0]})	
+				
+				/*songs[x].tracks=[];
 				songs[x].artist_location = {}
 				songs[x].artist_location={};
 				songs[x].tracks.push({ "foreign_id": "spotify:track:"+songs[x].id});
@@ -1456,9 +1515,10 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 						songs.final_loc_arr.push(songs.location_arr[r].split('@@')[1].split('&&')[1]);
 					}
 				}	
-				
-				return songs;
-			});
+				*/
+				deferred.resolve(songs);
+				return deferred.promise;
+			//});
 			
 		},
 		
@@ -1472,16 +1532,16 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 				var url= url.slice(0, 2000);
 				var index =url.lastIndexOf('**');
 				url = url.slice(0, index);
-				var urlObj = {'url': 'http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/'), 'sliced':'yes'}
+				var urlObj = {'url': 'http://musicwhereyour.com/%23'+url.replace('--', '/'), 'sliced':'yes'}
 				
 			}
 			else{
 			
 			var url = (url);
-			var urlObj = {'url': 'http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/'), 'sliced':'no'}
+			var urlObj = {'url': 'http://musicwhereyour.com/%23'+url.replace('--', '/'), 'sliced':'no'}
 			}
 			
-			console.log(url+':'+url.length)
+			
 			url ='http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/');
 			deferred.resolve(urlObj);
 			return deferred.promise;
@@ -1490,10 +1550,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 		getBitLy:function(url)
 		{
 			var bitly = 'http://api.bitly.com/v3/shorten?format=json&apiKey=R_06ae3d8226a246f2a0bb68afe44c8379&login=robostheimer&longUrl='+url
-			console.log(bitly)
 			return $http.get(bitly).then(
 				function(result){
-					console.log()
 					return result.data.data.url;
 				});
 		},	
@@ -1517,12 +1575,17 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify, 
 				return $http.get(url).then(function(results)
 				{
 					
+					for(var x=0; x<results.data.response.data.length; x++)
+					{
+						results.data.response.data[x].number=5;
+					}
 					return results.data;
 				});
 			},
 			
 		lookUpTag: function(searchterm, number, qs, type) {
 				$rootScope.loading_tags=true;
+				var deferred = $q.defer();
 				////////////////////Local Storage////////////////////////
 				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
 				var ls_str=''
@@ -1557,10 +1620,12 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify, 
 				{
 					lsIdFavArr=[];
 				}
-				
+				var obj ={arr:lsTitleArr, searchterm:searchterm.replace(/The /g, ''), number:number, qs:qs,type:type };
+				deferred.resolve(obj)
+				return deferred.promise;
 				///////////////////////End Local Storage/////////////////////
 		
-				var searchterm = searchterm.replace(/The /g, '')
+			//	var searchterm = searchterm.replace(/The /g, '')
 					
 					Spotify.runSpotifySearch(searchterm, number,qs).then(function(result) {
 							
@@ -1648,7 +1713,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			});
 		},
 		
-		runSpotifySearch : function(searchterm, number, qs_noqs)
+		runSpotifySearch : function(searchterm, number, qs_noqs, arr)
 		{
 			
 			if(localStorage.country!=undefined && localStorage.country!='')
@@ -1675,7 +1740,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 					var url = 'https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+'%20year:1960-2014%20NOT%20genre:"Audiobooks, Spoken Word"&type=track&limit='+number
 				}			
 			}
-			//console.log(url);
 			return $http.get(url).then(function(results)
 			{
 				
@@ -1684,8 +1748,9 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 				for(var z=0; z<songs.length; z++)
 				{
 					songs.songsStr+=songs[z].id;
+					songs[z].searchterm = searchterm;
 				}
-				
+				//console.log(songs)
 				return songs;	
 			});
 		},
@@ -1769,17 +1834,19 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 		createLatLng:function(location_arr, counter, zoom, latitude, longitude, spot_arr)
 		{
 			//console.log(location_arr)
+			location_arr.sort();
 			var deferred = $q.defer();
 			var location_str='';
 			var final_loc_arr=[];
 			
 				for (var r = 0; r < location_arr.length; r++) {
-				if (!location_str.match(location_arr[r].split('@@')[0])) {
-					final_loc_arr.push('%%' + location_arr[r]);
-;
-				} else {
+				if(!location_str.match(location_arr[r].split('@@')[0]))
+					{
+					final_loc_arr.push('%%'+location_arr[r]);
+					location_str +=location_arr[r].split('@@')[0];
+					} else {
 					final_loc_arr.push(location_arr[r].split('@@')[1].split('&&')[1]);
-
+					
 				}
 				
 				if (r == (location_arr.length - 1 )/*&& (data.data.response.songs.songsArr.length >= 5 || counter == 5)*/){
@@ -1871,11 +1938,11 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			{
 				zoom=9
 			}
-			else if(number>.9  &&number<1)
+			else if(number>.7  &&number<1)
 			{
 				zoom=10
 			}
-			else if(number>.3 &&number<.9)
+			else if(number>.3 &&number<.7)
 			{
 				zoom=11
 			}
@@ -1896,20 +1963,32 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 MusicWhereYouAreApp.factory("SongLength",[ '$q', '$rootScope', '$http', '$sce','Spotify','LocationDataFetch',
 function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 	return{
-		checkSongLength:function(number,iterator)
+		checkSongLength:function(songs, number,iterator)
 		{
 			$rootScope.loading_tags=true;
 			var location_arr = [];	
 			var artistlocation = '';
 			var artistlocations ={latitude:[], longitude:[]};
-				
-			if($rootScope.holder.length<iterator)
+			var deferred = $q.defer();
+			
+			if(songs.length<iterator)
+			{
+				console.log('less')
+				deferred.resolve(songs);
+				return deferred.promise;
+			}
+			else
+			{
+				console.log('great');
+				deferred.resolve(songs);
+				return deferred.promise;
+			}
+			/*if(songs.length<iterator)
 			{
 				
 				
 				$rootScope.lookUpSongs=$rootScope.holder;
 				
-				//console.log($rootScope.lookUpSongs)
 				for(var y=0; y<$rootScope.holder.length; y++)
 				{
 					//$rootScope.lookUpSongs.push($rootScope.holder[x]);
@@ -1923,6 +2002,7 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 					
 					
 					location_arr.push($rootScope.holder[y].artist_location.location +'@@'+$rootScope.holder[y].artist_location.latitude + ':' + $rootScope.holder[y].artist_location.longitude+'&&<h5>'+$rootScope.holder[y].name+'</h5><p>'+$rootScope.holder[y].artists[0].name+'</p><a href="spotify:track:'+$rootScope.holder[y].id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+$rootScope.holder[y].artist_location.location.replace(', ' , '*').split(',')[0]+'/'+$rootScope.holder[y].artists[0].name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+				
 				}
 	
 				var lat_range =Math.abs(artistlocations.latitude[artistlocations.latitude.length-1]-artistlocations.latitude[0]);
@@ -1967,7 +2047,6 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 						}
 						var lat_range =Math.abs(artistlocations.latitude[artistlocations.latitude.length-1]-artistlocations.latitude[0]);
 						var lng_range = Math.abs(artistlocations.longitude[artistlocations.longitude.length-1]-artistlocations.longitude[0]);
-						console.log(lat_range+':'+lng_range);	
 						if(lat_range>lng_range)
 						{
 							var finalRange=lat_range					
@@ -2003,7 +2082,6 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 						}
 							var lat_range =Math.abs(artistlocations.latitude[artistlocations.latitude.length-1]-artistlocations.latitude[0]);
 							var lng_range = Math.abs(artistlocations.longitude[artistlocations.longitude.length-1]-artistlocations.longitude[0]);
-							console.log(lat_range+':'+lng_range);	
 							if(lat_range>lng_range)
 							{
 								var finalRange=lat_range					
@@ -2017,7 +2095,6 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 							$rootScope.idStr = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.idArr.toString());	
 							
 							LocationDataFetch.count=100000000000;
-							console.log($rootScope.lookUpSongs.length)
 							if($rootScope.lookUpSongs.length>=iterator)
 							{
 								$rootScope.loading_tags=false;
@@ -2027,7 +2104,7 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 					
 					$rootScope.idStr = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.idArr.toString());
 				
-			}
+			}*/
 		},
 	};
 }]);

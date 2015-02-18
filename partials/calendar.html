@@ -6,6 +6,15 @@
 			
 			<div class="clear"></div>
 		</section>
+<section class="alert"  ng-show="errorMessage==true;" >
+
+	<p>
+		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+
+	</p>
+	
+	<div class="clear"></div>
+</section>		
 		
 <section class="alert"  ng-show="noSongs==true;" >
 
@@ -28,9 +37,8 @@
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
-	<br>
-	<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loadingEvents==true">{{location}}</span></h4><br>
-		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loadingEvents==true"><img src="/MusicWhereYouAre/loading.gif" alt="loadingEvents"/></div>
+		<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loadingEvents==true">{{location}}</span></h4><br>
+		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loadingEvents==true"><img src="loading.gif" alt="loadingEvents"/></div>
 		<div class="clear"></div>
 		
 		<div ng-show="noShows==true"><h3>There are no shows scheduled for this {{location}}.</h3></div>
@@ -40,7 +48,7 @@
 	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loadingEvents==true">
 		<div class="event_image info"><img src="{{event.venue.image[1]['#text']}}"/></div>
 			
-				<h6 class="event_description" style="margin:0;"><a href="{{event.url}}" target="_blank">{{event.artists.headliner}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
+				<h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{event.artists.headliner}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
 					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br> </span><br>
 					Date: {{event.startDate}}<br>

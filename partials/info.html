@@ -1,12 +1,22 @@
+<section class="alert"  ng-show="errorMessage==true;" >
+
+	<p>
+		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+
+	</p>
+	
+	<div class="clear"></div>
+</section>
 <section id="info-area"  ng-swipe-up="goBack()" >
 		<form>
 					<input type="text"  name="song_form" id="artistsearch" placeholder="Search for an artist"  class="text"   ng-model="artist" ng-enter="lookUpArtist(artist)" />
 					<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpArtist(artist)"></div>
 					
 			</form>
-	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="/MusicWhereYouAre/loading.gif" alt="loading"/></div>
+	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
 		
+	<!--<div>There are no information about <b> {{name}}</b></div>	-->
 	<div id="intro_image" ng-show="loading==false"></div>
 	<div id="artist_holder" ng-show="loading==false">
 		

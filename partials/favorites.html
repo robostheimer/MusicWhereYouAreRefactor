@@ -6,6 +6,15 @@
 			
 			<div class="clear"></div>
 		</section>
+<section class="alert"  ng-show="errorMessage==true;" >
+
+	<p>
+		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+
+	</p>
+	
+	<div class="clear"></div>
+</section>
 		
 <section class="alert"  ng-show="noSongs==true;" >
 			
@@ -63,7 +72,7 @@
 				<p class="info" id="pinfo{{song.num_id}}">
 					{{song.name}}
 					<br>
-					{{song.artists[0].name}}<br>
+					<span class="artist">{{song.artists[0].name}}</span><br>
 					<sup>From: <a href="#/playlist/{{song.artist_location.location.split(',')[0]}}*{{song.artist_location.location.split(',')[1].replace(' ','')}}">{{song.artist_location.location}}</a></sup>
 				</p>
 				

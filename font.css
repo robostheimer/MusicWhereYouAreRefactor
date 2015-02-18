@@ -1,0 +1,209 @@
+@font-face {
+	font-family: 'MusicWhereYouAre';
+	src:url('fonts/MusicWhereYouAre.eot?-rkat59');
+	src:url('fonts/MusicWhereYouAre.eot?#iefix-rkat59') format('embedded-opentype'),
+		url('fonts/MusicWhereYouAre.woff?-rkat59') format('woff'),
+		url('/fonts/MusicWhereYouAre.ttf?-rkat59') format('truetype'),
+		url('fonts/MusicWhereYouAre.svg?-rkat59#MusicWhereYouAre') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon"], [class*=" icon"] {
+	font-family: 'MusicWhereYouAre';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.boxyma:before{background:#c53526; color:white; width;content: "\6a";padding:5px; border:1px dotted white; -moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px; font-size:25px;}
+.boxypl:before{background:#c53526; color:white; width;content: "\54";padding:5px; border:1px dotted white; -moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px; font-size:25px;}
+.boxyge:before{background:#c53526; color:white; width;content: "\57";padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px}
+.boxyfa:before{background:#c53526; color:white; width;content: "\74";padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px;margin-right:5px;}
+.boxyjb:before{background:#c53526; color:white; width;content: "\72";padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px;}
+.boxyrs:before{background:#c53526; color:white; width;content: "\26";padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px;}
+.boxycal:before{background:#c53526; color:white; width;content: "\31	";padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px;}
+.boxyshare:before{background:#c53526; color:white; width;content: "\7a"; padding:5px; border:1px dotted white;-moz-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;font-size:25px;}
+
+.iconarrow-up:before {
+	content: "\50";
+}
+
+.iconkid:before {
+	content: "\52";
+}
+.icondrama1:before {
+	content: "\40";
+}
+.iconsong:before {
+	content: "\54";padding:5px;
+}
+.iconequalizer12:before {
+	content: "\57";padding:5px;
+}
+.iconsmall84:before {
+	content: "\58";
+}
+.iconretro3:before {
+	content: "\44";
+}
+.iconpush20:before {
+	content: "\4e";
+}
+.iconnote:before {
+	content: "\59";
+}
+.iconmusic150:before {
+	content: "\4d";
+}
+.iconmicrophone45:before {
+	content: "\47";
+}
+.iconharp3:before {
+	content: "\46";
+}
+.iconguitar11:before {
+	content: "\4b";
+}
+.iconfedora:before {
+	content: "\42";
+}
+.iconearth24:before {
+	content: "\53";
+}
+.iconcompass47:before {
+	content: "\48";
+}
+.iconlist:before {
+	content: "\6d";
+}
+.iconfavorite:before {
+	content: "\74";padding:5px;
+}
+.iconfavorite2:before {
+	content: "\75";
+}
+.iconheadphones2:before {
+	content: "\68";
+}
+.iconequalizer {
+	content: "\57";
+}
+
+.iconsettings5:before {
+	content: "\5a";
+}
+.iconcheckbox2:before {
+	content: "\71";
+}
+.iconinfo:before {
+	content: "\2a";
+}
+.iconpencil:before {
+	content: "\29";
+}
+.iconpencil2:before {
+	content: "\28";
+}
+.iconheadphones:before {
+	content: "\64";
+}
+.iconfolder:before {
+	content: "\79";
+}
+.iconlocation3:before {
+	content: "\67";
+}
+.iconlocation2:before {
+	content: "\66";
+}
+
+.iconmap2:before {
+	content: "\6b";
+}
+.iconusers2:before {
+	content: "\6c";
+}
+.iconsearch:before {
+	content: "\73";
+}
+.icontarget:before {
+	content: "\65";
+}
+.iconsignup:before {
+	content: "\6f";
+}
+.iconlink:before {
+	content: "\77";
+}
+.iconclose:before {
+	content: "\78";
+}
+.iconcheckmark:before {
+	content: "\6e";
+}
+.iconcheckmark2:before {
+	content: "\35";
+}
+.iconcheckbox-checked:before {
+	content: "\36";
+}
+.iconusers:before {
+	content: "\76";
+}
+.iconcompass:before {
+	content: "\61";
+}
+.iconlocation:before {
+	content: "\62";
+}
+.iconarrowleft3:before {
+	content: "\24";
+}
+
+
+.iconarrow-right2:before {
+	content: "\25";
+}
+.icon-RoadSoda:before {
+	content: "\26";
+}
+.iconspotify:before {
+	content: "\63";
+}
+
+.iconmap:before {
+	content: "\6a";
+}
+
+.geolocation-jukebox:before {
+	content: "\72";
+}
+.icon-googleplus:before {
+	content: "\21";
+}
+.icon-facebook:before {
+	content: "\40";
+}
+.icon-twitter:before {
+	content: "\5e";
+}
+.icon-plus:before {
+	content: "\7e";
+}
+.share:before {
+	content: "\7a";
+}
+
+.icon-calendar:before {
+	content: "\31";
+}
+.calendar:before {
+	content: "\31";
+}
