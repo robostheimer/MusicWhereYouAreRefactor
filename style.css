@@ -577,6 +577,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 width:265px;
 float:left;
 padding:3px;
+margin-bottom:7px;
 }
 #selector_genre{margin-top:5px;}
 #selector_genre input {
@@ -1195,7 +1196,7 @@ top: 20%;
 }
 /*Look at TAS for how to reset the boxes so the items are vertical;*/
 @media screen and (max-width: 480px) {
-header{width:0px; padding:21px;height:30px;}
+header{width:0px; padding:21px;height:10px;}
 #info-area{padding-top:2.5%; padding-bottom:14%}
 #whereyouat{ float:left; width:55%}
 header{float:left; margin-left:15px;}

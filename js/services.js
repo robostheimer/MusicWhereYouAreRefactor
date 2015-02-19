@@ -397,7 +397,7 @@ function($q,  $http, $sce, $rootScope) {
 	
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
-		
+		console.log(lat+','+ long);
 		
 		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
@@ -1740,6 +1740,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 					var url = 'https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+'%20year:1960-2014%20NOT%20genre:"Audiobooks, Spoken Word"&type=track&limit='+number
 				}			
 			}
+			
 			return $http.get(url).then(function(results)
 			{
 				
