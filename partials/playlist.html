@@ -17,11 +17,23 @@
 	<div class="clear"></div>
 </section>
 
+<section class="alert"  ng-show="noMoreSongs==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noMoreSongs=false; moreHider=true"></div>
+	<p>
+		Bummer! You've reached the end of {{location}}'s musical road - at least according to the database.  Try out another city! Or click the back button to scroll back through the playlists.  
+
+	</p>
+	
+	<div class="clear"></div>
+</section>
+
 <section class="alert"  ng-show="tooMany==true">
 			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="tooMany=false"></div>
 			<p>
 				Unfortunately, there were too many songs in your playlist to create a Bit.ly link.  So that you can share at least part of your playlist on Twitter, we have removed songs from the bottom of your playlist. If you would like to share your complete playlist with your friends via email or even Facebook, you can copy the following link and paste it into an email or as a Facebook Status:<br><br> <textarea  rows="9" style="width:97%" >{{long_url.replace('%23','#')}} </textarea>	</p>
 </section>
+
+
 
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
@@ -53,7 +65,7 @@
 			<div id="iframe_holder">
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savSpotArr, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
@@ -138,9 +150,9 @@
 		<div ng-hide="aboutShower==false">
 		<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
 			<div id="iframe_holder" ng-hide="lookUpSongs.length==0">
-				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{lookUpSongs.idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(savIdArr, location);" ng-hide="lookUpSongs.length==0">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(lookUpSongs.savSpotArr, location);" ng-hide="lookUpSongs.length==0">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
@@ -158,7 +170,7 @@
 			<div class="clear"></div>
 
 			
-			<div ng-show="lookUpSongs.length==0">
+			<div ng-show="finalcollector.length==0">
 				Oh Snap! We were unable to find any songs about your current location. Try adding search terms to the form above to see if that gets you any songs.  If that fails, maybe you should pen a song about this desolate (from a music standpoint) place.
 			</div>
 			<div ng-repeat="song in lookUpSongs track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">

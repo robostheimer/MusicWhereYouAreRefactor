@@ -16,9 +16,9 @@
 	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
 		
-	<!--<div>There are no information about <b> {{name}}</b></div>	-->
-	<div id="intro_image" ng-show="loading==false"></div>
-	<div id="artist_holder" ng-show="loading==false">
+	<div ng-show="noArtist==true">There are no information about <b> {{name}}</b></div>
+	<div id="intro_image" ng-hide="noArtist==true"></div>
+	<div id="artist_holder" ng-hide="noArtist==true">
 		
 		
 		<div id='artist_info'>

@@ -117,13 +117,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 		
 		 	}
 		 	songs = {};
-		 	if(finalgenres=='' && era=='')
+		 	 if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=20&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=20&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
 			}
+			
 			return $http.get(url).success(function(data) {
 				
 				var songs = data.response.songs;
@@ -397,7 +398,7 @@ function($q,  $http, $sce, $rootScope) {
 	
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
-		console.log(lat+','+ long);
+		console.log(lat+','+ long+':'+zoom);
 		
 		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
@@ -511,6 +512,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					if(latorlng=="lat")
 					{
 					return	$http.get(lat_url).then(function(data){
+						console.log(data)
 						if (data.data.rows != null) {
 							for(var j=0; j<data.data.rows.length;j++)
 								{
@@ -519,6 +521,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 								}
 							geolocation.latitude=lats/data.data.rows.length;
 							geolocation.lat_min = data.data.rows[0][0] - ratio;
+							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + ratio;
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
@@ -1828,6 +1831,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			songs.location_arr.sort();
 			songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString();
 			songs.spot_strFinal = $sce.trustAsResourceUrl(songs.spot_str);
+			console.log(songs)
 			deferred.resolve(songs);
 			return deferred.promise;
 			
@@ -1874,11 +1878,11 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
 				if(data.data.response.songs.length==0)
 				{
-					song.artist_location={latitude:39.3158, longitude:-50, location:'No Location Data Available', location_link:''} ;
+					song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
 				}
 				else if(jQuery.isEmptyObject(data.data.response.songs[0].artist_location)==true)
 				{
-				song.artist_location={latitude:39.3158, longitude:-50, location:'No Location Data Available', location_link:''} ;
+				song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
 				
 				//return data.repsonse.songs[0].artist_location;
 				//console.log(data.repsonse.songs[0].artist_location)
@@ -1902,52 +1906,50 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 		
 		runRange:function(number)
 		{
-			if(number>100 )
+			
+			if(number>15 )
 			{
 				zoom=2;
 			}
-			if(number>60&&number<100)
+			if(number>10&&number<15)
 			{
 				zoom=3;
 			}
-			if(number>50&&number<60)
-			{
-				zoom=3;
-			}
-			if(number>30&&number<50)
+			
+			if(number>7&&number<10)
 			{
 				zoom=4;
 			}
-			else if(number>20&&number<30)
+			else if(number>5&&number<7)
 			{
 				zoom=5
 			}
-			else if(number>10&&number<20)
+			else if(number>3&&number<5)
 			{
 				zoom=6
 			}
 			
-			else if(number>5 &&number<10) 
+			else if(number>2 &&number<3) 
 			{
 				zoom=7
 			}
-			else if(number>3&&number<5)
+			else if(number>1&&number<2)
 			{
 				zoom=8
 			}
-			else if(number>1&&number<3) 
+			else if(number>.8&&number<1) 
 			{
 				zoom=9
 			}
-			else if(number>.7  &&number<1)
+			else if(number>.6 && number<.8)
 			{
 				zoom=10
 			}
-			else if(number>.3 &&number<.7)
+			else if(number>.29 && number<.6)
 			{
 				zoom=11
 			}
-			else if(number>.2 &&number<.3)
+			else if(number>.2 &&number<.29)
 			{
 				zoom=12
 			}
@@ -1955,6 +1957,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			{
 				zoom=13
 			}
+			
 			return zoom;
 		}
 		
