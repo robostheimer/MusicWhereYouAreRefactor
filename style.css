@@ -794,7 +794,7 @@ gm-style p.info {
 	z-index: 100001;
 	padding: 10px;
 	float:right;
-	padding-bottom: 0;
+	padding-bottom: 3px;
 	bottom:50px;
 	right:0;
 	background:white;

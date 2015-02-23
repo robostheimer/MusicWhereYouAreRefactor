@@ -171,7 +171,7 @@ function($compileProvider)
     }).
     
       otherwise({
-        redirectTo: '/map'
+        redirectTo: '/playlist'
       });
   }]);
 

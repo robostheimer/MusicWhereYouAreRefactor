@@ -175,13 +175,14 @@
 			</p>
 
 		</section>-->
-		<section id="map-area" class="animate-show" ng-hide="noSongs==true">
+		<section id="map-area" class="animate-show" ng-hide="noSongs==true" >
 			<div style="width:100%;height:90%; background:white; position:absolute; z-index:1" ng-hide="loading==false">
 				<div style="width:100px; margin:auto"><img src="loading.gif" alt="loading"/>
 					
 				</div>
 			</div>
-			<div mwya-map id='map-canvas' zoom="12" longitude="{{longitude}}" latitude="{{latitude}}" maptype="roadmap" scrollwheel="false" >
+			
+			<div mwya-map id='map-canvas' zoom="{{zoom}}"  longitude="{{longitude}}" latitude="{{latitude}}" maptype="roadmap" scrollwheel="false" >
 					<div style="width:100px; margin:auto"><img src="loading.gif" alt="loading"/>
 					
 				</div>

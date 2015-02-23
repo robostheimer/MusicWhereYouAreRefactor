@@ -396,11 +396,28 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
 function($q,  $http, $sce, $rootScope) {
 	
+	///Creates compiled variables for mwya-map directive to create the map////
+	$rootScope.latitude =0;
+	$rootScope.longitude=150;
+	$rootScope.locationarrstr='';
+	$rootScope.zoom;
+	
+	
+
+	///////////////Create a Directive to remove this from Services.  See evernote, but keep a watch on a specific "Map" object that includes {zoom, lat, long, arr, spot_arr}; 
+	//////////////when this changes, change the map
+	/////////////object should be modeled after finalcollector in each service//////////////////////
+	/////////////Will need to be added to holder_arr.songs, finalcollector, and songFav////////////
 	return {
 		runMap :function(zoom,lat, long, arr, spot_arr){
-		console.log(lat+','+ long+':'+zoom);
-		
-		styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
+			
+			
+			$rootScope.latitude =lat;
+			$rootScope.longitude=long;
+			$rootScope.locationarrstr=arr.toString();
+			$rootScope.zoom = zoom;
+			
+		/*styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
 			var loc_arr=[];
 			var loc_arr_string = arr.toString().replace(/<\/p>,/g, '');
@@ -443,7 +460,7 @@ function($q,  $http, $sce, $rootScope) {
 					})(geomarker, i));
 					
 				
-			}	
+			}	*/
 		} 
 	};
 }]);
@@ -512,7 +529,6 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					if(latorlng=="lat")
 					{
 					return	$http.get(lat_url).then(function(data){
-						console.log(data)
 						if (data.data.rows != null) {
 							for(var j=0; j<data.data.rows.length;j++)
 								{
@@ -1831,7 +1847,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			songs.location_arr.sort();
 			songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString();
 			songs.spot_strFinal = $sce.trustAsResourceUrl(songs.spot_str);
-			console.log(songs)
 			deferred.resolve(songs);
 			return deferred.promise;
 			
@@ -1977,13 +1992,11 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 			
 			if(songs.length<iterator)
 			{
-				console.log('less')
 				deferred.resolve(songs);
 				return deferred.promise;
 			}
 			else
 			{
-				console.log('great');
 				deferred.resolve(songs);
 				return deferred.promise;
 			}

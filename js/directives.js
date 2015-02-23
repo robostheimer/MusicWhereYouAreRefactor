@@ -6,117 +6,72 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
  return {
  	 	
     	 restrict: 'AE',
-            replace: true,
-           // template: '<div></div>',
-            scope: true,
-            link: function(scope, element, attrs ) {/*
-				element.addClass('map');
+         //replace: true,
+         scope: { }, 
+         transclude: true,
+            
+            link: function(rootScope, element, attrs ) {
+            	rootScope.latitude =attrs.latitude;
+            	rootScope.longitude=attrs.longitude;
+            	attrs.$observe('latitude', function(){
+            	var loc_arr_string='';	
+            	var loc_arr=[];
+            	var zoom =parseInt(attrs.zoom);
+            	var iw_content=''
+            	var styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
+				$rootScope.noSongs=false;
 				
-                var myOptions = {
-                    zoom: 12,
-                    center: new google.maps.LatLng(0,0),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    scrollwheel: true
-                };
-                 var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
-                if(attrs.latitude)
-                {
-                	var latitude = attrs.latitude;
-                	myOptions.center=new google.maps.LatLng(attrs.latitude, 0)
-                	alert(latitude)
-                	
-                }
-                else
-                {
-                	var latitude = 30
-                }
-                scope.$watch($rootScope.finalLat, function(latitude) {
-                 	alert('changed')
-                 	alert(attrs.latitude)
-                    map.setCenter(new google.maps.LatLng(attrs.latitude, 0));
-                    alert(myOptions.center)
-                }, true);
-                 map = new google.maps.Map(document.getElementById('map-canvas'), myOptions); 
-				// myOptions.center = new google.maps.LatLng(parseFloat(latitude), 0);
-				 
-                //zoom as attribute
-               /* if(attrs.zoom && parseInt(attrs.zoom)) myOptions.zoom = parseInt(attrs.zoom);
-                //center as attribute
-                if(attrs.latitude){
-                    var latitude = scope.$eval(attrs.latitude);
-                    
-                }
-                if(attrs.longitude)
-                {
-                	var longitude=scope.eval(attrs.longitude)
-                	console.log(longitude)
-                }
-                if(parseFloat(latitude) && parseFloat(longitude))
-                {
-                        myOptions.center = new google.maps.LatLng(parseFloat(scope.latitude), parseFloat(scope.longitude));
-                 }       
-                //maptype as attribute
-                if(attrs.maptype){
-                     switch(attrs.maptype.toLowerCase()){
-                         case 'hybrid':
-                             myOptions.mapTypeId = google.maps.MapTypeId.HYBRID;
-                             break;
-                         case 'roadmap':
-                             myOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
-                             break;
-                         case 'satellite':
-                             myOptions.mapTypeId = google.maps.MapTypeId.SATELLITE;
-                             break;
-                         case 'terrain':
-                             myOptions.mapTypeId = google.maps.MapTypeId.TERRAIN;
-                             break;
-                         default:
-                             myOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
-                             break;
-                     }
-                }
-                if(attrs.scrollwheel){
-                    switch(attrs.scrollwheel.toLowerCase()){
-                        case 'true':
-                            myOptions.scrollwheel = true;
-                            break;
-                        case 'false':
-                            myOptions.scrollwheel = false;
-                            break;
-                        default:
-                            myOptions.scrollwheel = true;
-                            break;
-                    }
-                }
-
-                var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
-                
-                scope.$watch('latitude', function(latitude, longitude) {
-                    map.setCenter(new google.maps.LatLng(latitude, longitude));
-                }, true);
-                console.log(myOptions);
-               /* google.maps.event.addListener(map, 'drag', function(e) {
-                    var Latlng = map.getCenter();
-                    scope.$apply(function() {
-                        scope.center.lat = Latlng.lat();
-                        scope.center.lon = Latlng.lng();
-                    });
-                });
-
-                google.maps.event.addListener(map, 'click', function(e) {
-                    scope.$apply(function() {
-                        var myLatlng = new google.maps.LatLng(e.latLng.lat(), e.latLng.lng());
-                        var marker = new google.maps.Marker({
-                            position: myLatlng,
-                            map: map,
-                            title:"Hello World!"
-                        });
-                    });
-                }); // end click listener*/
+			
+				loc_arr_string = $rootScope.locationarrstr.replace(/,%%/g, '%%');
+				loc_arr = loc_arr_string.split('%%');
+				var LatLng = new google.maps.LatLng(attrs.latitude, attrs.longitude);
+				var infowindow_textArr =[];
+				var mapOptions = {
+					center : LatLng,
+					zoom : zoom,
+					mapTypeId : google.maps.MapTypeId.ROADMAP,
+					draggable : true,
+					 styles: styles
+					
+				};
+				
+				var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				
+				var marker_image = 'genre_icons/marker_sm.svg';
+				for (var i = 1; i < loc_arr.length; i++) {
+					iw_content+=('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>'))
+					var LatLng_marker = new google.maps.LatLng(loc_arr[i].split('@@')[1].split(':')[0], loc_arr[i].split('@@')[1].split(':')[1].split('&&')[0]);
+					var geomarker = new google.maps.Marker({
+						position : LatLng_marker,
+						map : map,
+						icon : marker_image
+					});
+					var infowindow = new google.maps.InfoWindow();
+					var geomarker, i;
+					//infowindow_textArr.push('<b>'+loc_arr[(i-1)].split('@@')[0].replace(/, US/g,'')+'</b><br><br/>'+loc_arr[(i-1)].split('&&')[1]);
+					
+					
+	
+						google.maps.event.addListener(geomarker, 'click', (function(geomarker, i) {
+							return function() {
+															
+								infowindow.setContent('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>')+'<br/>');
+								infowindow.open(map, geomarker);
+							};
+						})(geomarker, i));
+						
+					
+				}		
+            	
+            	
+            
+           });	
+				
 
             }
-	
-};
+          };
+
+
 });
 
 
