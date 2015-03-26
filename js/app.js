@@ -17,7 +17,8 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
  'angulartics', 
  'angulartics.google.analytics',
  'Events',
- 'Country'
+ 'Country',
+ 'SongsAbout'
  
 ]);
 
@@ -168,6 +169,13 @@ function($compileProvider)
     	templateUrl:'partials/playlist.html',
     	controller:'hashedLocation',
     	animation: 'from-left'
+    }).
+     when('/songs_about',
+    {
+    	
+    	templateUrl:'partials/songs_about.html',
+    	controller:'findSongsAbout',
+    	//animation: 'from-left'
     }).
     
       otherwise({

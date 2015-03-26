@@ -36,7 +36,7 @@
 			</p>
 			<div class="clear"></div>
 </section>		
-
+<section class="alert" ng-show='getFav==false' ><p>Oh, Hi There. Thanks for visiting the Favorites Page.  Right now you don't have any favorites saved, but if you click the star in the song cards so it is filled in, well, maybe it might not be so lonely here.<p>I'm not saying, I'm just saying.</p>   </section>
 
 <section class="alert"  ng-show="tooMany==true;">
 			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="tooMany=false"></div>
@@ -52,9 +52,7 @@
 		<h4 style="margin-top:15px;"><span style="color:#979797">Your</span> Favorites</h4>
 	</div>
 	<div class="clear"></div>
-	<div ng-show='getFav==false' style="font-size:15px"><p>Oh, Hi There. No, no those aren't tears; I was just cutting onions.  That's all.  Get off my back.</p>
-		
-		<p>Let's try this again.  Hi There, I'm the place where songs you star live.  I'm pretty lonely here right now.  So go find some good (or at least music you think is good) music and then click the star button. They'll be right here waiting for you to play or save to Spotify.  I'll be waiting and waiting and waiting... well you get the idea.</p> </div>
+	
 	<div ng-hide="getFav==false">
 	<div id="iframe_holder">
 		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songsFav.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>

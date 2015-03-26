@@ -5,8 +5,8 @@
 //Checks to see if Geolocation is Activated.  If it is it creates a geolocation variable and sends them as parameters to HashCreate service////
 
 ///If Geolocation is not enabled, alerts user to the fact/////////
-MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope',
-function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
+MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope','$location',
+function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 	
 	
 	var zoom = 11;
@@ -37,7 +37,9 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope) {
 			var long_min = currentLong - .25;
 			var long_max = currentLong + .25;
 			////Creates a promise that runs the Playlist creation Function and then the Map Create function.
-			HashCreate.runHash(currentLat, currentLong);
+			HashCreate.runHash(currentLat, currentLong, true, .05).then(function(data){
+				$location.path(data);	
+			});
 			
 						
 
@@ -119,14 +121,12 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	songs = {};
 		 	 if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number+'&callback=JSON_CALLBACK';
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era+'&callback=JSON_CALLBACK';;
 			}
-			
-			return $http.get(url).success(function(data) {
-				
+			return $http.jsonp(url).success(function(data) {
 				var songs = data.response.songs;
 				songs.songsArr=[];
 				songs.songsArr.spot_arr = [];
@@ -402,7 +402,7 @@ function($q,  $http, $sce, $rootScope) {
 	$rootScope.locationarrstr='';
 	$rootScope.zoom;
 	
-	
+	$rootScope.mapOpening=true;
 
 	///////////////Create a Directive to remove this from Services.  See evernote, but keep a watch on a specific "Map" object that includes {zoom, lat, long, arr, spot_arr}; 
 	//////////////when this changes, change the map
@@ -416,6 +416,8 @@ function($q,  $http, $sce, $rootScope) {
 			$rootScope.longitude=long;
 			$rootScope.locationarrstr=arr.toString();
 			$rootScope.zoom = zoom;
+			$rootScope.mapOpening=false;
+			
 			
 		/*styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
 			$rootScope.noSongs=false;
@@ -524,11 +526,11 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					}
 					
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					if(latorlng=="lat")
 					{
-					return	$http.get(lat_url).then(function(data){
+					return	$http.jsonp(lat_url).then(function(data){
 						if (data.data.rows != null) {
 							for(var j=0; j<data.data.rows.length;j++)
 								{
@@ -546,11 +548,13 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						}	
 						return (geolocation);
 					});
+					
 					}
+					
 					else
 					{
 					
-					return	$http.get(long_url).then(function(data){
+					return	$http.jsonp(long_url).then(function(data){
 						
 						if (data.data.rows != null) {
 							for(var j=0; j<data.data.rows.length;j++)
@@ -596,14 +600,14 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 				else {
 					var location =location;
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					
 
 					location = toTitleCase(location);
 					if(latorlng=="lat")
 						{
-						return	$http.get(lat_url).then(function(data){
+						return	$http.jsonp(lat_url).then(function(data){
 							if (data.data.rows != null) {
 								geolocation.latitude=data.data.rows[0][0];
 								geolocation.lat_min = data.data.rows[0][0] - ratio
@@ -619,7 +623,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						else
 						{
 						
-						return	$http.get(long_url).then(function(data){
+						return	$http.jsonp(long_url).then(function(data){
 							if (data.data.rows != null) {
 								geolocation.longitude=data.data.rows[0][0];
 								geolocation.long_min = data.data.rows[0][0] - ratio;
@@ -648,32 +652,39 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
 function($q, $rootScope, $http, $sce, $location, $routeParams) {
 	return{
-			runHash : function(lat, lng) {
+			runHash : function(lat, lng, url_change, ratio) {
 			
-			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+.05) + "+AND+Lat>=" + (lat - .05) + "+AND+Long<=" + (lng+.05) + "+AND+Long>=" + (lng -.05) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
-			$http.get(url).success(function(data) {
-				if (data.rows != null) {
-					var deferred = $q.defer();
-					var city = data.rows[0][0];
-					var state = data.rows[0][1];
+			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
+			return $http.get(url).then(function(data) {
+				
+				if (data.data.rows != null) {
+				
+					var city = data.data.rows[0][0];
+					var state = data.data.rows[0][1];
+					var obj={'city':city, 'state':state }
 					if (city.split(' ') > 1) {
 						city = city.replace(/ /g, '_');
 					}
+					
 					if (state.split(' ') > 1) {
 						state = state.replace(/ /g, '_');
 					}
+					var hashy = $location.path().split('/')[1].split('/')[0];
 					var location = city + '*' +state+'/';
-					;
-				} else {
-					var location = "";
-				}
+					if(url_change ==true)
+					{
+					return hashy+'/'+location.replace(/ /g, '_');
+					}
+					
+					return 	obj;
+					
 
-				var hashy = $location.path().split('/')[1].split('/')[0];
+				} 
 
-				//window.location.href = '#'/hashy + '/' + location;
-				$location.path(hashy+'/'+location.replace(/ /g, '_'));
 				
+								//window.location.href = '#'/hashy + '/' + location;
 				
+								
 			});
 		}
 	};	
@@ -706,10 +717,10 @@ function($routeParams, $http){
 	
 	loadEchonestStyles:function()
 	{
-		var url ='http://developer.echonest.com/api/v4/artist/list_terms?api_key=3KFREGLKBDFLWSIEC&format=json&type=style'
+		var url ='http://developer.echonest.com/api/v4/artist/list_terms?api_key=3KFREGLKBDFLWSIEC&format=jsonp&type=style&callback=JSON_CALLBACK'
      			
      			
-     			return $http.get(url).then(function(result)
+     			return $http.jsonp(url).then(function(result)
      			{
      				var genres= result.data.response.terms
      				
@@ -809,10 +820,10 @@ return{
      		
      			//var feed = 'http://teacheratsea.wordpress.com/category/'+$routeParams.teachername.split('*')[0].toLowerCase()+'-'+$routeParams.teachername.split('*')[1].toLowerCase()+'/feed';
      			
-     			var url ='http://developer.echonest.com/api/v4/artist/search?api_key=3KFREGLKBDFLWSIEC&format=json&name='+artistname_echo+'&results=1&bucket=songs&bucket=biographies&bucket=images&bucket=id:spotify-WW&limit=true&bucket=video&bucket=news&bucket=artist_location&rank_type=familiarity'
+     			var url ='http://developer.echonest.com/api/v4/artist/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&name='+artistname_echo+'&results=1&bucket=songs&bucket=biographies&bucket=images&bucket=id:spotify-WW&limit=true&bucket=video&bucket=news&bucket=artist_location&rank_type=familiarity&callback=JSON_CALLBACK'
      			
      			
-     			return $http.get(url).then(function(result)
+     			return $http.jsonp(url).then(function(result)
      			{
      				
 					
@@ -1408,7 +1419,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 			
 			for (var x=0; x<songs.length; x++)
 			{
-				str+=songs[x].name.replace(/&/g, 'and')+'{'+songs[x].id+'~'+songs[x].artists[0].name.replace(/&/g, 'and')+'}'+songs[x].favorite+']'+songs[x].artist_location.latitude+','+songs[x].artist_location.longitude+'**';
+				
+				str+=songs[x].name.replace(/&/g, 'and').replace('?', 'q*m')+'{'+songs[x].id+'~'+songs[x].artists[0].name.replace(/&/g, 'and')+'}'+songs[x].favorite+']'+songs[x].artist_location.latitude+','+songs[x].artist_location.longitude+'**';
 			}
 			//str = encodeURI(str);
 			var url = location.replace(/ /g, '_')+'/'+str.replace(/%20/g, '_').replace(/\//g, '--');
@@ -1439,11 +1451,10 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 			songs.spot_arr=[];
 			songs.song_arr=[];
 			//tmpArr=tmpArr.slice(1,21);
-			
-			//console.log(tmpArr);
+					//console.log(tmpArr);
 			for(var x=0; x<tmpArr.length-1;x++)
 			{
-				tmpTitleArr.push(tmpArr[x].split('{')[0].replace(/_/g, ' '))
+				tmpTitleArr.push(tmpArr[x].split('{')[0].replace(/_/g, ' ').replace('q*m', '?'))
 				tmpIdArr.push(tmpArr[x].split('{')[1].split('~')[0]);
 				tmpArtistsArr.push(tmpArr[x].split('~')[1].split('}')[0].replace(/_/g, ' '));
 				tmpFavArr.push(tmpArr[x].split('}')[1].split(']')[0]);
@@ -1551,27 +1562,28 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 				var url= url.slice(0, 2000);
 				var index =url.lastIndexOf('**');
 				url = url.slice(0, index);
-				var urlObj = {'url': 'http://musicwhereyour.com/%23'+url.replace('--', '/'), 'sliced':'yes'}
+				var urlObj = {'url': url.replace('--', '/'), 'sliced':'yes'}
 				
 			}
 			else{
 			
 			var url = (url);
-			var urlObj = {'url': 'http://musicwhereyour.com/%23'+url.replace('--', '/'), 'sliced':'no'}
+			var urlObj = {'url': url.replace('--', '/'), 'sliced':'no'}
 			}
 			
 			
-			url ='http://cityblinking.com/MusicWhereYouAre/app/%23'+url.replace('--', '/');
+			url =url.replace('--', '/');
 			deferred.resolve(urlObj);
 			return deferred.promise;
 			
 		},
 		getBitLy:function(url)
 		{
-			var bitly = 'http://api.bitly.com/v3/shorten?format=json&apiKey=R_06ae3d8226a246f2a0bb68afe44c8379&login=robostheimer&longUrl='+url
-			return $http.get(bitly).then(
+			var bitly = 'http://api.bitly.com/v3/shorten?format=json&apiKey=R_06ae3d8226a246f2a0bb68afe44c8379&login=robostheimer&longUrl=http://musicwhereyour.com/%23'+encodeURIComponent(url);
+				return $http.get(bitly).then(
 				function(result){
 					return result.data.data.url;
+					
 				});
 		},	
 	};
@@ -1581,8 +1593,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 }]);	
 
 
-MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify','SongLength',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify, SongLength) {
+MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) {
 	return{
 		getWikiLandmarks: function(lat,lng, country)
 			{
@@ -1644,80 +1656,14 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify, 
 				return deferred.promise;
 				///////////////////////End Local Storage/////////////////////
 		
-			//	var searchterm = searchterm.replace(/The /g, '')
-					
-					Spotify.runSpotifySearch(searchterm, number,qs).then(function(result) {
-							
-							arr=[];
-							
-							var lengthy = result.length;
-							if(lengthy>0)
-							{
-								for(var x=0; x<result.length; x++)
-								{
-									if (!$rootScope.titleArr.toString().replace(/\W/g, '').match(result[x].name.replace(/\W/g,''))&&!lsTitleArr.toString().match(result[x].name)) 
-									{
-									Spotify.lookUpEchonest(result[x]).then(function(result){
-										
-										result.keyword = searchterm;
-										result.favorite ='off';
-										result.num_id = $rootScope.holder.length;
-										$rootScope.holder.push(result);
-										arr.push(x)
-										$rootScope.titleArr.push(result.name);
-										
-										if(lengthy==arr.length)
-										{
-										
-										$rootScope.idStr = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $rootScope.idArr.toString());
-											
-											
-											SongLength.checkSongLength($rootScope.count_about, 15);
-											
-										$rootScope.loading_tags=false;
-										}
-										});
-									
-									}
-								
-							}	//
-						}
-						else
-						{
-							$rootScope.loading_tags=false;
-						}	
-					
-	});
-
-			/*getWikiAttractions: function(location)
-			{
-				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Visitor_attractions_in_'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
-				{
-					//console.log(results.data.query.categorymembers)
-					var attractions =results.data.query.categorymembers;
-					for(var x=0; x<attractions.length; x++)
-					{
-						attractions[x].classy="off";
-					}
-					//console.log(attractions);
-					return attractions;
-				});
-			},
-			getWikiCulture: function(location)
-			{
-				return $http.jsonp('http://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Culture%20of%20'+location+'%E2%80%8E&cmtype=page&cmlimit=20&format=json&callback=JSON_CALLBACK').then(function(results)
-				{
-					//console.log(results.data.query.categorymembers)
-					return results.data;
-				});
-			},*/
+			
 		}	
 	};
 }]);
 
 
-MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate',
-function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
+MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate',
+function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate){
 	return{
 		
 		runLyricsnMusic: function(searchterm)
@@ -1737,29 +1683,30 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			
 			if(localStorage.country!=undefined && localStorage.country!='')
 			{
-				if(qs_noqs=='yes')
+				if(qs_noqs=='no')
 
 				{
-					
-					var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm.split('[')[0]+'"%20year:1960-2014%20NOT%20genre:"Audiobooks,Spoken Word"&type=track&limit='+number+'&market='+localStorage.country.toUpperCase();
+					//'https://api.spotify.com/v1/search?q=%22'+searchterm+'%22OR%20%22'+searchterm.split(',')[0]+'%22&type=track&limit=30&ioffset=0&market=US'
+					var url = 'https://api.spotify.com/v1/search?q='+searchterm+'%20AND%20NOT%20Live%20AND%20NOT%20%2250%20Songs%22%20AND%20NOT%20album:%22Live%22%20%20AND%20NOT%20album:%22 '+searchterm+'%22AND%20NOT%20genre:%22Audiobooks%22%20AND%20NOT%20genre:%22Spoken%20Word%22AND%20NOT%20genre:%22oratory%22AND%20NOT%20artist:%22'+searchterm+'%22AND%20NOT%20artist:"The%20Guy%20Who%20Sings%20Songs"AND%20NOT%20artist:"'+searchterm.split(', ')[0]+'"AND%20NOT%20artist:"'+searchterm.split(', ')[1]+'"&type=track&limit='+number+'&ioffset=0&market='+localStorage.country.toUpperCase();
 				}
 				else {
 					
-					var url='https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+'%20year:1960-2014%20NOT%20genre:"Audiobooks, Spoken Word"&type=track&limit='+number+'&market='+localStorage.country.toUpperCase()
+					var url = 'https://api.spotify.com/v1/search?q="'+searchterm.split(', ')[0]+'"%20AND%20NOT%20Live%20AND%20NOT%20%2250%20Songs%22%20AND%20NOT%20album:%22Live%22%20%20AND%20NOT%20album:%22 '+searchterm.split(', ')[0]+'%22AND%20NOT%20genre:%22Audiobooks%22%20AND%20NOT%20genre:%22Spoken%20Word%22AND%20NOT%20genre:%22oratory%22AND%20NOT%20artist:%22'+searchterm.split(', ')[0]+'%22AND%20NOT%20artist:"The%20Guy%20Who%20Sings%20Songs"AND%20NOT%20artist:"'+searchterm.split(', ')[0]+'"&type=track&limit='+number+'&ioffset=0&market='+localStorage.country.toUpperCase();
 				}
+				
 			}
 			else{
-				if(qs_noqs=='yes')
+				if(qs_noqs=='no')
 				{
 				
-				var url = 'https://api.spotify.com/v1/search?q=title:"'+searchterm.split('[')[0]+'"%20year:1960-2014%20NOT%20genre:"Audiobooks, Spoken Word"&type=track&limit='+number
+				var url = 'https://api.spotify.com/v1/search?q='+searchterm+'%20AND%20NOT%20Live%20AND%20NOT%20%2250%20Songs%22%20AND%20NOT%20album:%22Live%22%20%20AND%20NOT%20album:%22 '+searchterm+'%22AND%20NOT%20genre:%22Audiobooks%22%20AND%20NOT%20genre:%22Spoken%20Word%22AND%20NOT%20genre:%22oratory%22AND%20NOT%20artist:%22'+searchterm+'%22AND%20NOT%20artist:"The%20Guy%20Who%20Sings%20Songs"AND%20NOT%20artist:"'+searchterm.split(', ')[0]+'"AND%20NOT%20artist:"'+searchterm.split(', ')[1]+'"&type=track&limit='+number+'&ioffset=0'
 				}
+				
 				else
 				{
-					var url = 'https://api.spotify.com/v1/search?q=title:'+searchterm.split('[')[0]+'%20year:1960-2014%20NOT%20genre:"Audiobooks, Spoken Word"&type=track&limit='+number
-				}			
+					var url = 'https://api.spotify.com/v1/search?q="'+searchterm.split(', ')[0]+'"%20AND%20NOT%20Live%20AND%20NOT%20%2250%20Songs%22%20AND%20NOT%20album:%22Live%22%20%20AND%20NOT%20album:%22 '+searchterm.split(', ')[0]+'%22AND%20NOT%20genre:%22Audiobooks%22%20AND%20NOT%20genre:%22Spoken%20Word%22AND%20NOT%20genre:%22oratory%22AND%20NOT%20artist:%22'+searchterm.split(', ')[0]+'%22AND%20NOT%20artist:"The%20Guy%20Who%20Sings%20Songs"AND%20NOT%20artist:"'+searchterm.split(', ')[0]+'&type=track&limit='+number+'&ioffset=0'
+				}	
 			}
-			
 			return $http.get(url).then(function(results)
 			{
 				
@@ -1883,24 +1830,33 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 		
 		lookUpEchonest:function(song)
 		{
+		
+			
+			/////////////////////////USE LastFM instead - has tag for place formed; that will give then run that location through retrievelocaiton to get lat, long info
+			
+			
 			var deferred =$q.defer();
 			//console.log(song)
-			if(song.artist_location==undefined)
+			if(song.artist_location==undefined ||jQuery.isEmptyObject(song.artist_location))
 			{
-				var songtitle = song.name;
-				var artist = removeSpecialChar(song.artists[0].name);
+				var songtitle = removeSpecialChar(song.name);
+				var artist = removeSpecialChar(song.artists[0].name)
+				//console.log(artist)
+				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=MIV6XZXYU7FNSMMDN&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
+					
 				
-				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
 				if(data.data.response.songs.length==0)
 				{
+					//song.artist_location={latitude:song.song_location.latitude, longitude:song.song_location.longitude, location:'No Location Data Available', location_link:''};
 					song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
 				}
 				else if(jQuery.isEmptyObject(data.data.response.songs[0].artist_location)==true)
 				{
+				//song.artist_location={latitude:song.song_location.latitude, longitude:song.song_location.longitude, location:'No Location Data Available', location_link:''};
+						
 				song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
 				
-				//return data.repsonse.songs[0].artist_location;
-				//console.log(data.repsonse.songs[0].artist_location)
+				
 				}
 				else{
 					
@@ -1919,6 +1875,119 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 			}
 		},
 		
+		createCities:function(lat, long)
+		{
+			var songs=[];
+			var arr=[];
+			
+			return $http.get('json/MajorCities.json').then(function(result){
+				var data = result.data.feed.entry;
+				var arr=[];
+				
+				data.lat_plus_long=[];
+				for(var x=0; x<data.length; x++)
+				{
+					var number=Math.abs(lat-data[x].latitude.$t)+Math.abs(long-data[x].longitude.$t)
+					data.id=x;	
+					if(number<.5 && $routeParams.location.split('*')[0].toLowerCase()!=data[x].city.$t.toLowerCase())
+					{
+					data.lat_plus_long.push({number:number,city:data[x].city.$t, lat:data[x].latitude.$t, long:data[x].longitude.$t});
+					}
+				}
+   				
+									
+						
+   					
+   					data.lat_plus_long.sort(function(a, b) 
+					{
+						return a.number - b.number
+					});
+					
+
+				
+				return data.lat_plus_long;
+				
+				
+				
+			});
+		},
+		runSongsAbout:function(obj, number){
+			
+			
+			console.log(obj.artist)
+			if(localStorage.country!="")
+			{
+			var url='https://api.spotify.com/v1/search?q=track:"'+obj.song+'"&type=track&limit=1&offset=0&market='+localStorage.country.toUpperCase();
+			}else{
+				
+			var url='https://api.spotify.com/v1/search?q=track:"'+obj.song+'"&type=track&limit=1&offset=0&market=';
+			}
+			console.log(url)
+			return $http.get(url).then(function(data){
+				console.log(data);
+				data.data.tracks.artist_location={};
+				data.data.tracks.artist_location.location = obj.city;
+				data.data.tracks.artist_location.latitude=obj.geolocation.split(', ')[0];
+				data.data.tracks.artist_location.longitude=obj.geolocation.split(', ')[1];
+				//console.log(data.data.tracks)
+				return data.data.tracks;
+				
+				
+			});
+		},
+		runLocationJSON:function(){
+			return $http.get('json/SongsAboutCities.json').then(function(data){
+				return data.data.feed.entry;
+			});
+		},
+		runFusionTableJSON: function(lat,lng, ratio){
+			if(lat==51.50853 && lng==-0.12574)
+			{
+			////////Fix for bad Data/////////
+			///////Songs from London England actually going to London Canada geolocation/////////////////////	
+			var url ='https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Id,Name,AvailableMarkets,SongLocation,SongLatitude,SongLongitude,ArtistsName,ArtistsId,AlbumId,AlbumName,AlbumAvailableMarkets,Favorite,ArtistLocation,ArtistLatitude,ArtistLongitude,ArtistLocationLink+FROM+16u2CEBr6_hvcYO9qoFEIQDMPb5TP60RHnLrI5Dgx++WHERE+SongLatitude+<=' + (42.98339+ratio) + "+AND+SongLatitude>=" + (42.98339 - ratio) + "+AND+SongLongitude<=" + (-81.23304+ratio) + "+AND+SongLongitude>=" + (-81.23304 -ratio) + '&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';	
+			
+			}
+			else{
+				var url ='https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Id,Name,AvailableMarkets,SongLocation,SongLatitude,SongLongitude,ArtistsName,ArtistsId,AlbumId,AlbumName,AlbumAvailableMarkets,Favorite,ArtistLocation,ArtistLatitude,ArtistLongitude,ArtistLocationLink+FROM+16u2CEBr6_hvcYO9qoFEIQDMPb5TP60RHnLrI5Dgx++WHERE+SongLatitude+<=' + (lat+ratio) + "+AND+SongLatitude>=" + (lat - ratio) + "+AND+SongLongitude<=" + (lng+ratio) + "+AND+SongLongitude>=" + (lng -ratio) + '&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0';
+				
+			}
+			return $http.get(url).then(function(data){
+				var songs=[];
+				var song_id='';
+				var songStr='';
+				if(data.data.rows!=undefined)
+				{
+					for(var x=0; x<data.data.rows.length;x++)
+					{
+						if((localStorage!=""||localStorage!=undefined)&&!song_id.match(data.data.rows[x][0])&&data.data.rows[x][2].toString().match(localStorage.country))
+						{
+								
+								
+									songs.push({
+									song_location:{location:data.data.rows[x][3], latitude:data.data.rows[x][4], longitude:data.data.rows[x][5]},
+									name: data.data.rows[x][1],
+									id: data.data.rows[x][0],
+									artists:[{name:data.data.rows[x][6], id:data.data.rows[x][7]}],
+									album: {id:data.data.rows[x][8], name:data.data.rows[x][9], available_markets: data.data.rows[x][10]},
+									available_markets: data.data.rows[x][2],
+									favorite:'off',
+									artist_location: {latitude:data.data.rows[x][13], longitude:data.data.rows[x][14], location:data.data.rows[x][12], location_link: data.data.rows[x][15]},
+									searchterm: data.data.rows[x][3]
+									});
+									
+								
+							
+							}
+						
+						song_id+=data.data.rows[x][0]+':';
+						songStr+=data.data.rows[x][1]+':';
+					}
+				}
+				return songs;
+			});
+		},
+			
 		runRange:function(number)
 		{
 			
@@ -1978,6 +2047,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate){
 		
 	};
 }]);	
+
 //////////////////Need to lose the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
 MusicWhereYouAreApp.factory("SongLength",[ '$q', '$rootScope', '$http', '$sce','Spotify','LocationDataFetch',
 function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
@@ -2127,16 +2197,8 @@ function($q, $rootScope, $http, $sce, Spotify, LocationDataFetch){
 }]);
 
 
-MusicWhereYouAreApp.factory("Country",[ '$q', '$rootScope', '$http', '$sce', '$location', '$routeParams', 'PlaylistCreate', 'MapCreate', 'LocationDataFetch', 'getLocation', 'ShareSongs', 'retrieveLocation',
-function($q, $rootScope, $http, $sce, $location, $routeParams, PlaylistCreate, MapCreate, LocationDataFetch, getLocation, ShareSongs, retrieveLocation){
-	return{
-		runPlaylist: function()
-		{
-			
-		}
 		
-	};
-}]);	
+	
 
 
 
