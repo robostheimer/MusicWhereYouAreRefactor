@@ -9,16 +9,18 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
          scope: { }, 
          transclude: true,
             link: function(rootScope, element, attrs ) {
-            	
-            	attrs.$observe('latitude', function(){
+            	$rootScope.mapdata={};
+				$rootScope.mapdata.locationarrstr=''
+            	attrs.$observe('change', function(){	
             	var loc_arr_string='';	
-            	//console.log(attrs.latitude)
+            	
             	var loc_arr=[];
             	var zoom =parseInt(attrs.zoom);
             	var iw_content=''
             	var styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
-				$rootScope.noSongs=false;
-				loc_arr_string = $rootScope.locationarrstr.replace(/,%%/g, '%%');
+				//$rootScope.noSongs=false;
+				loc_arr_string = $rootScope.mapdata.locationarrstr
+				loc_arr_string= loc_arr_string.replace(/,%%/g, '%%');
 				loc_arr = loc_arr_string.split('%%');
 				var LatLng = new google.maps.LatLng(attrs.latitude, attrs.longitude);
 				var infowindow_textArr =[];

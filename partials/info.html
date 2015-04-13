@@ -1,10 +1,39 @@
-<section class="alert"  ng-show="errorMessage==true;" >
-
+<section class="alert"  ng-show="stillLooking==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="stillLooking=false; moreHider=true"></div>
 	<p>
-		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+		Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
+	</p>
+
+	<div class="clear"></div>
+</section>
+			
+			<div class="clear"></div>
+		</section>
+<section class="alert"  ng-show="errorMessage==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="errorMessage=false; moreHider=true"></div>
+	<p>
+		Uh, Oh.  Something has gone wrong.  Try refreshing your browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
 
 	</p>
 	
+	<div class="clear"></div>
+</section>		
+<section class="alert"  ng-show="noSongs==true;" >
+		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
+	<p>
+		Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+
+	</p>
+	<p>
+		And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+	</p>
+	<p>
+		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+	</p>
+	
+	<p>
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
+	</p>
 	<div class="clear"></div>
 </section>
 <section id="info-area"  ng-swipe-up="goBack()" >

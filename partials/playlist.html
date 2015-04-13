@@ -1,22 +1,23 @@
 <section class="alert"  ng-show="stillLooking==true;" >
-
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="stillLooking=false; moreHider=true"></div>
 	<p>
 		Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
 	</p>
 
 	<div class="clear"></div>
 </section>
-
+			
+			<div class="clear"></div>
+		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
-
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="errorMessage=false; moreHider=true"></div>
 	<p>
-		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.
+		Uh, Oh.  Something has gone wrong.  Try refreshing your browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
 
 	</p>
-
+	
 	<div class="clear"></div>
-</section>
-
+</section>		
 <section class="alert"  ng-show="noMoreSongs==true;" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noMoreSongs=false; moreHider=true"></div>
 	<p>
@@ -26,11 +27,10 @@
 
 	<div class="clear"></div>
 </section>
-
 <section class="alert"  ng-show="noSongs==true;" >
-
+		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
-		Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+		Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
 
 	</p>
 	<p>
@@ -39,7 +39,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-
+	
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
 	</p>
@@ -57,7 +57,7 @@
 </section>
 
 <section class="alert" ng-show="showCityMessage==true">
-	Oh Snap! We were unable to find any songs about your current location. Try adding search terms to the form above to see if that gets you any songs.  If that fails, maybe you should pen a song about this desolate (from a music standpoint) place.
+	Oh Snap! We were unable to find any songs about your current location. We're still looking, but if you are getting impatient try adding search terms to the form above to see if that gets you any songs.  If that fails, maybe you should pen a song about this desolate (from a music standpoint) place.
 </section>
 
 <section id="spot_holder" ng-swipe-left="goBack()" >
@@ -65,7 +65,7 @@
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 
 	<div class="clear"></div>
-	<div style="margin-top:10px;">
+	<div class="fixed" >
 		<button class="{{buttons[0].classy}}"  ng-click="runButtons('artists'); runApp(start_number, counter)" ng-swipe-left="goBack()">
 
 			<div class="button_txt">
@@ -79,14 +79,7 @@
 			</div>
 		</button>
 		<div class="clear" ></div>
-	</div>
-
-	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true">
-		<img src="loading.gif" alt="loading"/>
-	</div>
-
-	<div ng-hide="loading==true">
-		<div class="{{buttons[0].state}}">
+		<div class="{{buttons[0].state}}" ng-hide="loading==true">
 			<div id="iframe_holder">
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
@@ -96,7 +89,35 @@
 					Save Playlist to Spotify
 				</div>
 			</button>
+		</div>
+		<div class="{{buttons[1].state}} abouttab"  ng-hide="loading_tags==true">
+			<div id="iframe_holder" ng-hide="showSpotPlayer==false">
+				<iframe id="spot_frame" theme="light" view="coverart" src="{{lookUpSongs.idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+			</div>
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(lookUpSongs.savSpotArr, location);" ng-hide="lookUpSongs.length==0">
+				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
+				<div class="button_txt">
+					Save Playlist to Spotify
+				</div>
+			</button>
+			<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
 
+				<input type="text"  name="song_form" id="findmoresongs" placeholder="Add to your playlist"  class="text"   ng-model="searchterm" ng-enter="runUserSearch(searchterm, 10,'yes', 'user')"/>
+				<div class="search"  aria-hidden="true" data-icon="e" ng-click="runUserSearch(searchterm, 10,'yes','user')"  ></div>
+				<div class="clear"></div>
+			</form>
+
+			<div class="closey" ng-show="tagShower==false" ng-click="toggleTagsBox()" aria-hidden="true" data-icon="~"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div style="width:100px; margin-left:auto; margin-right:auto;" class="cards" ng-show="loading==true">
+		<img src="loading.gif" alt="loading"/>
+	</div>
+
+	<div ng-hide="loading==true"  class="{{buttons[0].state}} cards" >
+		
 			<div>
 				<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
 					<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'from')"></div>
@@ -120,12 +141,12 @@
 
 			<div class="sharer" >
 
-				<button class="more_button" ng-hide="btnCount==0" ng-click="backSongs()" ng-enter="moreSongs((start_number-25))">
+				<button class="more_button" ng-hide="btnCount==0" ng-click="backSongs()" ng-enter="backSongs)">
 					<div class=button_txt>
 						« Back
 					</div>
 				</button>
-				<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs()" ng-enter="moreSongs((start_number+25))">
+				<button class="more_button" ng-hide="moreHider==true" ng-click="moreSongs()" ng-enter="moreSongs()">
 					<div class=button_txt>
 						More Songs »
 					</div>
@@ -171,31 +192,13 @@
 
 			</div>
 
-		</div>
+	
 	</div>
-	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading_tags==true"><img src="loading.gif" alt="loading"/>
+	<div style="width:100px; margin-left:auto; margin-right:auto" class="about_section " ng-show="loading_tags==true"><img src="loading.gif" alt="loading"/>
 	</div>
-	<div ng-hide="aboutShower==false">
-		<div  class="{{buttons[1].state}}"  ng-hide="loading_tags==true">
-			<div id="iframe_holder" ng-hide="lookUpSongs.length==0">
-				<iframe id="spot_frame" theme="light" view="coverart" src="{{lookUpSongs.idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
-			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(lookUpSongs.savSpotArr, location);" ng-hide="lookUpSongs.length==0">
-				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
-				<div class="button_txt">
-					Save Playlist to Spotify
-				</div>
-			</button>
-			<form id="song_form" class="{{buttons[1].state}}"  ng-swipe-left="goBack()" >
-
-				<input type="text"  name="song_form" id="findmusic" placeholder="Add to your playlist"  class="text"   ng-model="searchterm" ng-enter="runUserSearch(searchterm, 10,'no', 'user')"/>
-				<div class="search"  aria-hidden="true" data-icon="e" ng-click="runUserSearch(searchterm, 10,'no','user')"  ></div>
-				<div class="clear">
-					<div>
-			</form>
-
-			<div class="closey" ng-show="tagShower==false" ng-click="toggleTagsBox()" aria-hidden="true" data-icon="~"></div>
-			<div class="clear"></div>
+	<div  ng-hide="aboutShower==false" class="{{buttons[1].state}}   about_section" >
+		<div>
+			
 
 			<div ng-repeat="song in lookUpSongs track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
 				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'about')"></div>
@@ -219,7 +222,7 @@
 			<br>
 			<br>
 			<br>
-
+				
 		</div>
 		<div class="sharer" >
 
@@ -270,12 +273,7 @@
 
 			<div class="sharer_icon" ng-show="sharer==false" >
 				<span class='icon share' ng-click="getSongs(lookUpSongs);"></span>
-			</div>
-
-			<br>
-
-			<br>
-			<br>
-			<br>
+			
+		</div>			
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

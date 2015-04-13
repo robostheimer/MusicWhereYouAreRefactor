@@ -1,24 +1,46 @@
+<section id="country_form"  ng-show="noCountry==true;">
+			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="close()"></div>
+			<p>For MusicWhereYouAre to be able to find Spotify songs that are available in your location, it needs to know the country where you are located.</p>
+			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p> 
+			<p>If you would like to change that location, please submit the two-letter country code that you would like to use as the basis of yoru search below. If you would prefer not to limit your playlist to Spotify, click the 'X' inthe top-right corner.</p>
+		
+			<form>
+				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country.toUpperCase())">
+				<button class="button_on" ng-click="setCountry(country.toUpperCase())" ng-enter="setCountry(country.toUpperCase())">
+
+					<div class="button_txt" >
+						Submit
+					</div>
+				</button>
+			</form>
+			<div class="clear"></div>
+		</section>
+
+
 <section class="alert"  ng-show="stillLooking==true;" >
-			
-			<p>
-				Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
-			</p>
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="stillLooking=false; moreHider=true"></div>
+	<p>
+		Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
+	</p>
+
+	<div class="clear"></div>
+</section>
 			
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
-
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="errorMessage=false; moreHider=true"></div>
 	<p>
-		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+		Uh, Oh.  Something has gone wrong.  Try refreshing your browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
 
 	</p>
 	
 	<div class="clear"></div>
 </section>		
 <section class="alert"  ng-show="noSongs==true;" >
-
+		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
-		Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+		Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
 
 	</p>
 	<p>
@@ -33,6 +55,8 @@
 	</p>
 	<div class="clear"></div>
 </section>
+
+
 <section id="genre_holder" style="padding-top:10px;" >
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">

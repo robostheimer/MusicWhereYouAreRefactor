@@ -41,10 +41,10 @@ function($compileProvider)
   function($routeProvider) {
     $routeProvider.
     
-       when('/country', {
+       /*when('/country', {
         templateUrl: 'partials/country.html',
         controller: 'addCountry'
-      }).
+      }).*/
        when('/favorites', {
         templateUrl: 'partials/favorites.html',
         controller: 'LoadFav'

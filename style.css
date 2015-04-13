@@ -268,7 +268,7 @@ body {
 	margin: 0;
 	padding: 0;
 	width:100%;
-	overflow-x:hidden;
+	overflow:hidden;
 }
 header {
 	
@@ -527,13 +527,16 @@ input {
 	cursor: pointer;
 	border: 1px solid #ececec;
 }
-#findmusic, #artistsearch {
+#findmusic, #artistsearch, #findmoresongs {
 	font-size: 13px;
 	padding: 4px;
 	margin-bottom: 5px;
 	border: 1px solid #ececec;
 	width: 100%;
 	height:18px;
+}
+#findmoresongs{
+float:left; width:250px;
 }
 #artistsearch {width:50%; float:left;margin-bottom:12px;}
 input[type=range]::-webkit-slider-runnable-track {
@@ -675,7 +678,7 @@ padding-top: 6px;
 .button_txt{float:left; margin-right;10px; font-family: 'PT Sans', sans-serif;}
 
 #spot_holder .button_on, #spot_holder .button_off{font-size:.5em; margin-bottom:10px;}
-.gray .close, .red .close{margin-left:86%;}
+#spot_holder .gray .close, .red .close{margin-left:270px;}
 .gray:hover, .red {
 	background-color: #c53526;
 	color: #ececec;
@@ -930,11 +933,10 @@ gm-style p.info {
 }
 #avant_garde_button:hover .avant_garde, #blues_button:hover .blues, #classic_rock_button:hover .classic_rock, #classical_button:hover .classical, #mic_button:hover .comedy, #country_button:hover .country, #drama_button:hover .drama, #electronic_button:hover .electronic, #folk_button:hover .folk, #hip_hop_button:hover .hip-hop,  #holiday_button:hover .holiday, #indie_button:hover .indie, #jazz_button:hover .jazz, #kid_music_button:hover .childrens_music, #latin_button:hover .latin, #new_age_button:hover .new_age, #motown_button:hover .motown, #pop_button:hover .pop, #rock_button:hover .rock, #soft_rock_button:hover .soft_rock, #world_button:hover .world{background-color:#c53526; background-position:-27px 0px}
 	
-}
-/*
-.hider {
-	display: none;
-}*/
+#spot_holder .cards{margin-top:190px;}
+ #spot_holder .about_section{margin-top:223px;}
+.fixed{padding-top:10px; position:fixed; background-color: rgba(243, 243, 243, .95)}
+#fav_holder .cards{ margin-top:155px;}
 
 
 @media screen and (min-height: 1001px)  {
@@ -1153,7 +1155,6 @@ top: 20%;
 #info-area .spot{display:none} 
 .hint{
  margin-top:3;margin-left:10px;z-index:7000000000; max-height:300px; overflow-y:scroll}
-#iframe_holder{display:none}
 #search {
 		width: 80%;
 		margin-bottom: 0px;
@@ -1183,6 +1184,8 @@ top: 20%;
 #info-area .button_icon{ float:none;font-size:30px; width:30px; margin-left:auto; margin-right:auto; margin-top:5px;}
 #info-area .button_txt{display:none}
 #iframe_holder{display:none}
+#spot_holder .cards, #fav_holder .cards{margin-top:100px;}
+#spot_holder .about_section{margin-top:135px;}
 #search {
 		width: 75%;
 		margin-bottom: 0px;
@@ -1243,7 +1246,8 @@ header{float:left; margin-left:15px;}
 #country_form, .alert{left:15px; top:30%}
 #artistsearch{width:35%}
 #info-area #artist_holder{height:87%}
-		
+#spot_holder .cards, #fav_holder .cards{margin-top:100px;}	
+#spot_holder .about_section{margin-top:135px;}
 }
 
 
@@ -1410,7 +1414,9 @@ border: 1px solid #ececec;
 
 }
 #artist_loader h4{position:absolute; right:0px; font-size:13px;top:0px; background:#C53526; color:white; padding:5px; padding-right:10px; border-top-left-radius:5px; border-bottom-left-radius:5px; -webkit-border-top-left-radius:5px; -webkit-border-bottom-left-radius:5px;-moz-border-top-left-radius:5px; -moz-border-bottom-left-radius:5px;   -o-border-top-left-radius:5px; -o-border-bottom-left-radius:5px;}
-.close, .closey{font-size:12px; position:absolute;padding:5px;margin-left:89%;opacity:1;cursor:pointer; display:none;}
+.close, .closey{font-size:12px; position:absolute;padding:5px;margin-left:89%;opacity:1;cursor:pointer; display:none;z-index:100; }
+#spot_holder .close, #spot_holder .closey, #fav_holder .close, #fav_holder .close{position:fixed; margin-left:280px;}
+#spot_holder .share_box .closey, #fav_holder .share_box .closey{margin-left:36%}
 .closey{display:block; color:#c53526;}
 .gray:hover .close{display:block}
 .red:hover .close{display:block}
@@ -1750,3 +1756,4 @@ div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
 .viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}
 .event_image{float:left; padding:10px;}
 .event_description{float:left; width:64%; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:10px; margin-bottom:0px;  padding:bottom:10px; padding-right:10px;}
+
