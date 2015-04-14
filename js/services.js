@@ -121,12 +121,12 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	songs = {};
 		 	 if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number+'&callback=JSON_CALLBACK';
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era+'&callback=JSON_CALLBACK'
 			}
-			return $http.get(url).then(function(data) {
+			return $http.jsonp(url).then(function(data) {
 				var songs = data.data.response.songs;
 				songs = removeDuplicatesArrObj(songs, 'title', true);
 				songs.songsArr=[];
@@ -309,6 +309,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				return songs;
 				
 			},function(error){
+				$rootScope.errorMessage=true;
 				
 			});
 		 	},
@@ -501,30 +502,29 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					if(latorlng=="lat")
 						{
 						return	$http.jsonp(lat_url).then(function(data){
-							if (data.data.rows != null) {
-								geolocation.latitude=data.data.rows[0][0];
-								forEach(data.data.rows, function(data)
+						if (data.data.rows != null) {
+							forEach(data.data.rows, function(data)
 								{
-									lats+= parseFloat(data[4]);
+									lats += parseFloat(data[0]);
+									
 								});
-								
-							//geolocation.longitude=longs/data.data.rows.length;;
-								geolocation.latitude=lats/data.data.rows.length;
-								var miles_to_lat = distance_to_degrees_lat(7*ratio);
-								var miles_to_lon = distance_to_degrees_lon(geolocation.latitude , 7*ratio);
-								geolocation.lat_min = $scope.latitude - miles_to_lat;
-								geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
-								geolocation.location = location;
-								geolocation.country = data.data.rows[0][3];
-								if(localStorage.country==null)
-								{
-									localStorage.country = geolocation.country;
-								}
-							} else {
-								$rootScope.noSongs=true;
-							}	
-							return (geolocation);
-						});
+							geolocation.latitude=lats/data.data.rows.length;
+							var miles_to_lat = distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
+							
+							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
+							geolocation.location = location;
+							geolocation.country = data.data.rows[0][3];
+							if(localStorage.country==null)
+							{
+								localStorage.country = geolocation.country;
+							}
+						} else {
+							$rootScope.noSongs=true;
+						}	
+						return (geolocation);
+					});
 						}
 						else
 						{
@@ -635,10 +635,10 @@ function($routeParams, $http){
 	
 	loadEchonestStyles:function()
 	{
-		var url ='http://developer.echonest.com/api/v4/artist/list_terms?api_key=3KFREGLKBDFLWSIEC&format=jsonp&type=style&callback=JSON_CALLBACK'
+		var url ='json/echonest_genres.json'
      			
      			
-     			return $http.jsonp(url).then(function(result)
+     			return $http.get(url).then(function(result)
      			{
      				var genres= result.data.response.terms
      				
@@ -1657,16 +1657,17 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			
 			
 			var deferred =$q.defer();
-			//console.log(song)
+			
 			if(song.artist_location==undefined ||jQuery.isEmptyObject(song.artist_location))
 			{
+				
+				
 				var songtitle = removeSpecialChar(song.name);
 				var artist = removeSpecialChar(song.artists[0].name)
 				//console.log(artist)
 				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=MIV6XZXYU7FNSMMDN&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
-					
 				
-				if(data.data.response.songs.length==0)
+				if(data.data.response.songs.length==0 )
 				{
 					//song.artist_location={latitude:song.song_location.latitude, longitude:song.song_location.longitude, location:'No Location Data Available', location_link:''};
 					song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
@@ -1688,11 +1689,16 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					song.tracks = data.data.response.songs.tracks
 				}
 				return song;
+			},function(error){
+				
+				song.artist_location={latitude:$rootScope.latitudeObj_root.latitude, longitude:$rootScope.longitudeObj_root.longitude, location:'No Location Data Available', location_link:''} ;
+					
 			});
 			}
 			else
 			{
 				song.artist_location.location_link= song.artist_location.location.replace(/,/g, '*')
+				
 				deferred.resolve(song)
 				return deferred.promise;
 				

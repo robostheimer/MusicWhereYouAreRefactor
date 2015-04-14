@@ -213,7 +213,7 @@
 				<a class="spotter" href="spotify:track:{{song.id}}" ><div class="spot_link_spot" id="spot{{song.id}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
 
 				<a ng-click="switchFavorite(song.id, song.num_id, 'about')"><div  class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div></a>
-				<a ng-click="switchFavorite(song.num_id,song.id, 'about')"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
+				<a ng-click="switchFavorite(song.id,song.num_id, 'about')"><div class="icon iconfavorite spot_link favorite favorite_on" ng-hide="song.favorite=='off'"></div></a>
 				<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{num_id}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
 				<a href="#/events/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}" ><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
 				<div style="clear:both;margin-bottom:-15px;"></div>

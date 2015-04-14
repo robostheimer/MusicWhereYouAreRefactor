@@ -108,6 +108,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 	$rootScope.marked=false;
 	$rootScope.aboutMarked =false;
 	$scope.btnCount=0;
+	$scope.collector_arr=[];
 	$scope.finalcollector = [];
 	$scope.finalcollector.idStr='';
 	$scope.finalcollector.idArr=[];
@@ -734,13 +735,17 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 	
 	$scope.runSongAboutSearch=function(number, iterator, usergen)
 	{
+		//////////when there is a user-generated search -> add items to localStorage and attach it to a city - so the next time they look up a specific city, 
+		/////////those items show up.
+		/////////Take the "JSON" from the local storage and create CSV to add to the Songs About DB//////////
+		///////////Once there is a backend, this will enable user-generated content - i.e. all searches will go to the DB and be held there.
 		$scope.loading_tags=true;
 		
 		$scope.number = number;
 		
 		var location_arr=[];
 		$scope.start_index=number;
-		$scope.iterator=15;
+		$scope.iterator=20;
 
 			var location_stringy = $routeParams.location;
 			location_stringy = location_stringy.replace(/_/g, ' ');
@@ -817,81 +822,99 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 				$scope.location_arr=[];
 				$scope.finalcollector.artistlocation='';
 				$scope.finalcollector.artistlocations ={latitude:[], longitude:[]};
+				var ft_length=0;
 				////////////////Create the .3 dynamically so it re-runs until that number is over one////////////////	
+				
+				//////////////Runs the various functions  to create the songs about Cities array/////////////
+				///////////////collects the song in the $scope.collector_arr///////////////////
 				Spotify.runFusionTableJSON($rootScope.latitudeObj_root.latitude, $rootScope.longitudeObj_root.longitude, .3).then(function(data){
-				
-				if(auto_or_user=="auto")
-				{	
-					
-					if(data.length>0)
-						{
-						$scope.parseSongData(data, 'no', 'no')
-						
-						
-						Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
-									var lengthy = result.length;
-									
-									if(result.length>0)
-									{
+				if($scope.countRunUserSearch<4)
+				{
+						if(auto_or_user=="auto" )
+						{	
+							ft_length = data.length;
+							if(data.length>0 && data.length<400)
+								{
+								
+								$scope.collector_arr=$scope.collector_arr.concat(data);
+								
+								Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
+											var lengthy = result.length;
+											$scope.collector_arr=$scope.collector_arr.concat(result);
 										
-									$scope.parseSongData(result, 'yes', 'no');
+											/*if(scope.countRunUserSearch<2)
+												{*/
+												$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
+												//$scope.runCityStateSearch(searchterm);
+												
+												$scope.countRunUserSearch++;
+												//}
+			
+								
+									});
 									
-									}
-									if(data.length!=0 && $scope.countRunUserSearch<2)
-										{
-											
-										$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
-										$scope.runCityStateSearch(searchterm);
-										$scope.countRunUserSearch++;
-										}
-	
+									
+								}
+								else if(data.length>400)	
+								{
+											$scope.collector_arr=$scope.collector_arr.concat(data);
+											$scope.countRunUserSearch=2;
+											$scope.parseSongData($scope.collector_arr.reverse(), 'yes')	
+								}	
+								
+							else if(data.length==0 )
+								{
+									
+									$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
+									//$scope.runCitySearch(searchterm);
+									$scope.countRunUserSearch++;
+									
+								}
 						
+						}
+						else if(auto_or_user=="user"){
+							
+							$scope.collector_arr=[];
+							Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
+										
+											//$scope.parseSongData(result, 'yes', 'yes')	;
+											$scope.countRunUserSearch=2;	
+											$scope.parseSongData(result,'yes')										
+			
+								
 							});
+							}
+						else if(typeof(auto_or_user) ==='number' ){
 							
-							
+							Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
+											
+											$scope.collector_arr=$scope.collector_arr.concat(result)
+										//	$scope.parseSongData(result, 'yes', 'no')	;
+											$scope.countRunUserSearch=2;
+											if($scope.pass_length-1== auto_or_user)
+											{
+												
+											$scope.parseSongData($scope.collector_arr, 'no')
+											}
+									});		
+						}	
+						else {
+							Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
+								$scope.collector_arr=$scope.collector_arr.concat(result)
+							$scope.parseSongData($scope.collector_arr, 'no')
+							});
 						}
 						
-					if(data.length==0 )
-						{
-							
-							$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
-							//$scope.runCitySearch(searchterm);
-							$scope.countRunUserSearch++;
-							
-						}
-				
-				}
-				if(auto_or_user=="user"){
-					
-					
-					Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
-									
-									$scope.parseSongData(result, 'yes', 'yes')	;
-									$scope.countRunUserSearch=2;
-									
-	
-						
-					});
 					}
-				else{
-					Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
-									
-									
-									$scope.parseSongData(result, 'yes', 'no')	;
-									$scope.countRunUserSearch=2;
-							});		
-				}	
-				
-				
-				
-				
-			},function(error){
-				$scope.errorMessage = true;
-			});
-				
-			
-			
-		}
+					
+						
+					},function(error){
+						$scope.errorMessage = true;
+					});
+						
+					
+					
+				}
 		
 
 		else{
@@ -899,7 +922,8 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 					var lat_range =Math.abs($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length)-2]-$scope.finalcollector.artistlocations.latitude[0]);
 					var lng_range = Math.abs($scope.finalcollector.artistlocations.longitude[($scope.finalcollector.artistlocations.longitude.length)-2]-$scope.finalcollector.artistlocations.longitude[0]);
 					var lat_avg = ($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length-2)]+$scope.finalcollector.artistlocations.latitude[0])/2;
-					var lng_avg=($scope.finalcollector.artistlocations.longitude[($scope.finalcollector.artistlocations.longitude.length-2)]+$scope.finalcollector.artistlocations.longitude[0])/2;			
+					var lng_avg=($scope.finalcollector.artistlocations.longitude[($scope.finalcollector.artistlocations.longitude.length-2)]+$scope.finalcollector.artistlocations.longitude[0])/2;	
+	
 					if(lat_range>lng_range)
 					{
 						var finalRange=lat_range					
@@ -909,21 +933,18 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 						var finalRange=lng_range;
 					}
 					$rootScope.aboutMarked =true;
-					$scope.zoom=Spotify.runRange(finalRange)
-					Spotify.createLatLng( $scope.finalcollector.location_arr,0, zoom,lat_avg, lng_avg,  $scope.lookUpSongs).then(function(data){
-					$rootScope.mapdata = data;
-					LocationDataFetch.count=100000000000;
-							
-					$scope.showCityMessage=false;	
+					$scope.zoom=Spotify.runRange(finalRange);
+					console.log($scope.finalcollector);
 					$scope.loading_tags=false;	
-			});;
+					$scope.parseSongData($scope.finalcollector, 'no')
+				
 					
 									
 				}
 				
 	
 	};
-	$scope.parseSongData=function(result, echonest, usergen)
+	$scope.parseSongData=function(result, usergen)
 	{
 		
 		var collector=[];
@@ -943,26 +964,26 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 				var resultNoDups=result;
 			}	
 			var lengthy = resultNoDups.length;
-			if(echonest=='yes')
-			{
-					
+			
+				
 					for(var t=0; t<resultNoDups.length; t++)
 					{
 						resultNoDups[t].favorite='off';
 						
 						if((localStorage.country!="" || localStorage.country!=undefined) && resultNoDups[t].available_markets.toString().match(localStorage.country))
 						{
-							
+						
 						Spotify.lookUpEchonest(resultNoDups[t]).then(function(result){
-									
+						collector.push(resultNoDups[t]);				
 								
-							result.num_id=$scope.finalcollector.length;
-							collector.push(resultNoDups[t]);
+							result.num_id=t;
+							
 							
 							if(usergen=='yes')
 							{
 								$scope.finalcollector.splice(0, 0, result)
 								$scope.finalcollector.idArr.splice(0,0, result.id);
+								
 								$scope.finalcollector.savSpotArr.splice(0,0,'spotify:track:'+result.id)
 								$scope.location_arr.splice(0,0,result.artist_location.location +'@@'+result.artist_location.latitude + ':' + result.artist_location.longitude+'&&<h5>'+result.name+'</h5><p>'+result.artists[0].name+'</p><a href="spotify:track:'+result.id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+result.artist_location.location.replace(', ' , '*').split(',')[0]+'/'+result.artists[0].name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 							
@@ -971,6 +992,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 								
 								$scope.finalcollector.push(result)
 								$scope.finalcollector.idArr.push(result.id);
+								
 								$scope.finalcollector.savSpotArr.push('spotify:track:'+result.id);
 								$scope.location_arr.push(result.artist_location.location +'@@'+result.artist_location.latitude + ':' + result.artist_location.longitude+'&&<h5>'+result.name+'</h5><p>'+result.artists[0].name+'</p><a href="spotify:track:'+result.id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+result.artist_location.location.replace(', ' , '*').split(',')[0]+'/'+result.artists[0].name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 							}
@@ -984,10 +1006,11 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 							$scope.finalcollector.artistlocations.latitude.sort();
 							$scope.finalcollector.artistlocations.longitude.sort();
 							}	
-						if(lengthy==collector.length && $scope.countRunUserSearch==2)
+						
+						if(lengthy==collector.length)
 						{
 							$scope.createMapAbout($scope.finalcollector, 0);
-							}
+						}
 						
 						
 			
@@ -1001,52 +1024,14 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 				}
 				
 				
-		}
-		else{
-			
-				
-			for(var x=0; x<result.length; x++)
-			{
-				collector.push(result[x]);
-				
-				
-				$scope.finalcollector.push(result[x]);
-				$scope.finalcollector.idArr.push(result[x].id);
-				$scope.finalcollector.savSpotArr.push('spotify:track:'+result[x].id);
-				$scope.location_arr.push(result[x].artist_location.location +'@@'+result[x].artist_location.latitude + ':' + result[x].artist_location.longitude+'&&<h5>'+result[x].name+'</h5><p>'+result[x].artists[0].name+'</p><a href="spotify:track:'+result[x].id+'" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+x></div></a><a><a a href="#/info/'+result[x].artist_location.location.replace(', ' , '*').split(',')[0]+'/'+result[x].artists[0].name.replace('The ', '')+'" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+x  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
-			
-			
-			Favorites.checkFavorites(result[x]);
-			$scope.finalcollector.artistlocation =result[x].artist_location.location;
-			
-			if(isNaN(result[x].artist_location.latitude)==false && isNaN(result[x].artist_location.longitude)==false)
-			{
-			$scope.finalcollector.artistlocations.latitude.push(parseFloat(result[x].artist_location.latitude));	
-			$scope.finalcollector.artistlocations.longitude.push(parseFloat(result[x].artist_location.longitude));
-			$scope.finalcollector.artistlocations.latitude.sort();
-			$scope.finalcollector.artistlocations.longitude.sort();
-			}
-			if(lengthy==collector.length && $scope.countRunUserSearch==2)
-				{
-					$scope.createMapAbout($scope.finalcollector, 0);
-					}
-			else{
-					
-				//$scope.showCityMessage=true;
-				
-				
-				}	
-			}
-				
-				
-			
-			
-		}
+		
+		
+	
 	};
 	
 	$scope.createMapAbout=function(arr, start_index)
 	{
-		
+			console.log(arr);
 			
 			$scope.finalcollector = arr;
 			if($scope.finalcollector.length==0)
@@ -1104,7 +1089,7 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 			$scope.zoom=Spotify.runRange(finalRange);
 			
 			
-			Spotify.createLatLng( $scope.finalcollector.location_arr,0, $scope.zoom,lat_avg, lng_avg, $scope.lookUpSongs).then(function(data){
+			Spotify.createLatLng($scope.finalcollector.location_arr,0, $scope.zoom,lat_avg, lng_avg, $scope.lookUpSongs).then(function(data){
 				$rootScope.mapdata = data;
 				LocationDataFetch.count=200000000000;
 				$rootScope.loading_tags=false;		
@@ -1142,11 +1127,12 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 							arr.push(result);
 							if(arr.length==lengthy)
 							{
-								
+								$scope.pass_length = arr.length;
 								for(var y=0; y<arr.length; y++)
 								{
-									$scope.countRunUserSearch=2;
-									$scope.runUserSearch(arr[y].city, 20, 'yes', '');
+									//$scope.countRunUserSearch=2;
+									
+									$scope.runUserSearch(arr[y].city, 20, 'yes', y);
 									//$scope.runUserSearch(arr[y].city, 20, 'yes', 'user');
 									
 								}
@@ -1261,7 +1247,8 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 		}
 
 		if (about_or_from == 'from') {
-			if ($scope.songs[num_id].favorite == 'off') {
+			
+;			if ($scope.songs[num_id].favorite == 'off') {
 				$scope.songs[num_id].favorite = 'on';
 				songFav.push($scope.songs[num_id]);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
@@ -1288,14 +1275,16 @@ function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $ro
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
 				$scope.favorites = Favorites.addFavorites();
 			}
-				else {
-					for (var x = 0; x < songFav.length; x++) {
-						songId.push(songFav[x].id);
-					}
-				var index = songId.indexOf($scope.songs[num_id].id);
-				songFav.splice(index, 1);
-				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-				$scope.songs[num_id].favorite = 'off';
+			else {
+				console.log(songFav);
+				for (var x = 0; x < songFav.length; x++) {
+					songId.push(songFav[x].id);
+				}
+			var index = songId.indexOf($scope.songs[num_id].id);
+			
+			songFav.splice(index, 1);
+			localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
+			$scope.lookUpSongs[num_id].favorite = 'off';
 			}		
 
 
@@ -2305,7 +2294,16 @@ angular.module('Genre', []).controller('GenreController', ['$scope', '$routePara
 function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCreate, MapCreate, $location, $rootScope, $q, loadGenreCheckData, runSymbolChange, getLocation, Spotify, $sce, Wiki, ChunkSongs) {
 	localStorage.path=$location.path();
 	///////////////////////Fix this; this is a mess.... Turn it into a service that can be called here and in the retrieve location controller/////////////////////////////
-	
+	if(sessionStorage.genre==null || sessionStorage.genre==false)
+	{
+	$scope.showGenreMessage=true;
+	sessionStorage.genre=false;
+	}
+	else
+	{
+		$scope.showGenreMessage=false;
+		sessionStorage.genre=true;
+	}
 	$scope.buttons = [{
 		name : 'genres',
 		state : 'shower',

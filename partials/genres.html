@@ -57,6 +57,12 @@
 </section>
 
 
+<section class="alert"  ng-show="showGenreMessage==true;" >
+		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="showGenreMessage=false"></div>
+	Browsing by genre and active years is only available for the "Artists from a Location" tab.  It is not available for the "Songs About a Location" tab.
+	<div class="clear"></div>
+</section>
+
 <section id="genre_holder" style="padding-top:10px;" >
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">
@@ -68,7 +74,7 @@
 	<button class="{{buttons[1].classy}}" ng-click="runButtons('eras')" >
 
 		<div class="button_txt">
-			&nbsp;&nbsp;Years&nbsp;&nbsp;
+			&nbsp;&nbsp;Active Years&nbsp;&nbsp;
 		</div>
 	</button>
 	<button class="{{buttons[2].classy}}" ng-click=" resetCountry()" ng-controller="addCountry">

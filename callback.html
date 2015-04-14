@@ -105,6 +105,7 @@ function doit() {
 
 	getUsername(function(username) {
 		createPlaylist(username, g_name, function(playlist) {
+			
             if (playlist) {
                 addTracksToPlaylist(username, playlist, g_tracks, 0, function(ok) {
                     if (ok) {
