@@ -37,6 +37,14 @@
 	</p>
 	<div class="clear"></div>
 </section>
+<section class="alert"  ng-show="noGeo==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
+	<p>
+		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above or enable geolocation on your device.
+	</p>
+
+	<div class="clear"></div>
+</section>
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>

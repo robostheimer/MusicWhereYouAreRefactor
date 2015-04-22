@@ -15,9 +15,11 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 	var deferred = $q.defer();
 	$rootScope.genres='';
 	$rootScope.tags=[];
+	$rootScope.noGeo=true;
 	$rootScope.lookUpSongs=[];
 	//console.log('geo:'+$rootScope.lookUpSongs)
 	$rootScope.era='';
+	
 	//$rootScope.location = [];
 	var Geolocation = {
 		_checkGeoLocation : function() {
@@ -29,7 +31,7 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 
 		handle_geolocation_query : function(position) {
 
-			
+			$rootScope.noGeo=false;
 			currentLat = (position.coords.latitude);
 			currentLong = (position.coords.longitude);
 			var lat_min = currentLat - .25;
@@ -46,30 +48,32 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 		},
 
 		handle_errors : function(error) {
-			alert('Looks like geolocation on your device is not enabled. Try enabling it or clicking on the map icon in the lower righthand corner and type in a city and state/region in the field at the top of the page.');
-			currentLat = 41.5;
-			currentLong = 91.6
-			lat_min = currentLat - .1;
-			lat_max = currentLat + .1;
-			long_min = currentLong - .1;
-			long_max = currentLong + .25
-			$rootScope.noSongs=true;
+			//alert('Looks like geolocation on your device is not enabled. Try enabling it or clicking on the map icon in the lower righthand corner and type in a city and state/region in the field at the top of the page.');
+			
+			
+		$rootScope.noGeo=true;
+			
 			switch(error.code) {
 				case error.PERMISSION_DENIED:
 
-					error = 'Choose a City and State from the form below or enable geolocation on your device.'
+					error = 'Choose a City and State from the form below or enable geolocation on your device.';
+					
+					
 					break;
 
 				case error.POSITION_UNAVAILABLE:
 					error = 'We could not detect current position';
+					alert(error)
 					break;
 
 				case error.TIMEOUT:
 					error = 'There was a server timeout.'
+					alert(error)
 					break;
 
 				default:
 					error = 'There was an unknown error.';
+					alert(error)
 					break;
 			}
 			
@@ -390,21 +394,20 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 				}	
 				else
 				{
+					
 					location = location.replace('_', ' ');
 					var ab = location.split(', ')[1].split(' ')[0].toUpperCase();
-					
-					forEach(states, function(state){
+					for (var x=0; x<states.length; x++){
 						if(states[x].abbreviation==ab)
 						{
+						
 							var state =(states[x].name);
-							var locationSplit = location.split(',');
+							var locationSplit = location.split(', ');
 							var loc1 = toTitleCase(locationSplit[0]);
-							var loc2 = toTitleCase(state);
+							var loc2 = state;
+							
 						}
-					});
-						
-						
-					
+					};
 					
 				}	
 					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
@@ -1657,7 +1660,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			
 			
 			var deferred =$q.defer();
-			
 			if(song.artist_location==undefined ||jQuery.isEmptyObject(song.artist_location))
 			{
 				
@@ -1707,6 +1709,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 		
 		createCities:function(lat, long, ratio)
 		{
+			
 			var songs=[];
 			var arr=[];
 			return $http.get('json/MajorCities.json').then(function(result){
@@ -1723,6 +1726,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					item.id=x;	
 					if(number<ratio && $routeParams.location.split('*')[0].toLowerCase()!=item.city.$t.toLowerCase())
 					{
+					
 					data.lat_plus_long.push({number:number,city:item.city.$t, lat:item.latitude.$t, long:item.longitude.$t});
 					}
 				});
@@ -1763,11 +1767,40 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				
 			});
 		},
-		runLocationJSON:function(){
+		/*runLocationJSON:function(){
 			return $http.get('json/SongsAboutCities.json').then(function(data){
+				console.log(data.data.feed.entry)
 				return data.data.feed.entry;
 			});
 		},
+		runFusionTableJSON2: function(city){
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Id,Name,AvailableMarkets,DurationMs,CityLocation,CityLatitude,CityLongitude,ArtistsName,ArtistsId,AlbumId,AlbumName,AlbumAvailableMarkets+FROM+1_PGnF_OzyOksnVE6afVf7qkeKe4x_-fBe0Yi9k_U+WHERE+CityLocation=%27'+city+'%27+&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(data){
+				//console.log(data.data.rows);
+				var songs=[];
+				var song_id='';
+				
+				for(var x=0; x<data.data.rows.length;x++)
+				{
+					if(!song_id.match(data.data.rows[x][0]))
+					{
+					songs.push({
+						song_location:{location:data.data.rows[x][4], latitude:data.data.rows[x][5], longitude:data.data.rows[x][6]},
+						name: data.data.rows[x][1],
+						id: data.data.rows[x][0],
+						artists:[{name:data.data.rows[x][7], id:data.data.rows[x][8]}],
+						album: {id:data.data.rows[x][9], name:data.data.rows[x][10], available_markets: data.data.rows[x][11]},
+						available_markets: data.data.rows[x][2],
+						favorite:'off',
+						//artist_location: {latitude:'', longitude:'', location:''}
+						});
+					}
+					song_id+=data.data.rows[x][0]+':';
+				}
+				console.log(songs)
+				return songs;
+			});
+		},*/
+		
 		runFusionTableJSON: function(lat,lng, ratio){
 			if(lat==51.50853 && lng==-0.12574)
 			{
@@ -1781,6 +1814,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				
 			}
 			return $http.get(url).then(function(data){
+				
 				var songs=[];
 				var song_id='';
 				var songStr='';

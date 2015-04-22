@@ -1,8 +1,95 @@
 'use strict';
 
 /* Directives */
-
 MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
+ return {
+ 	 	
+    	 restrict: 'AE',
+         scope: { }, 
+         transclude: true,
+       // template:'<div id="map"></div>',
+            link: function(rootScope, element, attrs ) {
+			
+				
+				
+		
+				
+				$rootScope.mapdata={};
+				$rootScope.mapdata.latitude=0;
+				$rootScope.mapdata.longitude=0;
+				$rootScope.mapdata.zoom=15;
+            	
+		
+				var map = new L.Map("map",{});
+				 var markers=[];
+				var HERE_normalDayGrey = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day.grey/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
+					attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+					subdomains: '1234',
+					mapID: 'newest',
+					app_id: 'Y8m9dK2brESDPGJPdrvs',
+					app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
+					base: 'base',
+					minZoom: 0,
+					maxZoom: 20
+					});
+				 	
+			
+				map.addLayer(HERE_normalDayGrey); 	
+            	
+            	
+            	attrs.$observe('change', function(){
+            		
+	            	if(attrs.latitude!=0 && attrs.longitude!=0)
+	            	{
+	            	
+	            	
+		            	if(markers.length>0)
+		            	{
+		            		forEach(markers, function(marker){
+							map.removeLayer(marker);
+						});
+		            	}
+	            	markers=[];
+	            	var loc_arr_string='';	
+	            	var loc_arr=[];
+	            	loc_arr_string = $rootScope.mapdata.locationarrstr
+					loc_arr_string= loc_arr_string.replace(/,%%/g, '%%');
+					loc_arr = loc_arr_string.split('%%');
+					var zoom =$rootScope.mapdata.zoom;
+	            	var iw_content=''
+            		var myIcon = L.icon({
+					    iconUrl: 'genre_icons/marker_sm.svg',
+					    
+					});
+					
+					map.animate=true;
+					map._zoom=zoom;
+					map.panTo([attrs.latitude, attrs.longitude]);
+				 	
+				 	map.zoomControl.options.position='topright';
+			 		for (var i = 1; i < loc_arr.length; i++) {
+			 		
+			 		iw_content='';
+			 		
+					iw_content+=('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>'))
+					
+					 markers.push(L.marker([loc_arr[i].split('@@')[1].split(':')[0], loc_arr[i].split('@@')[1].split(':')[1].split('&&')[0]], {icon: myIcon}).bindPopup(iw_content));
+					
+					
+					}
+					forEach(markers, function(marker){
+						marker.addTo(map);
+					});
+				//$rootScope.$apply();
+				}
+            	
+            	
+           }); 
+         
+          }  
+       };
+    });        
+/*MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
  return {
  	 	
     	 restrict: 'AE',
@@ -66,7 +153,7 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
           };
 
 
-});
+});*/
 
 
 

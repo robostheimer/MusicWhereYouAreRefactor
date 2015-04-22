@@ -36,6 +36,14 @@
 	</p>
 	<div class="clear"></div>
 </section>
+<section class="alert"  ng-show="noGeo==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
+	<p>
+		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above or enable geolocation on your device.
+	</p>
+
+	<div class="clear"></div>
+</section>
 <section id="info-area"  ng-swipe-up="goBack()" >
 		<form>
 					<input type="text"  name="song_form" id="artistsearch" placeholder="Search for an artist"  class="text"   ng-model="artist" ng-enter="lookUpArtist(artist)" />

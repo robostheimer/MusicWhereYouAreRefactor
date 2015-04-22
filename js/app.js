@@ -46,18 +46,18 @@ function($compileProvider)
         controller: 'addCountry'
       }).*/
        when('/favorites', {
-        templateUrl: 'partials/favorites.html',
-        controller: 'LoadFav'
+        templateUrl: 'partials/map.html',
+        controller: 'Geolocate'
       }).
         when('/genres', {
-        templateUrl: 'partials/genres.html',
-        controller:'GenreController',
+        templateUrl: 'partials/map.html',
+        controller:'Geolocate',
       }).
        
        when('/info', {
-        templateUrl: 'partials/info.html',
-        //controller: 'loadInfo',
-         animation: 'from-right'
+        templateUrl: 'partials/map.html',
+        controller: 'Geolocate',
+         //animation: 'from-right'
       }).
       when('/liner_notes', {
         templateUrl: 'partials/liner_notes.html',
@@ -89,10 +89,12 @@ function($compileProvider)
     }).
      when('/playlist/',
     {
-    	templateUrl:'partials/playlist.html',
-    	controller:'hashedLocation',
-    	 animation: 'from-left'
+    	templateUrl:'partials/map.html',
+    	controller:'Geolocate',
+    	//controller:'hashedLocation',
+    	// animation: 'from-left'
     }).
+   
      when('/playlist/:location',
     {
     	templateUrl:'partials/playlist.html',
@@ -133,8 +135,8 @@ function($compileProvider)
    
      when('/calendar/', 
      {
-        templateUrl: 'partials/calendar.html',
-       controller: 'LoadEvents',
+        templateUrl: 'partials/map.html',
+       controller: 'Geolocate',
         animation: 'from-left'
       }).  
       
@@ -153,8 +155,8 @@ function($compileProvider)
    
      when('/events/', 
      {
-        templateUrl: 'partials/events.html',
-       controller: 'LoadBandEvents',
+        templateUrl: 'partials/map.html',
+       controller: 'Geolocate',
         animation: 'from-left'
       }).   
     when('/genres/:location/:genre',
@@ -176,6 +178,11 @@ function($compileProvider)
     	templateUrl:'partials/songs_about.html',
     	controller:'findSongsAbout',
     	//animation: 'from-left'
+    }).
+     when('/error',
+    {
+    	templateUrl:'partials/map.html',
+    	
     }).
     
       otherwise({

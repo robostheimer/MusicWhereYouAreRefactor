@@ -169,7 +169,7 @@
  #count_form p{margin-top:10px;}
 #country_form input, .alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
 
-
+footer a, .footer_item{float:left; margin-right:5px;}
 #whereyouat{float:left; margin-top:30px;width:75%;}
 h5{color:#c53526; font-size:1.1em;  margin:0px; padding:0px;line-height:1em; margin-top:.7em;}
 .ui-view{height:100%}
@@ -180,7 +180,7 @@ h5{color:#c53526; font-size:1.1em;  margin:0px; padding:0px;line-height:1em; mar
 
 section#contact {
 	position: absolute;
-	top: 5px;
+	bottom: 0px;
 	right: 5px;
 	margin: 0px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -312,14 +312,12 @@ header {
 .noheight{height:0%;  overflow:hidden;margin:0px;}
 .vis{opacity:1};
 .no_vis{opacity:0}
-#map-canvas, .angular-google-map-container {
-	height: 100%;
-		
-}
 
-#map-canvas{margin: 15px;
-	margin-top: 15px;
-	border: 1px dashed #ececec; height:100%}
+
+#map-canvas, #map{margin: 15px;
+	margin-top: 0px;
+	border: 1px dashed #ececec; height:100%;
+	z-index:1;}
 .info {/*color:black*/
 	max-width: 100px;
 	padding: 10px;
@@ -467,11 +465,9 @@ div.button:hover{background-color:#c53526;; color:white; }
 	overflow: scroll;
 	overflow-x: hidden;
 }
-.gm-style .gm-style-iw, .gm-style .gm-style-iw a, .gm-style .gm-style-iw span, .gm-style .gm-style-iw label, .gm-style .gm-style-iw div {
-
+.gm-style .gm-style-iw, .gm-style .gm-style-iw a, .gm-style .gm-style-iw span, .gm-style .gm-style-iw label, .gm-style .gm-style-iw div, .leaflet-container {
 	font-weight: 300;
-	font-family: 'PT Sans', Arial;
-	
+	font-family: 'PT Sans', Arial;	
 }
 
 .gm-style div, .gm-style span, .gm-style label {
@@ -492,12 +488,13 @@ div.button:hover{background-color:#c53526;; color:white; }
 	overflow-x: hidden;
 }
 
-.gm-style-iw p {
+.gm-style-iw p, .leaflet-container p {
 	margin-top:.5em;
-	font-size:.85em
+	font-size:.8em
 }
-.gm-style-iw h5{
-font-size:.95em;	
+.gm-style-iw h5, .leaflet-container h5{
+font-size:.85em;
+line-height:1.3em;	
 }
 
 #search {
@@ -651,14 +648,14 @@ margin-bottom:7px;
 .info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
 .info_button{width:220px;}
 .spot_button{width:295px;}
-.button_on, .button_off:hover{color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.button_on, .button_off:hover{color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:10px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .more_button{width: 80px;
 color: white;
 background: #c53526;
 padding: 3px;
 margin-bottom: 3px;
 font-size: .6em;
-margin-right: 5px;
+margin-right: 10px;
 border: 1px dotted #ccc;
 border-radius: 5px;
 -moz-border-radius: 5px;
@@ -686,6 +683,8 @@ padding-top: 6px;
 	margin-left:-1px;
 	width: 295px;
 	margin-bottom: 5px;
+	padding-bottom:5px;
+	padding-top:5px;	
 }
 .gray:hover .spot_link, .red .spot_link, .gray:hover .spot_link_fav, .red .spot_link_fav, .gray:hover .spot_link_spot, .red .spot_link_spot {
 	color: #f0f0f0;
@@ -699,6 +698,8 @@ padding-top: 6px;
 	border: 1px dotted #CCCCCC;
 	width: 295px;
 	margin-bottom: 5px;
+	padding-bottom:5px;
+	padding-top:5px;
 	
 }
 .gray .spot_link, .red .spot_link {
@@ -726,10 +727,10 @@ padding-top: 6px;
 .spot_link:hover, .spot_link_fav:hover {
 	color: #ececec
 }
-.gm-style-iw {
-	font-size: 1em
+.gm-style-iw, .leaflet-popup-content {
+	font-size: .75em;
 }
-.gm-style-iw a div.spot_link {
+.gm-style-iw a div.spot_link, .leaflet-popup a div.spot_link {
 	float: left;
 	font-size: 20px;
 	text-decoration: none;
@@ -738,7 +739,7 @@ padding-top: 6px;
 	color: #c53526;
 }
 
-gm-style p.info {
+.gm-style p.info {
 	margin: 0px;
 }
 #spot_holder p.info, #fav_holder p.info {
@@ -1148,7 +1149,7 @@ top: 20%;
 @media screen and (min-width: 481px) and (max-width: 640px) {
 #artist_info ul{ font-size:.9em;font-weight:bold;width:135px;float:left;  overflow:hidden; margin-top:5px; margin-right:15px;  border-right:1px dotted #ccc;  }
 #artist_info ul li, #artist_info ul li .off{display:block;border:none;margin-right:5px; }
-#whereyouat{ float:left; width:70%}
+
 #info-area{padding-top:2.5%; padding-bottom:10%}
 #info-area .intro-image{float:left;  margin-right:15px;max-width:300px;overflow:hidden}
 #info-area p.intro img {border: 1px solid #ccc; height:150px;}
@@ -1201,7 +1202,7 @@ top: 20%;
 @media screen and (max-width: 480px) {
 header{width:0px; padding:21px;height:10px;}
 #info-area{padding-top:2.5%; padding-bottom:14%}
-#whereyouat{ float:left; width:55%}
+
 header{float:left; margin-left:15px;}
 .menu{margin-top:0px;}
 #info-area .intro-image_ang{float:none;  max-width:300px;overflow:hidden}
@@ -1292,9 +1293,7 @@ padding-top: 7px;
 		margin-top: 2px;
 		cursor: pointer;
 	}
-	#genre_holder, fav_holder, #spot_holder {
-		width: 300px
-	}
+	
 
 }
 
@@ -1302,9 +1301,7 @@ padding-top: 7px;
 	
 		
 
-	#genre_holder, #fav_holder, #spot_holder,  {
-		width: 300px
-	}
+	
 
 	#findmusic {
 		font-size: 13px;
@@ -1352,8 +1349,7 @@ border: 1px solid #ececec;
 	
 	
 
-		#genre_holder, #fav_holder, #spot_holder {
-		width: 300px
+		
 	}
 	h4, #spot_holder .spot_icon {
 		
@@ -1416,7 +1412,7 @@ border: 1px solid #ececec;
 #artist_loader h4{position:absolute; right:0px; font-size:13px;top:0px; background:#C53526; color:white; padding:5px; padding-right:10px; border-top-left-radius:5px; border-bottom-left-radius:5px; -webkit-border-top-left-radius:5px; -webkit-border-bottom-left-radius:5px;-moz-border-top-left-radius:5px; -moz-border-bottom-left-radius:5px;   -o-border-top-left-radius:5px; -o-border-bottom-left-radius:5px;}
 .close, .closey{font-size:12px; position:absolute;padding:5px;margin-left:89%;opacity:1;cursor:pointer; display:none;z-index:100; }
 #spot_holder .close, #spot_holder .closey, #fav_holder .close, #fav_holder .close{position:fixed; margin-left:280px;}
-#spot_holder .share_box .closey, #fav_holder .share_box .closey{margin-left:36%}
+#spot_holder .share_box .closey, #fav_holder .share_box .closey{margin-left: 250px;}
 .closey{display:block; color:#c53526;}
 .gray:hover .close{display:block}
 .red:hover .close{display:block}

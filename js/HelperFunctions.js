@@ -175,6 +175,37 @@ function sortNumber(a,b) {
     return a - b;
 }
 
+ function SortObjAsc(property, obj)
+ {
+ 
+ 	var sortable =[];
+ 	obj.sort(
+ 		function(a, b){
+ 				 var aprop=a[property]
+				 var bprop =b[property]
+				 return bprop-aprop
+				});
+ 	
+ 	console.log('descending')
+ 	return obj.reverse();
+ }
+
+
+ function SortObjDsc(property, obj)
+ {
+ 
+ 	var sortable =[];
+ 	obj.sort(
+ 		function(a, b){
+ 				 var aprop=a[property]
+				 var bprop =a[property]
+				 return aprop-bprop
+				});
+ 	
+ 	console.log('ascending')
+ 	return obj;
+ }
+
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::                                                                         :::
 //:::  This routine calculates the distance between two points (given the     :::
