@@ -1,12 +1,11 @@
-//'use strict';
 
 /* Services */
 
 //Checks to see if Geolocation is Activated.  If it is it creates a geolocation variable and sends them as parameters to HashCreate service////
 
 ///If Geolocation is not enabled, alerts user to the fact/////////
-MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope','$location',
-function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
+MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope','$location','HelperFunctions',
+function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location, HelperFunctions) {
 	
 	
 	var zoom = 11;
@@ -15,10 +14,11 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 	var deferred = $q.defer();
 	$rootScope.genres='';
 	$rootScope.tags=[];
-	$rootScope.noGeo=true;
+	//$rootScope.geoloading=true;
 	$rootScope.lookUpSongs=[];
 	//console.log('geo:'+$rootScope.lookUpSongs)
 	$rootScope.era='';
+	$rootScope.noGeo=false;
 	
 	//$rootScope.location = [];
 	var Geolocation = {
@@ -30,8 +30,9 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 		},
 
 		handle_geolocation_query : function(position) {
-
+			$rootScope.hideiconHolder=false;
 			$rootScope.noGeo=false;
+			$rootScope.geoloading=false;
 			currentLat = (position.coords.latitude);
 			currentLong = (position.coords.longitude);
 			var lat_min = currentLat - .25;
@@ -41,6 +42,7 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 			////Creates a promise that runs the Playlist creation Function and then the Map Create function.
 			HashCreate.runHash(currentLat, currentLong, true, .05).then(function(data){
 				$location.path(data);	
+			
 			});
 			
 						
@@ -48,34 +50,12 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 		},
 
 		handle_errors : function(error) {
-			//alert('Looks like geolocation on your device is not enabled. Try enabling it or clicking on the map icon in the lower righthand corner and type in a city and state/region in the field at the top of the page.');
-			
-			
-		$rootScope.noGeo=true;
-			
-			switch(error.code) {
-				case error.PERMISSION_DENIED:
-
-					error = 'Choose a City and State from the form below or enable geolocation on your device.';
-					
-					
-					break;
-
-				case error.POSITION_UNAVAILABLE:
-					error = 'We could not detect current position';
-					alert(error)
-					break;
-
-				case error.TIMEOUT:
-					error = 'There was a server timeout.'
-					alert(error)
-					break;
-
-				default:
-					error = 'There was an unknown error.';
-					alert(error)
-					break;
-			}
+			$rootScope.noGeo=true;
+		$rootScope.hideiconHolder=true;
+		$rootScope.$apply();
+		
+		
+		
 			
 		},
 	};
@@ -89,13 +69,13 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 
 /////////////////Runs the geolocations through Echonest and filters results based on type of location (city, region or just region, removes duplicates, etc.)
 ////////////////Checks to see if any items in this playlist have been favorites
-MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
-function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States) {
+MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States','HelperFunctions',
+function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, HelperFunctions) {
 	
 
 	return {
 		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
-			var lsTitleArr=[];
+		 	var lsTitleArr=[];
 			var lsIdArr=[];
 			var lsTitleStr='';
 			var lsIdStr='';
@@ -132,7 +112,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 			}
 			return $http.jsonp(url).then(function(data) {
 				var songs = data.data.response.songs;
-				songs = removeDuplicatesArrObj(songs, 'title', true);
+				songs = HelperFunctions.removeDuplicatesArrObj(songs, 'title', true);
 				songs.songsArr=[];
 				songs.songsArr.spot_arr = [];
 			 	songs.songsArr.spot_playlist=[];
@@ -228,7 +208,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				}
 				
 				
-				forEach(songs, function(song) {
+				songs.forEach(function(song) {
 					var x=songs.indexOf(song)
 					
 					var songtitle=song.title
@@ -308,7 +288,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					}
 				});
 				
-				songs = compareArraysObj(songs,LeaveOut, 'title');
+				songs = HelperFunctions.compareArraysObj(songs,LeaveOut, 'title');
 				//console.log(songs)
 				return songs;
 				
@@ -317,6 +297,39 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				
 			});
 		 	},
+		 	createPlaylist:function(songlist)
+			{
+				var deferred = $q.defer();
+				var songs={};
+				songs.songs=[];
+				songs.spot_arr=[];
+				songs.savSpotArr=[];
+				songs.artistlocation ='';
+				songs.spot_str='';
+				songs.location_arr=[];
+				songlist.forEach (function(song) {
+					var x = songlist.indexOf(song);
+					song.artists[0].name=HelperFunctions.findThe(song.artists[0].name);
+					song.num_id=x;
+					songs.songs.push(song);
+					Favorites.checkFavorites(song);
+					songs.spot_arr.push(song.id);
+					songs.savSpotArr.push('spotify:track:'+song.id);
+					songs.artistlocation = $routeParams.location;
+					songs.tracks=[{foreign_id: song.uri}]
+					
+					songs.location_arr.push(song.artist_location.location + '@@' + song.artist_location.latitude + ':' + song.artist_location.longitude + '&&<h5>' + song.name + '</h5><p>' + song.artists[0].name + '</p><a href="spotify:track:' + song.id + '" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+songs.length></div></a><a><a a href="#/info/' + songs.artistlocation + '/' + song.artists[0].name.replace('The ', '') + '" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+songs.length  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
+					
+				});
+				
+				//songs.location_arr.sort();
+				songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString();
+				songs.spot_strFinal = $sce.trustAsResourceUrl(songs.spot_str);
+				//console.log(songs)
+				deferred.resolve(songs);
+				return deferred.promise;
+				
+			},
 		 	
 		 	
 		 	
@@ -327,8 +340,8 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 
 /////////////////////Takes multiple variables from the PlaylistCreate function and creates a google map with markers for where the artists are from/////////////////
-MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
-function($q,  $http, $sce, $rootScope) {
+MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope','HelperFunctions',
+function($q,  $http, $sce, $rootScope,HelperFunctions) {
 	
 	///Creates compiled variables for mwya-map directive to create the map////
 	$rootScope.latitude =0;
@@ -365,12 +378,15 @@ function(location, latorlng) {
 	//};
 }]);
 
-MusicWhereYouAreApp.factory("retrieveLocation", ['$q', '$rootScope', '$http', '$sce', '$window', '$location','States',
-function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
+MusicWhereYouAreApp.factory("retrieveLocation", ['$http', '$sce', '$location','States','HelperFunctions','$routeParams','$rootScope',
+function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScope) {
+	
 	//////////////////////MAKE WORK for LOWERCASE
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
 		runLocation : function(location, latorlng, ratio) {
+			$rootScope.hideiconHolder=false;
+			$rootScope.noGeo=false;
 			//$rootScope.lookUpSongs=[];
 			var location = location.replace('*',', ');
 			var lat_min;
@@ -389,8 +405,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 				///////city+full state//////
 				if (location.split(',')[1].replace(' ', '').length > 2) {
 					var locationSplit = location.split(',');
-					var loc1 = toTitleCase(locationSplit[0]);
-					var loc2 = toTitleCase(locationSplit[1].replace(' ', ''));
+					var loc1 = HelperFunctions.toTitleCase(locationSplit[0]);
+					var loc2 = HelperFunctions.toTitleCase(locationSplit[1].replace(' ', ''));
 				}	
 				else
 				{
@@ -403,7 +419,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						
 							var state =(states[x].name);
 							var locationSplit = location.split(', ');
-							var loc1 = toTitleCase(locationSplit[0]);
+							var loc1 = HelperFunctions.toTitleCase(locationSplit[0]);
 							var loc2 = state;
 							
 						}
@@ -417,17 +433,18 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					{
 					return	$http.jsonp(lat_url).then(function(data){
 						if (data.data.rows != null) {
-							forEach(data.data.rows, function(data)
+							data.data.rows.forEach(function(data)
 								{
 									lats += parseFloat(data[0]);
 									
 								});
 							geolocation.latitude=lats/data.data.rows.length;
-							var miles_to_lat = distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
+							
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
 							if(localStorage.country==null)
@@ -448,7 +465,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 					return	$http.jsonp(long_url).then(function(data){
 						
 						if (data.data.rows != null) {
-							forEach(data.data.rows, function(data)
+							data.data.rows.forEach(function(data)
 								{
 									longs += parseFloat(data[0]);
 									lats+= parseFloat(data[4]);
@@ -456,8 +473,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 								
 							geolocation.longitude=longs/data.data.rows.length;;
 							var latitude=lats/data.data.rows.length;
-							var miles_to_lat = distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
 							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 							geolocation.location = location;
@@ -497,23 +514,23 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 				}	
 					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					//var miles_to_lat = distance_to_degrees_lat(7*ratio);
-					//var miles_to_lon = distance_to_degrees_lon($scope.latitudeObj.lat_max , 7*ratio);
+					//var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
+					//var miles_to_lon = HelperFunctions.distance_to_degrees_lon($scope.latitudeObj.lat_max , 7*ratio);
 					
 
-					location = toTitleCase(location);
+					location = HelperFunctions.toTitleCase(location);
 					if(latorlng=="lat")
 						{
 						return	$http.jsonp(lat_url).then(function(data){
 						if (data.data.rows != null) {
-							forEach(data.data.rows, function(data)
+							data.data.rows.forEach(function(data)
 								{
 									lats += parseFloat(data[0]);
 									
 								});
 							geolocation.latitude=lats/data.data.rows.length;
-							var miles_to_lat = distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
@@ -535,7 +552,7 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 						return	$http.jsonp(long_url).then(function(data){
 							if (data.data.rows != null) {
 								geolocation.longitude=data.data.rows[0][0];
-								forEach(data.data.rows, function(data)
+								data.data.rows.forEach(function(data)
 								{
 									longs += parseFloat(data[0]);
 									lats+= parseFloat(data[4]);
@@ -544,8 +561,8 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 								
 							geolocation.longitude=longs/data.data.rows.length;;
 							var latitude=lats/data.data.rows.length;
-								var miles_to_lat = distance_to_degrees_lat(7*ratio);
-								var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+								var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
+								var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
 								geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
 								geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 								geolocation.location = location;
@@ -569,11 +586,11 @@ function($q, $rootScope, $http, $sce, $window,$location, States, $routeParams) {
 
 
 
-MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
-function($q, $rootScope, $http, $sce, $location, $routeParams) {
+MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, $routeParams,HelperFunctions) {
 	return{
 			runHash : function(lat, lng, url_change, ratio) {
-			
+			$rootScope.hideiconHolder=false;
 			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
 			return $http.get(url).then(function(data) {
 				
@@ -653,7 +670,7 @@ function($routeParams, $http){
 };
 }]);
 
-MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $location)
+MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location','HelperFunctions', function($rootScope, $location, HelperFunctions)
 {
 	return {
 		addButtons:function()
@@ -704,7 +721,7 @@ MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location', functi
 		{
 		if($rootScope.icons!=undefined)
 		{
-		forEach($rootScope.icons, function(icon){
+		$rootScope.icons.forEach(function(icon){
 
 				icon.state='off';
 				if($location.path().match(icon.name))
@@ -726,8 +743,8 @@ MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location', functi
 	
 }]);
 
-MusicWhereYouAreApp.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location',
-function($q, $rootScope, $http, $sce, $location) {
+MusicWhereYouAreApp.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, HelperFunctions) {
 return{
 	
      		infoRetrieve: function(artistname){
@@ -749,7 +766,7 @@ return{
      			artistinfo.videoArr=[];
      			artistinfo.lastfm_imgs=[];
      			
-	     			forEach(artistinfo.video, function(video){
+	     			artistinfo.video.forEach(function(video){
 	     			
 	     			if(video.url.match('youtube'))
 		     			{
@@ -757,8 +774,8 @@ return{
 		     			}
 	     			});
      			
-	     			forEach(artistinfo.news,function(news){
-		     			news.news_summary=removeHTML(news.summary);
+	     			artistinfo.news.forEach(function(news){
+		     			news.news_summary=HelperFunctions.removeHTML(news.summary);
 	     			});
      			
      			if(artistinfo.ytArr.length<7)
@@ -768,10 +785,10 @@ return{
      			else{
      			var yt_length = 7;
      			}
-     			forEach(yt_length, function(yt)
+     			for (var g=0; g<yt_length; g++)
 	     			{
 	     				artistinfo.videoArr.push($sce.trustAsResourceUrl('http://www.youtube.com/embed/'+artistinfo.ytArr[g].slice(artistinfo.ytArr[g].indexOf('?v='),artistinfo.ytArr[g].indexOf('&feature')).replace('?v=','')));
-	     			});
+	     			};
      			
      			
 	     			for(var i=0; i<artistinfo.biographies.length; i++)
@@ -782,7 +799,7 @@ return{
 	     					artistinfo.bio=result.data.response.artists[0].biographies[i];
 	     					if(artistinfo.bio.text.length>2700)
 	     					{
-	     						artistinfo.bio.text = textSlicer(artistinfo.bio.text, 2700) +'... ';
+	     						artistinfo.bio.text = HelperFunctions.textSlicer(artistinfo.bio.text, 2700) +'... ';
 								artistinfo.bio_site = 'Read More at ' +artistinfo.bio.site;
 	     					}
 	     					else
@@ -863,7 +880,7 @@ return{
 						
      			
      			
-     			forEach(artistsongs.tracks, function(track)
+     			artistsongs.tracks.forEach(function(track)
 	     			{
 	     				
 	     				artistsongs.spot_url.push(track.id);
@@ -885,7 +902,7 @@ return{
      			{
      			relatedartists =result.response.artists;
      			relatedartists.relatedartistsfinal = [];	
-     			forEach(relatedartists, function(artist)
+     			relatedartists.forEach(function(artist)
 	     			{
 	     				if(artist.artist_location!=null)
 	     				{
@@ -895,11 +912,11 @@ return{
 	     				}
 	     			});
 	     			
-	     			forEach(relatedartists.relatedartistsfinal, function(relatedartist)
+	     			relatedartists.relatedartistsfinal.forEach(function(relatedartist)
 	     			{	
 	     				relatedartist.href = '#/info/'+$location.path().split('/')[2]+'/'+relatedartist.name.replace('The ', '');
 	     				relatedartist.lastfm_imgs =[];
-	     				forEach(relatedartist.images, function(image)
+	     				relatedartist.images.forEach(function(image)
 	     				{
 	     					if(image.url.match('last.fm'))
 	     					{
@@ -974,8 +991,8 @@ return{
 }]);
 
 
-MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	return {
 		
 		addFavorites:function()
@@ -990,7 +1007,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				favorites=[];
 				//favorites.blogHider=true;
 			}
-			forEach(favorites,function(favorite)
+			favorites.forEach(function(favorite)
 				{
 					favorite.num_id=favorites.indexOf(favorite);
 				});
@@ -1012,7 +1029,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				//favorites.blogHider=true;
 			}
 			//console.log(favoritesArr)
-			forEach(favoritesArr, function(favorite)
+			favoritesArr.forEach(function(favorite)
 			{
 				favorite.favorite='off';
 				if(favorite.id==obj.id)
@@ -1030,8 +1047,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 }]);
 
-MusicWhereYouAreApp.factory('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+MusicWhereYouAreApp.factory('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce', 'HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	return {
 		createStateObj : function()
 		{
@@ -1107,8 +1124,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 };
 }]);
 
-MusicWhereYouAreApp.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States',
-function($q, $rootScope, $http, $sce, $location, States) {
+MusicWhereYouAreApp.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, States, HelperFunctions) {
 	var canceller = $q.defer();
 
 	 return {
@@ -1124,7 +1141,7 @@ function($q, $rootScope, $http, $sce, $location, States) {
 			var state_location = location[1]	
 			if(location[1].length<3)
 			{
-				forEach(states, function(state){
+				states.forEach(function(state){
 					if(location[1].toUpperCase().match(states.abbreviation))
 					{
 
@@ -1137,7 +1154,7 @@ function($q, $rootScope, $http, $sce, $location, States) {
 				if(result.data.rows!=undefined)
 				{
 				hints.finalArr=[];
-				 	forEach(result.data.rows, function(hint){
+				 	result.data.rows.forEach(function(hint){
 					 		hints.stateArr.push(hint[0]);
 							hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
 					 });
@@ -1150,7 +1167,7 @@ function($q, $rootScope, $http, $sce, $location, States) {
 				
 			if(location[1].length<3)
 			{
-				forEach(result.data.rows, function(hint){
+				result.data.rows.forEach(function(hint){
 				 		hints.stateArr.push(hint[0]);
 						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
 				 });
@@ -1166,7 +1183,7 @@ function($q, $rootScope, $http, $sce, $location, States) {
 					if(result.data.rows.length!=null)
 					{
 					
-			 		forEach(result.data.rows, function(hint){
+			 		result.data.rows.forEach(function(hint){
 						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
 				 	});
 					
@@ -1187,7 +1204,7 @@ function($q, $rootScope, $http, $sce, $location, States) {
 				{
 					hints = result.data.rows;
 					hints.finalArr=[];
-			 		forEach(result.data.rows, function(hint){
+			 		result.data.rows.forEach(function(hint){
 				 		
 						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
 				 	});	
@@ -1240,8 +1257,8 @@ function($q, $rootScope, $http, $sce, $location, States) {
 }]);	
 
 
-MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
+MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, HelperFunctions) {
 	return{
 			getGeoEvents: function(lat, lng)
 			{
@@ -1264,8 +1281,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 }]);
 
 
-MusicWhereYouAreApp.factory("ShareSongs", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','retrieveLocation',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveLocation) {
+MusicWhereYouAreApp.factory("ShareSongs", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','retrieveLocation','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveLocation, HelperFunctions) {
 	return{
 			
 		getSongs: function(songs, location)
@@ -1275,7 +1292,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 			var deferred = $q.defer();	
 			var str='';	
 			
-			forEach(songs, function(song)
+			songs.forEach(function(song)
 			{
 				
 				str+=song.name.replace(/&/g, 'and').replace('?', 'q*m')+'{'+song.id+'~'+song.artists[0].name.replace(/&/g, 'and')+'}'+song.favorite+']'+song.artist_location.latitude+','+song.artist_location.longitude+'**';
@@ -1332,7 +1349,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 				
 				songs.location_arr.sort();
 				
-				forEach(songs.location_arr, function(location)
+				songs.location_arr.forEach(function(location)
 				{
 					if(!location_str.match(location.split('@@')[0]))
 					{
@@ -1393,8 +1410,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 }]);	
 
 
-MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) {
+MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify','HelperFunctions',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify,HelperFunctions) {
 	return{
 		getWikiLandmarks: function(lat,lng, country)
 			{
@@ -1425,7 +1442,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 				lsIdFavArr=[];
 				if(ls_removeOut!=null)
 				{
-					forEach(ls_removeOut.length, function(ls)
+					ls_removeOut.forEach(function(ls)
 					{
 						lsTitleArr.push(ls.song);
 						lsIdArr.push(ls.id);
@@ -1442,7 +1459,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 				var ls_favorite = jQuery.parseJSON(localStorage.getItem('FavoriteArr'))
 				if(ls_favorite!=null)
 				{
-					forEach(ls_favorite.length, function(ls)
+					ls_favorite.forEach(function(ls)
 					{
 						lsIdFavArr.push(ls.id);
 					});
@@ -1462,8 +1479,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 }]);
 
 
-MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs',
-function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs){
+MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs','HelperFunctions',
+function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs,HelperFunctions){
 	return{
 		
 		runLyricsnMusic: function(searchterm)
@@ -1517,12 +1534,12 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					var LeaveOut=[];
 				}
 				//songs.songsStr='';
-				forEach(songs, function(song)
+				songs.forEach(function(song)
 				{
 					//songs.songsStr+=song.id;
 					song.searchterm = searchterm;
 				});
-				songs = compareArraysObj(songs,LeaveOut, 'title');
+				songs = HelperFunctions.compareArraysObj(songs,LeaveOut, 'title');
 				return songs;	
 			});
 		},
@@ -1531,7 +1548,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					var songsArr=[];
 					var finalSongs=[];
 					var songsArrStr='';
-						forEach(songs, function(song)
+						songs.forEach(function(song)
 						{
 							songsArr.push(song);
 							songsArrStr+=song.tracks[0].foreign_id.split(':')[2]+',';
@@ -1545,7 +1562,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					
 					
 							
-							forEach(tracks, function(track)
+							tracks.forEach(function(track)
 							{
 								var y= tracks.indexOf(track);
 								if(localStorage.country!=undefined && localStorage.country!="")
@@ -1581,24 +1598,16 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 		createPlaylist:function(songlist)
 		{
 			var deferred = $q.defer();
-			/*****This is causing a problem********Need to Debug******/
-			//console.log(songlist)
-			//var songlist =removeDuplicatesArrObj(songlist, 'name', true);
-			
-			
 			var songs={};
-			
-			
-			
 			songs.songs=[];
 			songs.spot_arr=[];
 			songs.savSpotArr=[];
 			songs.artistlocation ='';
 			songs.spot_str='';
 			songs.location_arr=[];
-			forEach (songlist, function(song) {
+			songlist.forEach (function(song) {
 				var x = songlist.indexOf(song);
-				song.artists[0].name=findThe(song.artists[0].name);
+				song.artists[0].name=HelperFunctions.findThe(song.artists[0].name);
 				song.num_id=x;
 				songs.songs.push(song);
 				Favorites.checkFavorites(song);
@@ -1642,9 +1651,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						
 					deferred.resolve({'zoom': zoom, 'latitude': latitude, 'longitude': longitude, locationarrstr: final_loc_arr.toString(), change:Math.random()});
 					return deferred.promise;
-					//MapCreate.runMap(zoom, latitude, longitude, final_loc_arr, spot_arr);
-				
-					
 					
 				}
 			}
@@ -1664,8 +1670,8 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			{
 				
 				
-				var songtitle = removeSpecialChar(song.name);
-				var artist = removeSpecialChar(song.artists[0].name)
+				var songtitle = HelperFunctions.removeSpecialChar(song.name);
+				var artist = HelperFunctions.removeSpecialChar(song.artists[0].name)
 				//console.log(artist)
 				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=MIV6XZXYU7FNSMMDN&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
 				
@@ -1718,7 +1724,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				
 				data.lat_plus_long=[];
 				//console.log(data)
-				forEach(data, function(item)
+				data.forEach(function(item)
 				{
 					var x= data.indexOf(item);
 					var number=Math.abs(lat-item.latitude.$t)+Math.abs(long-item.longitude.$t);
@@ -1850,14 +1856,14 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						songStr+=data.data.rows[x][1]+':';
 					}
 				}
-				songs = compareArraysObj(songs, LeaveOut, 'title');
+				songs = HelperFunctions.compareArraysObj(songs, LeaveOut, 'title');
 				return songs;
 			});
 		},
 			
 		runRange:function(number)
 		{
-			
+			//console.log(number)
 			if(number>15 )
 			{
 				zoom=2;
@@ -1873,28 +1879,28 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			}
 			else if(number>5&&number<7)
 			{
-				zoom=5
+				zoom=6
 			}
 			else if(number>3&&number<5)
 			{
-				zoom=6
+				zoom=7
 			}
 			
 			else if(number>2 &&number<3) 
 			{
-				zoom=7
+				zoom=8
 			}
 			else if(number>1&&number<2)
 			{
-				zoom=8
+				zoom=9
 			}
 			else if(number>.8&&number<1) 
 			{
-				zoom=9
+				zoom=10
 			}
 			else if(number>.6 && number<.8)
 			{
-				zoom=10
+				zoom=11
 			}
 			else if(number>.29 && number<.6)
 			{
@@ -1906,9 +1912,8 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			}
 			else if(number>=0 &&number<.2) 
 			{
-				zoom=13
+				zoom=15
 			}
-			
 			return zoom;
 		}
 		
@@ -1916,19 +1921,36 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 }]);	
 
 //////////////////Need to lose the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
-MusicWhereYouAreApp.factory("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch',
-function($q, $rootScope, $http, $sce, LocationDataFetch)
+MusicWhereYouAreApp.factory("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch','HelperFunctions',
+function($q, $rootScope, $http, $sce, LocationDataFetch,HelperFunctions)
 {
 	return{
 		createChunks:function(songs, number)
-		{
-				
+		{		
 				var deferred = $q.defer();
 				var remainder =songs.length%number;
 				var divider=songs.length/number;
 				var floor = Math.floor(divider);
 				var songsFinal =[];
 				var songsArrStr='';
+				if(songs.length<number)
+				{
+					var songsArr=[];
+					songs.forEach(function(item)
+					{
+						//console.log(SongSlicer[x])
+						songsArr.push(item);
+						songsArrStr+=item.tracks[0].foreign_id.split(':')[2]+',';
+										
+					});
+					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
+					songsFinal.push({songs:songs, url:'https://api.spotify.com/v1/tracks/?ids='+songsArrStr, ids: songsArrStr});
+					deferred.resolve(songsFinal);
+					return deferred.promise;	
+				}
+				else{
+				
+				
 				//Cannot use ForEach because Floor is not an array, but a number//////////
 				for(var z=0; z<floor; z++)
 				{
@@ -1940,7 +1962,7 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					SongSlicer = songs.slice(z*number,(z*number)+number);
 					
 					//console.log(SongSlicer.length)
-					forEach(SongSlicer, function(SongSlicer)
+					SongSlicer.forEach(function(SongSlicer)
 					{
 						//console.log(SongSlicer[x])
 						songsArr.push(SongSlicer);
@@ -1956,7 +1978,7 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					
 					var songsArr=[];
 					var SongSlicer =songs.slice(songs.length-remainder, songs.length);
-					forEach(SongSlicer, function(SongSlicer)
+					SongSlicer.forEach(function(SongSlicer)
 					{
 						//console.log(SongSlicer[x])
 						songsArr.push(SongSlicer);
@@ -1970,59 +1992,259 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 				deferred.resolve(songsFinal);
 				return deferred.promise;
 			
-				
+				}
 		},
 	};	
 }]);
 
-MusicWhereYouAreApp.factory("loadPlaylist",[ '$q', '$rootScope', '$http', '$sce','PlaylistCreate','Spotify',
-function($q, $rootScope, $http, $sce, PlaylistCreate, Spotify)
+
+
+
+/*MusicWhereYouAreApp.factory("loadPlaylist",[ '$q', '$rootScope', '$http', '$sce','PlaylistCreate','Spotify','retrieveLocation','$routeParams',
+function($q, $rootScope, $http, $sce, PlaylistCreate, Spotify, retrieveLocation, $routeParams)
 {
 	return{
-		callPlaylistCreate:function(arr, counter,zoom, latitude, longitude, lat_min, lat_max,long_min, long_max, genres, era,start_number)
+		
+		callPlaylistCreate:function(zoom, latitude, longitude, lat_min, lat_max, long_min, long_max, genres, era,start_number, arr, tmparr,holder_arr, index1, index2, number, counter)
 		{
-			var arr = arr;
-			var counter = counter;
-			var tmparr=[];
-			for(var t=0; t<10; t++)
-						{
-						
-							var start_number = t*100;
-							PlaylistCreate.runPlaylist(zoom, latitude, longitude, lat_min, lat_max,long_min, long_max, genres, era,start_number).then(function(data){
-								arr = arr.concat(data.data.response.songs);
-									tmparr.push(t)
-									if(tmparr.length==t)
+								
+								
+								var deferred = $q.defer();
+								PlaylistCreate.runPlaylist(zoom, latitude,longitude, lat_min, lat_max, long_min, long_max, genres, era,start_number).then(function(data){
+								arr = arr.concat(data);
+								console.log(arr);
+								
+								if(tmparr.length==number)
 									{
-										
-										if (arr.length < 200 && counter<=5) {
-									
-										counter = counter + 1;
-										
-														
-											if (counter <= 5) {
-											$scope.stillLooking = true;
-											PlaylistCreate.runPlaylist(zoom, latitude, longitude, lat_min, lat_max,long_min, long_max, genres, era,start_number).then(function(data){
-												return data;
+											
+										///////////No songs from this geolocation///////////
+										if(data.songsArr.length==0 && arr.length>0)
+										{
+											
+											$rootScope.loading=false;
+											/*if($scope.btnCount>0)
+											{
+											
+											$rootScope.noMoreSongs=true;
+											$scope.moreHider=true;
+											}*/
+											
+											/*$rootScope.noMoreSongs=false;
+											$rootScope.moreHider=false;
+											
+											
+											$rootScope.donesy=true;
+
+										}
+										Spotify.createPlaylist(holder_arr).then(function(result) {
+												var songs = result.songs.slice(index1, index2+20);
+												songs.spot_arr = result.spot_arr.slice(index1,index2+20);
+												songs.savSpotArr = result.savSpotArr.slice(index1, index2+20);
+												artistlocation = result.artistlocation.slice(index1, index2+20);
+												songs.location_arr = result.location_arr.slice(index1, index2+20);
+												songs.spot_strFinal =$sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+songs.spot_arr.toString());
+												$rootScope.songs_root = songs;
+												console.log(holder_arr)
+												deferred.resolve(songs);
+												return deferred.promise;
 												
-												
-												
+											},function(error){
+												$rootScope.errorMessage = true;
 											});
-											
-										}
-										else if ($scope.songs.length == 0 && $scope.counter>5) {
-											
-											$rootScope.noSongs = true;
-											return 'test'
-										}
+
 									}
+									else if (arr.length < 100 && counter<=5) {
+											counter = counter + 1;
+											/*if($rootScope.marked==true) {
+											moreHider=true;	
+											$rootScope.loading=false;
+											noMoreSongs = true;
+											}								
+											
+										 if (counter <= 5 && holder_arr.length<50) {
+												if(counter>3)
+												{
+												$rootScope.stillLooking = true;
+												}
+												start_number=start_number+50;
+												LocationDataFetch.count = 0;
+												////////need to return something to tell controller to re-run runApp function
+												//runApp(start_number, counter, '', arr, holder_arr);
+												
+											}
+										
+											//////////////////Number of songs is less than 50 and has gone through 5 ratio changes
+											else if(arr.length<=50 && (counter>=6 ||data.songsArr.length==0))
+											{
+												
+												Spotify.checkSongMarket(arr).then(function(result) {
+													
+												var tmparr=[];
+												for (var x = 0; x < result.length; x++) {
+														tmparr.push(x);
+														songs_for_service.push(result[x]);
+														if(tmparr.length==result.length)
+														{
+															holder_songs ={};	
+															holder_arr = songs_for_service;	
+															$rootScope.holder_arr_root = songs_for_service
+															if(holder_arr.length<=20)
+															{
+																moreHider=true;
+															}
+					
+															Spotify.createPlaylist(songs_for_service).then(function(result) {
+																holder_songs.songs = result.songs;
+																songs = result.songs.slice(index1, index2+20);
+																songs.spot_arr = result.spot_arr.slice(index1, index2+20);
+																songs.savSpotArr = result.savSpotArr.slice(index1, index2+20);
+																artistlocation = result.artistlocation.slice(index1, index2+20);
+																songs.location_arr = result.location_arr.slice(index1, index2+20);
+																songs.holder_arr = holder_arr;
+																songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString());
+																$rootScope.songs_root = songs;
+																createMapArtist(songs.location_arr, counter, zoom, latitudeObj.latitude, longitudeObj.longitude, final_loc_arr, songs.spot_arr);
+																
+	king = false;
+																	$rootScope.loading=false;
+																	$rootScope.mapOpening=false;
+																	checkForMore=false;
+															});
+															}
+														}
+													});		
+											}
+											////////////////Number of songs is greater than 50 but less than 100 and has gone through five ratio changes
+											//////////Because it is over 50 it needs to be run through Chunksongs service to get it in a usable format for 
+											/////////////Spotify API
+											else if(arr.length>50 && arr.length<100 && counter>=6){
+											ChunkSongs.createChunks(arr, 50).then(function(data){
+											
+												var tmparr=[];
+												var tmparr2 =[];
+												for(var y=0; y<data.length; y++)
+												{
+													tmparr.push(y);
+													Spotify.checkSongMarket(data[y].songs).then(function(result) {
+														
+													
+													for (var x = 0; x < result.length; x++) {
+														
+														tmparr2.push(x)
+														songs_for_service.push(result[x]);
+														if(tmparr.length==data.length &&tmparr2.length==result.length)
+														{
+														holder_songs ={};	
+														holder_arr = songs_for_service;	
+														$rootScope.holder_arr_root=songs_for_service;
+														Spotify.createPlaylist(songs_for_service).then(function(result) {
+															
+															holder_songs.songs = result.songs;
+															songs = result.songs.slice(index1, index2+20);
+															songs.spot_arr = result.spot_arr.slice(index1, index2+20);
+															songs.savSpotArr = result.savSpotArr.slice(index1, index2+20);
+															artistlocation = result.artistlocation.slice(index1, index2+20);
+															songs.location_arr = result.location_arr.slice(index1, index2+20);
+															songs.holder_arr = holder_arr;
+															songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString());
+															$rootScope.songs_root = songs;
+															createMapArtist(songs.location_arr, counter, zoom, latitudeObj.latitude, longitudeObj.longitude, final_loc_arr, songs.spot_arr);
+																$rootScope.stillLooking = false;
+																$rootScope.loading=false;
+																$rootScope.mapOpening=false;
+																$scope.checkForMore=true;
+																$rootScope.loading=false;
+															
+														});
+														}
+														
+													}
+													
+														
+												
+													});
+												}
+												
+												
+											});		
+														
+									}	
+								
+							}
+							else if(arr.length>50 &&($scope.donesy==false||$scope.donesy==undefined)){
+											ChunkSongs.createChunks(arr, 50).then(function(data){
+												
+												var tmparr=[];
+												var tmparr2 =[];
+												for(var y=0; y<data.length; y++)
+												{
+													tmparr.push(y);
+													Spotify.checkSongMarket(data[y].songs).then(function(result) {
+													for (var x = 0; x < result.length; x++) {
+														
+														tmparr2.push(x);
+														songs_for_service.push(result[x]);
+														if(tmparr.length==data.length &&tmparr2.length==result.length)
+														{
+														holder_songs ={};	
+														holder_arr = songs_for_service;
+														$rootScope.holder_arr_root = songs_for_service;
+														if(result.length%20>0 && counter<2 && holder_arr.length<150)
+														{
+															counter++;
+															//start_number=start_number+50;
+															LocationDataFetch.count=0;
+															runApp(start_number, counter, '', [], holder_arr);
+															
+												
+														}
+														else{
+															Spotify.createPlaylist(songs_for_service).then(function(result) {
+															
+															holder_songs.songs = result.songs;
+															songs = result.songs.slice(index1, index2+20);
+															songs.spot_arr = result.spot_arr.slice(index1, index2+20);
+															songs.savSpotArr = result.savSpotArr.slice(index1, index2+20);
+															artistlocation = result.artistlocation.slice(index1, index2+20);
+															songs.location_arr = result.location_arr.slice(index1, index2+20);
+															songs.holder_arr = holder_arr;
+															songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString());
+															$rootScope.songs_root = songs;
+															
+																createMapArtist(songs.location_arr, counter, zoom, latitudeObj.latitude, longitudeObj.longitude, final_loc_arr, songs.spot_arr);
+																stillLooking = false;
+																$rootScope.loading=false;
+																$rootScope.mapOpening=false;
+																checkForMore=true;
+																$rootScope.loading=false;
+															
+														
+														});
+														}
+													  }
+														
+													}
+													
+														
+												
+												});
+												}
+												
+											});		
+														
+										}
+										else if (arr.length == 0) {
+												//alert('true')
+												
+												$rootScope.noSongs=true;
+												$location.path('#/map')
+												}
+									});
 								}
-							})	;	
-			
-			}
-		}
+									
 	};
 }]);		
-	
+	*/
 
 
 

@@ -1,7 +1,7 @@
 'use strict';
 
 /* Directives */
-MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
+MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope, HelperFunctions) {
  return {
  	 	
     	 restrict: 'AE',
@@ -18,23 +18,33 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
 				$rootScope.mapdata.latitude=0;
 				$rootScope.mapdata.longitude=0;
 				$rootScope.mapdata.zoom=15;
+				$rootScope.mapOpening=true;
             	
 		
 				var map = new L.Map("map",{});
 				 var markers=[];
-				var HERE_normalDayGrey = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day.grey/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
-					attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+				//var HERE_normalDayGrey = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day.grey/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+				//var HERE_carnavDayGrey = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/carnav.day.grey/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+
+				//var Esri_WorldGrayCanvas = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+				//var OpenStreetMap_Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+				//var Esri_WorldStreetMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+//});			
+				var Esri_WorldTopoMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri&mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+
+				//var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 					subdomains: '1234',
 					mapID: 'newest',
 					app_id: 'Y8m9dK2brESDPGJPdrvs',
 					app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
 					base: 'base',
 					minZoom: 0,
-					maxZoom: 20
+					maxZoom: 20					
 					});
 				 	
 			
-				map.addLayer(HERE_normalDayGrey); 	
+				map.addLayer(Esri_WorldTopoMap); 	
             	
             	
             	attrs.$observe('change', function(){
@@ -45,7 +55,7 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
 	            	
 		            	if(markers.length>0)
 		            	{
-		            		forEach(markers, function(marker){
+		            		markers.forEach(function(marker){
 							map.removeLayer(marker);
 						});
 		            	}
@@ -56,7 +66,7 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
 					loc_arr_string= loc_arr_string.replace(/,%%/g, '%%');
 					loc_arr = loc_arr_string.split('%%');
 					var zoom =$rootScope.mapdata.zoom;
-	            	var iw_content=''
+					var iw_content=''
             		var myIcon = L.icon({
 					    iconUrl: 'genre_icons/marker_sm.svg',
 					    
@@ -77,10 +87,10 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
 					
 					
 					}
-					forEach(markers, function(marker){
+					markers.forEach(function(marker){
 						marker.addTo(map);
 					});
-				//$rootScope.$apply();
+				$rootScope.mapOpening=false;
 				}
             	
             	
@@ -88,7 +98,34 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
          
           }  
        };
-    });        
+    });      
+ /////////////Can be used to download Data if necessary/////////////////   
+MusicWhereYouAreApp.directive('downloadButton',  function ($compile) {
+ return {
+ 		restrict: 'AE',
+ 		link: function(scope,elem, attrs)
+ 		{
+ 			var data = {};
+ 			console.log(attrs)
+ 			attrs.$observe('data', function(){
+			var data = attrs.data;
+			console.log(data)
+			var json = JSON.stringify(data);
+			var blob = new Blob([json], {type: "application/json"});
+			var url  = URL.createObjectURL(blob);
+			
+			elem.html($compile(
+            '<a class="btn" download="data.json"' +
+                'href="' + url + '">' +
+                'Download Data' +
+                '</a>'
+        )(scope));
+ 		});
+ 		}
+ 	};
+ });
+ 
+ 
 /*MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
  return {
  	 	

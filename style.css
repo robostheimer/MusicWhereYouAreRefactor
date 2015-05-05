@@ -170,7 +170,7 @@
 #country_form input, .alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
 
 footer a, .footer_item{float:left; margin-right:5px;}
-#whereyouat{float:left; margin-top:30px;width:75%;}
+#whereyouat{float:left; margin-top:30px;width:74%;}
 h5{color:#c53526; font-size:1.1em;  margin:0px; padding:0px;line-height:1em; margin-top:.7em;}
 .ui-view{height:100%}
 .clear_border{clear:both; border-bottom: 1px dotted #ececec;margin-top:5px;}
@@ -200,7 +200,7 @@ section#contact ul li {
 section.attribute {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 8px;
-	margin-top: 5px;
+	margin-top: 15px;
 	margin-left: 15px;
 	margin-right: 15px;
 }
@@ -273,6 +273,7 @@ body {
 header {
 	
 	padding: 20px;
+	
 	/*height: 50px;*/
 	height:35px;
 	/*change back on Feb 15*/
@@ -280,7 +281,7 @@ header {
 	background-repeat: no-repeat;
 	margin-left: 15px;
 	padding-bottom: 0px;
-	margin-top: 10px;
+	margin-top: 17px;
 	float: left;
 	width: 75px;
 }
@@ -315,7 +316,7 @@ header {
 
 
 #map-canvas, #map{margin: 15px;
-	margin-top: 0px;
+	margin-top: 10px;
 	border: 1px dashed #ececec; height:100%;
 	z-index:1;}
 .info {/*color:black*/
@@ -605,7 +606,7 @@ margin-bottom:7px;
 	background: #f3f3f3;
 	left: 0px;
 	height: 100%;
-	top: 0;
+	top: 0px;
 	overflow-y: auto;
 	right: 0;
 	padding: 10px;
@@ -648,7 +649,7 @@ margin-bottom:7px;
 .info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
 .info_button{width:220px;}
 .spot_button{width:295px;}
-.button_on, .button_off:hover{color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.85em; margin-right:10px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.button_on, .button_off:hover{color:white; background:#c53526;padding:3px;margin-top:10px; margin-bottom:10px; font-size:.85em; margin-right:10px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .more_button{width: 80px;
 color: white;
 background: #c53526;
@@ -668,7 +669,7 @@ padding-top: 6px;
 }
 .share_button{float:left; margin-top: 10px; color:white; background:#c53526;padding:3px; margin-bottom:3px; font-size:.5em; margin-right:5px;border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;   cursor:pointer}
  #spot_holder .share_button .button_txt,#fav_holder .share_button .button_txt{margin-left:5px;  margin-right:5px; margin-top:2px; margin-bottom:2px;}
-.button_off{color:#c53526; background:white;padding:3px; margin-bottom:3px;  margin-right:5px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
+.button_off{color:#c53526; background:white;padding:3px; margin-bottom:10px;  margin-right:5px; margin-top:10px;font-size:.8em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-hover:5px; -o-border-radius:5px;  float:left; cursor:pointer}
 .info_button:hover,.spot_button:hover,  {color:#c53526; background:#f3f3f3;}
 .info_button:active,.spot_button:active, .genre_button:active{color:#c53526; background:#f3f3f3;}
 .button_icon{float:left;margin-top:2px;  width:20px; font-size:20px;margin-right:5px}
@@ -937,10 +938,40 @@ padding-top: 6px;
 #spot_holder .cards{margin-top:190px;}
  #spot_holder .about_section{margin-top:223px;}
 .fixed{padding-top:10px; position:fixed; background-color: rgba(243, 243, 243, .95)}
-#fav_holder .cards{ margin-top:155px;}
+#fav_holder .cards{ margin-top:170px;}
 
+@media screen and (min-height: 1801px)   {
+	body{height:93%}
+	#map-area {
+		height: 100%;
+		width: 100%;
+	}
+}
+@media screen and (min-height: 1601px)  and (max-height:1800px)  {
+	body{height:93%}
+	#map-area {
+		height: 100%;
+		width: 100%;
+	}
+}
+@media screen and (min-height: 1401px)  and (max-height:1600px)  {
+	body{height:92%}
+	#map-area {
+		height: 100%;
+		width: 100%;
+	}
 
-@media screen and (min-height: 1001px)  {
+}
+
+@media screen and (min-height: 1200px)  and (max-height:1400px)  {
+	body{height:90%}
+	#map-area {
+		height: 100%;
+		width: 100%;
+	}
+
+}
+@media screen and (min-height: 1001px) and (max-height:1199px)  {
 	#map-area {
 		height: 100%;
 		width: 100%;
@@ -983,11 +1014,11 @@ padding-top: 6px;
 
 @media screen and (min-height: 700px) and (max-height: 799px) {
 	#map-area {
-		height: 97%;
+		height: 95%;
 		width: 100%;
 	}
 	#icon_holder {
-		bottom:9%
+		bottom:9.5%
 	}
 	
 		ik, fav_holder, #spot_holder {
@@ -995,6 +1026,7 @@ padding-top: 6px;
 	}
 	
 	.from-top {height: 39%}
+	#map{margin-top:5px}
 }
 @media screen and (min-height: 600px) and (max-height: 699px)
 {
@@ -1002,75 +1034,85 @@ padding-top: 6px;
 	
 	
 	#map-area {
-		height: 93%;
+		height: 90.5%;
 		width: 100%;
 	}
 	#icon_holder {
-		bottom:9%;
+		bottom:11.25%;
 	}
 	.from-top {height: 41%}
+	#whereyouat{width:80%}
+	#search{width:80%}
+	#map{margin-top:5px;}
 }
 
 @media screen and (min-height: 500px) and (max-height: 599px)
 {
 	#map-area {
-		height: 91%;
+		height: 85%;
 		width: 100%;
 	}
 	#icon_holder {
-		bottom:10%
+		bottom:15%
 	}
 	.from-top {height:42% }
+	#map{margin-top:5px;}
+	
 }
 
 @media screen and (min-height: 400px) and (max-height: 499px)
 {
 	#map-area {
-		height: 81%;
+		height: 72%;
 		width: 100%;
 	}
 	#icon_holder {
-		bottom:17%
+		bottom:20%
 	}
 	.from-top {height: 61%}
+	#map{margin-top:5px;}
 }
 
-@media screen and (min-height: 300px) and (max-height:399px)
+@media screen and (min-height: 351px) and (max-height:399px)
+{
+	#map-area {
+		height: 73%;
+		width: 100%;
+	}
+	#icon_holder {
+		bottom:20%
+	}
+	.from-top {height: 89%}
+	#map{margin-top:5px;}
+}
+
+@media screen and (min-height: 301px) and (max-height:350px)
 {
 	#map-area {
 		height: 68%;
 		width: 100%;
 	}
 	#icon_holder {
-		bottom:22%
+		bottom:21%
 	}
 	.from-top {height: 89%}
+	#map{margin-top:5px;}
 }
 
-@media screen and (min-height: 200px) and (max-height:299px)
+@media screen and and (max-height:299px)
 {
 	#map-area {
-		height: 65%;
+		height: 28%;
 		width: 100%;
 	}
 	#icon_holder {
 		bottom:21%
 	}
 	.from-top {height: 90%}
+	#map{margin-top:5px;}
 }
 
-@media screen and   (max-height:199px)
-{
-	#map-area {
-		height: 60%;
-		width: 100%;
-	}
-	#icon_holder {
-		bottom:13%
-	}
-	.from-top {height: 85%}
-	
-}
+
 
 
 #artist_info ul{font-family: 'Bitter', san-serif;margin:0; padding:0; margin-top:5px; margin-bottom:15px; font:Arial, Helvetica, sans-serif}
@@ -1146,7 +1188,7 @@ top: 20%;
 #info-area #artist_holder{height:90%}
 }
 
-@media screen and (min-width: 481px) and (max-width: 640px) {
+@media screen and (min-width: 481px) and (max-width: 667px) {
 #artist_info ul{ font-size:.9em;font-weight:bold;width:135px;float:left;  overflow:hidden; margin-top:5px; margin-right:15px;  border-right:1px dotted #ccc;  }
 #artist_info ul li, #artist_info ul li .off{display:block;border:none;margin-right:5px; }
 
@@ -1186,7 +1228,8 @@ top: 20%;
 #info-area .button_txt{display:none}
 #iframe_holder{display:none}
 #spot_holder .cards, #fav_holder .cards{margin-top:100px;}
-#spot_holder .about_section{margin-top:135px;}
+#spot_holder .cards {margin-top:112px;}	
+#fav_holder .cards{margin-top:85px;}
 #search {
 		width: 75%;
 		margin-bottom: 0px;
@@ -1247,7 +1290,8 @@ header{float:left; margin-left:15px;}
 #country_form, .alert{left:15px; top:30%}
 #artistsearch{width:35%}
 #info-area #artist_holder{height:87%}
-#spot_holder .cards, #fav_holder .cards{margin-top:100px;}	
+#spot_holder .cards {margin-top:112px;}	
+#fav_holder .cards{margin-top:85px;}
 #spot_holder .about_section{margin-top:135px;}
 }
 
@@ -1372,7 +1416,7 @@ border: 1px solid #ececec;
 	
 	
 	#search {
-		width: 51%;
+		width: 80%;
 		margin-bottom: 7px;
 		
 	}
@@ -1382,7 +1426,7 @@ border: 1px solid #ececec;
 	}
 	.search {
 
-				font-size: 14px;
+		font-size: 14px;
 		float: left;
 		background: #c53526;
 		color: #fff;
@@ -1395,6 +1439,11 @@ border: 1px solid #ececec;
 		cursor: pointer;
 		border: 1px solid #ececec;
 	}
+#spot_holder .search{
+	padding-top:6px;
+	padding-bottom:0;
+	
+	}	
 
 	.spacer {
 

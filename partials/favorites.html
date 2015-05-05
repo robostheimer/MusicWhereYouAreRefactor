@@ -17,25 +17,23 @@
 </section>
 		
 <section class="alert"  ng-show="noSongs==true;" >
-			
-			<p>
-				Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
-				
-			</p>
-			<p>
-			And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
-			</p>
-			<p>
-				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
-			</p>
-			<p>
-				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
-			</p>
-			<p>
-				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
-			</p>
-			<div class="clear"></div>
-</section>		
+		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
+	<p>
+		Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.
+
+	</p>
+	<p>
+		And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
+	</p>
+	<p>
+		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
+	</p>
+	
+	<p>
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
+	</p>
+	<div class="clear"></div>
+</section>
 <section class="alert" ng-show='getFav==false' ><p>Oh, Hi There. Thanks for visiting the Favorites Page.  Right now you don't have any favorites saved, but if you click the star in the song cards so it is filled in, well, maybe it might not be so lonely here.<p>I'm not saying, I'm just saying.</p>   </section>
 
 <section class="alert"  ng-show="tooMany==true;">
@@ -47,14 +45,12 @@
 <section id="fav_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
-
-	<div id="spot_headline">
-		<h4 style="margin-top:15px;"><span style="color:#979797">Your</span> Favorites</h4>
-	</div>
-	<div class="clear"></div>
+<div class="fixed" ng-hide="getFav==false">	
+	
+	<div class="clear" style="margin-bottom:15px"></div>
 	
 	
-	<div class="fixed" ng-hide="getFav==false">	
+	
 	<div id="iframe_holder">
 		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songsFav.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 	</div>

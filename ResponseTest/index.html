@@ -1,0 +1,97 @@
+<!doctype html >
+<html lang="en" ng-app="App">
+	<head>
+		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="/bower_components/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+		<!---AngularJS--->
+		
+		
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="/bower_components/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+		<!---AngularJS--->
+		
+		<script src="/app/bower_components/angular/angular.js"></script>
+		<script src ="/app/bower_components/angular-infinite-scroll/ng-infinite-scroll.js"></script>
+		<script src="/app/bower_components/angular-route/angular-route.js"></script>
+		<script src="/app/bower_components/ui-utils/ui-utils.min.js"></script>
+		<script src="/app/bower_components/angular-sanitize/sanitize.js"></script>
+		<script src="/app/bower_components/angular-animate/angular-animate.js"></script>
+		<script src="/app/bower_components/angular-touch/angular-touch.min.js"></script>
+		<script src="/app/bower_components/angulartics-0.17.1/src/angulartics-ga.js"></script>
+		<script src="/app/bower_components/angulartics-0.17.1/src/angulartics.js"></script>
+		<script src="/app/bower_components/d3/d3.v3.min.js"></script>
+		<script src="/app/bower_components/angular-touch/angular-touch.min.js"></script>
+		<script>
+			var App = angular.module('App', [],function($httpProvider) {
+				  // Use x-www-form-urlencoded Content-Type
+				  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+				 
+				  /**
+				   * The workhorse; converts an object to x-www-form-urlencoded serialization.
+				   * @param {Object} obj
+				   * @return {String}
+				   */ 
+				  var param = function(obj) {
+				    var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
+				      
+				    for(name in obj) {
+				      value = obj[name];
+				        
+				      if(value instanceof Array) {
+				        for(i=0; i<value.length; ++i) {
+				          subValue = value[i];
+				          fullSubName = name + '[' + i + ']';
+				          innerObj = {};
+				          innerObj[fullSubName] = subValue;
+				          query += param(innerObj) + '&';
+				        }
+				      }
+				      else if(value instanceof Object) {
+				        for(subName in value) {
+				          subValue = value[subName];
+				          fullSubName = name + '[' + subName + ']';
+				          innerObj = {};
+				          innerObj[fullSubName] = subValue;
+				          query += param(innerObj) + '&';
+				        }
+				      }
+				      else if(value !== undefined && value !== null)
+				        query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+				    }
+				      
+				    return query.length ? query.substr(0, query.length - 1) : query;
+				  };
+				 
+				  // Override $http service's default transformRequest
+				  $httpProvider.defaults.transformRequest = [function(data) {
+				    return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+				  }];
+				});
+
+			var MainCtrl = function($scope, $http) {
+			  $scope.loading = true;
+			  $http.post('php/result.php', {your:'face', ill_show_you: 'your face' }).success(function(response) {
+			    console.log(response)
+			    $scope.response = response;
+			  });
+			};
+			
+		</script>
+		
+	</head>
+	<body>
+		<div ng-controller="MainCtrl">
+		 
+ 		 <p>Response: {{response}}</p>
+		</div>
+
+		
+	</body>

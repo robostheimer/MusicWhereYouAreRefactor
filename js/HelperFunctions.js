@@ -175,37 +175,59 @@ function sortNumber(a,b) {
     return a - b;
 }
 
- function SortObjAsc(property, obj)
+function SortObjAsc(property, obj, num_or_str)
  {
- 
+ 	if(num_or_str=='str')
+ 	{
  	var sortable =[];
  	obj.sort(
  		function(a, b){
+ 			
  				 var aprop=a[property]
 				 var bprop =b[property]
 				 return bprop-aprop
 				});
  	
- 	console.log('descending')
  	return obj.reverse();
+ 	}
+ 	else{
+ 		obj.sort(function(a, b){
+ 			
+ 				 var aprop=parseInt(a[property]);
+				 var bprop =parseInt(b[property]);
+				 return bprop-aprop;
+				});
+ 	}
+ 		return obj.reverse();
  }
 
 
- function SortObjDsc(property, obj)
+ function SortObjDsc(property, obj, num_or_str)
  {
  
+ 	if(num_or_str=='str')
+ 	{
  	var sortable =[];
  	obj.sort(
  		function(a, b){
+ 			
  				 var aprop=a[property]
-				 var bprop =a[property]
-				 return aprop-bprop
+				 var bprop =b[property]
+				 return bprop-aprop
 				});
  	
- 	console.log('ascending')
- 	return obj;
+ 	return obj
+ 	}
+ 	else{
+ 		obj.sort(function(a, b){
+ 			
+ 				 var aprop=parseInt(a[property]);
+				 var bprop =parseInt(b[property]);
+				 return bprop-aprop;
+				});
+ 	}
+ 		return obj;
  }
-
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::                                                                         :::
 //:::  This routine calculates the distance between two points (given the     :::

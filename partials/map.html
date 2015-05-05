@@ -13,15 +13,24 @@
 	</p>
 	
 	<p>
-		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.
+		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
 	<div class="clear"></div>
 </section>
-<section class="alert"  ng-show="noGeo==true;" >
+<section class="alert"  ng-hide="noGeo==false;"  >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
 	<p>
-		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above or enable geolocation on your device.
+		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above, or enable geolocation on your device and press this <a onclick="window.location.reload()">Refresh Link</a>.
 	</p>
 
 	<div class="clear"></div>
 </section>
+<!--<section class="alert"  ng-show="geoloading==true;"  ng-hide="geoloading==false;" >
+	{{geoloading}}
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="geoloading=false"></div>
+	<p>
+		Literally, figuring out where on earth you are.  Seriously, where are you?
+	</p>
+
+	<div class="clear"></div>
+</section>-->
