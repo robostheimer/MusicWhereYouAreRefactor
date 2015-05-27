@@ -19,7 +19,8 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
  'Events',
  'Country',
  'SongsAbout',
- 'infinite-scroll',
+ //'infinite-scroll',
+ 'ng.deviceDetector'
 ]);
 
 MusicWhereYouAreApp.config(['$compileProvider',

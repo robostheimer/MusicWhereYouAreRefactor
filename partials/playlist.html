@@ -76,7 +76,7 @@
 </section>
 
  
-<!--	CAN BE USED To download song data if ever necessary<section class="alert" download-button data="{{songs}}">
+<!--<CAN BE USED To download song data if ever necessary<section class="alert" download-button data="{{songs}}">
 	<div class="datalink">
 		
 	</div>
@@ -110,7 +110,7 @@
 		</button>
 		<div class="clear" ></div>
 		<div class="{{buttons[0].state}}" ng-hide="loading==true">
-			<div id="iframe_holder">
+			<div id="iframe_holder" ng-hide="spot_iframe_hider==true" >
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
 			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
@@ -120,8 +120,8 @@
 				</div>
 			</button>
 		</div>
-		<div class="{{buttons[1].state}} abouttab"  ng-hide="loading_tags==true">
-			<div id="iframe_holder" ng-hide="showSpotPlayer==false">
+		<div class="{{buttons[1].state}} abouttab"  ng-hide="loading_tags==true" >
+			<div id="iframe_holder" ng-hide="spot_iframe_hider==true">
 				<iframe id="spot_frame" theme="light" view="coverart" src="{{lookUpSongs.idStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
 			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(lookUpSongs.savSpotArr, location);" ng-hide="lookUpSongs.length==0">
@@ -146,7 +146,7 @@
 		<img src="loading.gif" alt="loading"/>
 	</div>
 
-	<div ng-hide="loading==true"  class="{{buttons[0].state}} cards" infinite-scroll = "infiniteTest()" infinite-scroll-distance="5" elmwin = 'elem' child='locationsongs' >
+	<div ng-hide="loading==true" ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[0].state}} cards"  >
 		
 			<div id="locationsongs">
 				<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
@@ -226,7 +226,7 @@
 	</div>
 	<div style="width:100px; margin-left:auto; margin-right:auto" class="about_section " ng-show="loading_tags==true"><img src="loading.gif" alt="loading"/>
 	</div>
-	<div  ng-hide="aboutShower==false" class="{{buttons[1].state}} about_section"  infinite-scroll = "moreSongsAbout()" infinite-scroll-distance="5" elmwin = 'elem' child='aboutsongs'>
+	<div  ng-hide="aboutShower==false"  ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[1].state}} about_section"  >
 		<div class="aboutsongs">
 			
 

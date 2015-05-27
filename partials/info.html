@@ -91,7 +91,7 @@
 			<div id="biobox" class="{{buttons.bio.classy}}" aria-labelledby="bio" aria-hidden='{{buttons.bio.state}}' >
 				
 			<p class="intro_ang"><img class="gallery" ng-src="{{artistinfo.lastfm_imgs[0].url}}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/><br>
-				<iframe class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe> 
+				<iframe ng-hide="spot_iframe_hider==true"class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe> 
 				<br>
 				<button class ="info_button clear" ng-controller="Spotify" ng-click="SavePlaylist(spotify.spot_url_button, artistinfo.name);"><div aria-hidden="true" data-icon="c" class="button_icon"></div><div class="button_txt"> Save Playlist to Spotify</div></button></p><p>From: <span style="color:#c53526;">{{artistinfo.artist_location.location}}</span></p><p>{{artistinfo.bio.text}}</p>	
 			<a href="{{artistinfo.bio.url}}" target="_blank"><br>{{artistinfo.bio_site}}</a>

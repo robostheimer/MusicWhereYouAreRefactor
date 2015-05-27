@@ -676,7 +676,7 @@ padding-top: 6px;
 .button_txt{float:left; margin-right;10px; font-family: 'PT Sans', sans-serif;}
 
 #spot_holder .button_on, #spot_holder .button_off{font-size:.5em; margin-bottom:10px;}
-#spot_holder .gray .close, .red .close{margin-left:270px;}
+#spot_holder .gray .close, .red .close{margin-left:270px; position:absolute;}
 .gray:hover, .red {
 	background-color: #c53526;
 	color: #ececec;
@@ -934,11 +934,15 @@ padding-top: 6px;
 	background-image: url(genre_icons/world_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 #avant_garde_button:hover .avant_garde, #blues_button:hover .blues, #classic_rock_button:hover .classic_rock, #classical_button:hover .classical, #mic_button:hover .comedy, #country_button:hover .country, #drama_button:hover .drama, #electronic_button:hover .electronic, #folk_button:hover .folk, #hip_hop_button:hover .hip-hop,  #holiday_button:hover .holiday, #indie_button:hover .indie, #jazz_button:hover .jazz, #kid_music_button:hover .childrens_music, #latin_button:hover .latin, #new_age_button:hover .new_age, #motown_button:hover .motown, #pop_button:hover .pop, #rock_button:hover .rock, #soft_rock_button:hover .soft_rock, #world_button:hover .world{background-color:#c53526; background-position:-27px 0px}
-	
-#spot_holder .cards{margin-top:190px;}
+
+#spot_holder .cards{margin-top:200px;}
+#spot_holder .iframehider{margin-top:115px;}	
+
  #spot_holder .about_section{margin-top:223px;}
+ #spot_holder .about_section.iframehider{margin-top:148px;}
 .fixed{padding-top:10px; position:fixed; background-color: rgba(243, 243, 243, .95)}
 #fav_holder .cards{ margin-top:170px;}
+#fav_holder .iframehider{margin-top:85px;}
 
 @media screen and (min-height: 1801px)   {
 	body{height:93%}
@@ -1099,7 +1103,7 @@ padding-top: 6px;
 	#map{margin-top:5px;}
 }
 
-@media screen and and (max-height:299px)
+@media screen and (max-height:299px)
 {
 	#map-area {
 		height: 28%;

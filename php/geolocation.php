@@ -11,8 +11,9 @@ $region = $_GET['Region'];
  
  $lt = round($lt, 3);
  
-$url ='Geolocation.txt';
+$url ='GeoLocation.txt';
 $csv = file_get_contents($url);
+echo $csv;
 $CountryID = '';
 $Country = '';
 $Region = '';

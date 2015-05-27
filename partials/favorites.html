@@ -51,7 +51,7 @@
 	
 	
 	
-	<div id="iframe_holder">
+	<div id="iframe_holder" ng-hide="spot_iframe_hider==true">
 		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songsFav.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 	</div>
 	<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(save_arr, 'Favorites from ' +date);">
@@ -63,7 +63,7 @@
 	</div>
 	<div ng-hide="getFav==false">
 	<div class="clear"></div>
-	<div class="cards">
+	<div class="cards"  ng-class="{iframehider: spot_iframe_hider == true}">
 			<div ng-repeat="song in songsFav track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true">
 				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id)"></div>
 				<p class="info" id="pinfo{{song.num_id}}">

@@ -1,7 +1,7 @@
 'use strict';
 
 /* Directives */
-MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope, HelperFunctions) {
+MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
  return {
  	 	
     	 restrict: 'AE',

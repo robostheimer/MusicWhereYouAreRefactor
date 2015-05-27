@@ -4,8 +4,8 @@
 //Checks to see if Geolocation is Activated.  If it is it creates a geolocation variable and sends them as parameters to HashCreate service////
 
 ///If Geolocation is not enabled, alerts user to the fact/////////
-MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope','$location','HelperFunctions',
-function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location, HelperFunctions) {
+MusicWhereYouAreApp.factory("getLocation", ['$q', '$http', '$sce', 'PlaylistCreate', 'HashCreate','$rootScope','$location',
+function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location) {
 	
 	
 	var zoom = 11;
@@ -69,8 +69,8 @@ function($q, $http, $sce, PlaylistCreate, HashCreate, $rootScope, $location, Hel
 
 /////////////////Runs the geolocations through Echonest and filters results based on type of location (city, region or just region, removes duplicates, etc.)
 ////////////////Checks to see if any items in this playlist have been favorites
-MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States','HelperFunctions',
-function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, HelperFunctions) {
+MusicWhereYouAreApp.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
+function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States) {
 	
 
 	return {
@@ -111,8 +111,9 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era+'&callback=JSON_CALLBACK'
 			}
 			return $http.jsonp(url).then(function(data) {
+				
 				var songs = data.data.response.songs;
-				songs = HelperFunctions.removeDuplicatesArrObj(songs, 'title', true);
+				songs = songs.removeDuplicatesArrObj( 'title', true);
 				songs.songsArr=[];
 				songs.songsArr.spot_arr = [];
 			 	songs.songsArr.spot_playlist=[];
@@ -288,7 +289,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					}
 				});
 				
-				songs = HelperFunctions.compareArraysObj(songs,LeaveOut, 'title');
+				songs = songs.compareArraysObj(LeaveOut, 'title');
 				//console.log(songs)
 				return songs;
 				
@@ -309,7 +310,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				songs.location_arr=[];
 				songlist.forEach (function(song) {
 					var x = songlist.indexOf(song);
-					song.artists[0].name=HelperFunctions.findThe(song.artists[0].name);
+					song.artists[0].name=song.artists[0].name.findThe();
 					song.num_id=x;
 					songs.songs.push(song);
 					Favorites.checkFavorites(song);
@@ -340,8 +341,8 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 
 /////////////////////Takes multiple variables from the PlaylistCreate function and creates a google map with markers for where the artists are from/////////////////
-MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope','HelperFunctions',
-function($q,  $http, $sce, $rootScope,HelperFunctions) {
+MusicWhereYouAreApp.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
+function($q,  $http, $sce, $rootScope) {
 	
 	///Creates compiled variables for mwya-map directive to create the map////
 	$rootScope.latitude =0;
@@ -378,12 +379,13 @@ function(location, latorlng) {
 	//};
 }]);
 
-MusicWhereYouAreApp.factory("retrieveLocation", ['$http', '$sce', '$location','States','HelperFunctions','$routeParams','$rootScope',
-function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScope) {
+MusicWhereYouAreApp.factory("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope',
+function( $http, $sce, $location,States, $routeParams, $rootScope) {
 	
 	//////////////////////MAKE WORK for LOWERCASE
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
+		
 		runLocation : function(location, latorlng, ratio) {
 			$rootScope.hideiconHolder=false;
 			$rootScope.noGeo=false;
@@ -399,14 +401,15 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 			var longs = Number();
 			var geolocation ={};
 			var states = States.createStateObj();
+			var location = location.replace(/'/, '')
 			
 			if (location.split(' ').length > 1 && location.match(',')) {
 				var zoom = 10;
 				///////city+full state//////
 				if (location.split(',')[1].replace(' ', '').length > 2) {
 					var locationSplit = location.split(',');
-					var loc1 = HelperFunctions.toTitleCase(locationSplit[0]);
-					var loc2 = HelperFunctions.toTitleCase(locationSplit[1].replace(' ', ''));
+					var loc1 = locationSplit[0].toTitleCase();
+					var loc2 = locationSplit[1].replace(' ', '').toTitleCase();
 				}	
 				else
 				{
@@ -419,15 +422,15 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 						
 							var state =(states[x].name);
 							var locationSplit = location.split(', ');
-							var loc1 = HelperFunctions.toTitleCase(locationSplit[0]);
+							var loc1 = locationSplit[0].toTitleCase();
 							var loc2 = state;
 							
 						}
 					};
 					
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+loc2.toUpperCase()+'%27+AND+CityName=%27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					
 					if(latorlng=="lat")
 					{
@@ -439,8 +442,8 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 									
 								});
 							geolocation.latitude=lats/data.data.rows.length;
-							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
@@ -473,8 +476,8 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 								
 							geolocation.longitude=longs/data.data.rows.length;;
 							var latitude=lats/data.data.rows.length;
-							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
 							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 							geolocation.location = location;
@@ -512,25 +515,23 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 				else {
 					var location =location;
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					//var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
-					//var miles_to_lon = HelperFunctions.distance_to_degrees_lon($scope.latitudeObj.lat_max , 7*ratio);
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key CONTAINS IGNORING CASE AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql CONTAINS IGNORING CASE SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					
 
-					location = HelperFunctions.toTitleCase(location);
+					location = location.toTitleCase();
 					if(latorlng=="lat")
 						{
 						return	$http.jsonp(lat_url).then(function(data){
-						if (data.data.rows != null) {
+						if (data.data.rows != null ) {
 							data.data.rows.forEach(function(data)
 								{
 									lats += parseFloat(data[0]);
 									
 								});
 							geolocation.latitude=lats/data.data.rows.length;
-							var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = distance_to_degrees_lat(7*ratio);
+							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
@@ -550,7 +551,7 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 						{
 						
 						return	$http.jsonp(long_url).then(function(data){
-							if (data.data.rows != null) {
+							if (data.data.rows != null || data.stringify.match('error')) {
 								geolocation.longitude=data.data.rows[0][0];
 								data.data.rows.forEach(function(data)
 								{
@@ -561,8 +562,8 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 								
 							geolocation.longitude=longs/data.data.rows.length;;
 							var latitude=lats/data.data.rows.length;
-								var miles_to_lat = HelperFunctions.distance_to_degrees_lat(7*ratio);
-								var miles_to_lon = HelperFunctions.distance_to_degrees_lon(latitude , 7*ratio);
+								var miles_to_lat = distance_to_degrees_lat(7*ratio);
+								var miles_to_lon =distance_to_degrees_lon(latitude , 7*ratio);
 								geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
 								geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 								geolocation.location = location;
@@ -586,15 +587,15 @@ function( $http, $sce, $location,States,HelperFunctions, $routeParams, $rootScop
 
 
 
-MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, $routeParams,HelperFunctions) {
+MusicWhereYouAreApp.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
+function($q, $rootScope, $http, $sce, $location, $routeParams) {
 	return{
 			runHash : function(lat, lng, url_change, ratio) {
 			$rootScope.hideiconHolder=false;
 			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
 			return $http.get(url).then(function(data) {
 				
-				if (data.data.rows != null) {
+				if (data.data.rows != null || data.stringify.match('error')) {
 				
 					var city = data.data.rows[0][0];
 					var state = data.data.rows[0][1];
@@ -670,7 +671,7 @@ function($routeParams, $http){
 };
 }]);
 
-MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location','HelperFunctions', function($rootScope, $location, HelperFunctions)
+MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $location)
 {
 	return {
 		addButtons:function()
@@ -743,8 +744,8 @@ MusicWhereYouAreApp.factory("runSymbolChange", ['$rootScope','$location','Helper
 	
 }]);
 
-MusicWhereYouAreApp.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, HelperFunctions) {
+MusicWhereYouAreApp.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location',
+function($q, $rootScope, $http, $sce, $location) {
 return{
 	
      		infoRetrieve: function(artistname){
@@ -775,7 +776,7 @@ return{
 	     			});
      			
 	     			artistinfo.news.forEach(function(news){
-		     			news.news_summary=HelperFunctions.removeHTML(news.summary);
+		     			news.news_summary=news.summary.removeHTML();
 	     			});
      			
      			if(artistinfo.ytArr.length<7)
@@ -799,7 +800,7 @@ return{
 	     					artistinfo.bio=result.data.response.artists[0].biographies[i];
 	     					if(artistinfo.bio.text.length>2700)
 	     					{
-	     						artistinfo.bio.text = HelperFunctions.textSlicer(artistinfo.bio.text, 2700) +'... ';
+	     						artistinfo.bio.text = artistinfo.bio.text.Slicer(2700) +'... ';
 								artistinfo.bio_site = 'Read More at ' +artistinfo.bio.site;
 	     					}
 	     					else
@@ -991,8 +992,8 @@ return{
 }]);
 
 
-MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
-function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
+MusicWhereYouAreApp.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
 		
 		addFavorites:function()
@@ -1047,8 +1048,8 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 
 }]);
 
-MusicWhereYouAreApp.factory('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce', 'HelperFunctions',
-function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
+MusicWhereYouAreApp.factory('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
 		createStateObj : function()
 		{
@@ -1124,10 +1125,10 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 };
 }]);
 
-MusicWhereYouAreApp.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, States, HelperFunctions) {
+MusicWhereYouAreApp.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States','retrieveLocation',
+function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 	var canceller = $q.defer();
-
+	
 	 return {
 			
 			showHint : function(location)
@@ -1209,10 +1210,7 @@ function($q, $rootScope, $http, $sce, $location, States, HelperFunctions) {
 						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
 				 	});	
 				 	
-					/*for (var t=0; t<hints.cityArr.length; t++)
-					{
-						hints.finalArr.push({city:hints.cityArr[t], cityhref:hints.cityArr[t].replace(/ /g, '_'), state: hints.stateArr[t], statehref:hints.stateArr[t].replace(/ /g, '_'), country: hints.countryArr[t], countryhref: hints.countryArr[t].replace(/ /g, '_')});
-					}*/
+					
 				
 				return hints;
 				}
@@ -1221,32 +1219,17 @@ function($q, $rootScope, $http, $sce, $location, States, HelperFunctions) {
 				
 				
 				
-				/*return $http.get('/php/geolocation.php?city='+location[0].toUpperCase()).then(function(result) {
+				
+					
 				//return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName=%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				//hints = result.data.rows;
-				hints=result.data;
-				hints.stateArr =[];
-				hints.cityArr=[];
-				hints.countryArr=[];
-				hints.finalArr=[];
-				for(var i=0; i<hints.length; i++)
-				{
-					
-					//hints.stateArr.push(hints[i][0]);
-					//hints.cityArr.push( hints[i][1]);
-					//hints.countryArr.push(hints[i][2]);
-					hints.stateArr.push(hints[i].Region);
-					hints.cityArr.push( hints[i].City);
-					hints.countryArr.push(hints[i].Country);
-					
-				}
-				for (var t=0; t<hints.cityArr.length; t++)
-				{
-					hints.finalArr.push({city:hints.cityArr[t], cityhref:hints.cityArr[t].replace(/ /g, '_'), state: hints.stateArr[t], statehref:hints.stateArr[t].replace(/ /g, '_'), country: hints.countryArr[t], countryhref: hints.countryArr[t].replace(/ /g, '_')});
-				}
 				
-				return hints;
-				});*/
+				
+					
+				
+				
+				
+				
 			}
 		},	
 			
@@ -1257,8 +1240,8 @@ function($q, $rootScope, $http, $sce, $location, States, HelperFunctions) {
 }]);	
 
 
-MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, HelperFunctions) {
+MusicWhereYouAreApp.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 	return{
 			getGeoEvents: function(lat, lng)
 			{
@@ -1281,8 +1264,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, HelperFun
 }]);
 
 
-MusicWhereYouAreApp.factory("ShareSongs", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','retrieveLocation','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveLocation, HelperFunctions) {
+MusicWhereYouAreApp.factory("ShareSongs", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','retrieveLocation',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveLocation) {
 	return{
 			
 		getSongs: function(songs, location)
@@ -1410,8 +1393,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, retrieveL
 }]);	
 
 
-MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify','HelperFunctions',
-function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify,HelperFunctions) {
+MusicWhereYouAreApp.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
+function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) {
 	return{
 		getWikiLandmarks: function(lat,lng, country)
 			{
@@ -1479,8 +1462,8 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify,H
 }]);
 
 
-MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs','HelperFunctions',
-function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs,HelperFunctions){
+MusicWhereYouAreApp.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs',
+function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs){
 	return{
 		
 		runLyricsnMusic: function(searchterm)
@@ -1539,7 +1522,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					//songs.songsStr+=song.id;
 					song.searchterm = searchterm;
 				});
-				songs = HelperFunctions.compareArraysObj(songs,LeaveOut, 'title');
+				songs = songs.compareArraysObj(LeaveOut, 'title');
 				return songs;	
 			});
 		},
@@ -1583,7 +1566,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 							tracks.artist_location = songsArr[y].artist_location;
 							finalSongs.push(tracks);
 							
-							
+								
 							}
 						});
 						
@@ -1607,7 +1590,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			songs.location_arr=[];
 			songlist.forEach (function(song) {
 				var x = songlist.indexOf(song);
-				song.artists[0].name=HelperFunctions.findThe(song.artists[0].name);
+				song.artists[0].name=song.artists[0].name.findThe();
 				song.num_id=x;
 				songs.songs.push(song);
 				Favorites.checkFavorites(song);
@@ -1670,8 +1653,8 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			{
 				
 				
-				var songtitle = HelperFunctions.removeSpecialChar(song.name);
-				var artist = HelperFunctions.removeSpecialChar(song.artists[0].name)
+				var songtitle = song.name.removeSpecialChar();
+				var artist = song.artists[0].name.removeSpecialChar()
 				//console.log(artist)
 				return $http.get('http://developer.echonest.com/api/v4/song/search?api_key=MIV6XZXYU7FNSMMDN&format=json&results=1&&artist='+artist+'&bucket=artist_location').then(function(data){
 				
@@ -1856,7 +1839,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						songStr+=data.data.rows[x][1]+':';
 					}
 				}
-				songs = HelperFunctions.compareArraysObj(songs, LeaveOut, 'title');
+				songs = songs.compareArraysObj( LeaveOut, 'title');
 				return songs;
 			});
 		},
@@ -1921,8 +1904,8 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 }]);	
 
 //////////////////Need to lose the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
-MusicWhereYouAreApp.factory("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch','HelperFunctions',
-function($q, $rootScope, $http, $sce, LocationDataFetch,HelperFunctions)
+MusicWhereYouAreApp.factory("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch',
+function($q, $rootScope, $http, $sce, LocationDataFetch)
 {
 	return{
 		createChunks:function(songs, number)
