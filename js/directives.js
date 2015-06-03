@@ -318,4 +318,78 @@ MusicWhereYouAreApp.directive('fastRepeat', function(){
               });
           }
       };
- });
+});
+ MusicWhereYouAreApp.directive(
+            "eventDelegate",
+            function( $parse ) {
+            	
+                // I bind the DOM and event handlers to the scope.
+                function link( $scope, element, attributes ) {
+                	
+                    // Right now, the delegate can be defined as
+                    // either selector and an expression; or simply
+                    // as an expression.
+                    var config = attributes.eventDelegate.split( "|" );
+                    ///////if not working problem could be that there is no 'type' attribute///////
+					var eventtype=attributes.type;
+                    // Only an expression has been defined - default
+                    // the selector to any anchor link.
+                    if ( config.length === 1 ) {
+
+                        var selector = "a";
+                        var expression = config[ 0 ];
+                    // Both selector and expression are defined.
+                    } else {
+
+                        var selector = config[ 0 ];
+                        var expression = config[ 1 ];
+
+                    }
+                    // Parse the expression into an invokable
+                    // function. This way, we don't have to re-parse
+                    // it every time the event handler is triggered.
+                    var expressionHandler = $parse( expression );
+                    // Bind to the click (currently only supported
+                    // event type) to the root element and listen for
+                    // clicks on the given selector.
+                    element.on(
+                        eventtype+".eventDelegate",
+                        selector,
+                        function( event ) {
+                        	// Prevent the default behavior - this is
+                            // not a "real" link.
+                            event.preventDefault();
+                            // Find the scope most local to the target
+                            // of the click event.
+                            var localScope = $( event.target ).scope();
+                            // Invoke the expression in the local scope
+                            // context to make sure we adhere to the
+                            // proper scope chain prototypal inheritance.
+                            localScope.$apply(
+                                function() {
+
+                                    expressionHandler( localScope );
+                                }
+                            );
+                        }
+                    );
+
+                    // When the scope is destroyed, clean up.
+                    $scope.$on(
+                        "$destroy",
+                        function( event ) {
+
+                            element.off( eventtype+".clickDelegate" );
+
+                        }
+                    );
+                }
+
+
+                // Return the directive configuration.
+                return({
+                    link: link,
+                    restrict: "A"
+                });
+
+            });;

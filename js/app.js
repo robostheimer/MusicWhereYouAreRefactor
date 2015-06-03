@@ -4,23 +4,27 @@
 
 var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
   'ngRoute',
-  'Genre',
-  'UI-Loader',
+  'Settings',
+  'UI',
+   'Playlist',
   'Info',
-  'FavoritesControllers',
-  'LinerNotesControllers',
+  'Favorites',
   'ui.utils',
-  'Forms',
  'sidebarAnimate',
- 'Symbol' ,
+ 
  'ngTouch',
  'angulartics', 
  'angulartics.google.analytics',
  'Events',
- 'Country',
- 'SongsAbout',
+  'Location', 
+  'Geolocation',
+ 
+  'Social',
+
  //'infinite-scroll',
- 'ng.deviceDetector'
+ 'ng.deviceDetector',
+'ngResource', 
+'base64'
 ]);
 
 MusicWhereYouAreApp.config(['$compileProvider',

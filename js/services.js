@@ -1981,6 +1981,48 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 }]);
 
 
+        
+ 
+ MusicWhereYouAreApp.factory('Twitter', ['$resource', '$http','$base64', function ($resource, $http, $base64) {
+ 	return{
+ 		getOAuth:function(){
+            var consumerKey = encodeURIComponent('H3aaSwXzaaxG6aousz7n89vWz')
+            var consumerSecret = encodeURIComponent('5ryizVky6YL9BYhFhMp83s6OOj6X2Dq6vWtCC7gfxYRGJNXPTO')
+            var credentials = $base64.encode(consumerKey + ':' + consumerSecret)
+            console.log(credentials);
+            // Twitters OAuth service endpoint
+            var twitterOauthEndpoint = $http.post(
+               'https://api.twitter.com/oauth2/token'
+                , "grant_type=client_credentials"
+                , {headers: {'Authorization': 'Basic ' + credentials, 'Content-Type': 'application/x-www-form-urlencoded'}}
+            );
+            twitterOauthEndpoint.success(function (response) {
+            	console.log(response);
+                // a successful response will return
+                // the "bearer" token which is registered
+                // to the $httpProvider
+                MusicWhereYouAreApp.$httpProvider.defaults.headers.common['Authorization'] = "Bearer " + response.access_token;
+            }).error(function (response) {
+                  // error handling to some meaningful extent
+               });
+ 
+           var r = $resource('https://api.twitter.com/1.1/search/:action',
+                {action: 'tweets.json',
+                    count: 10,
+              });
+               /* {
+<span style="line-height: 1.5;">                    paginate: {method: 'GET'}</span>
+                })
+ 
+            return r;
+        }
+
+        .config(function ($httpProvider) {
+           serviceModule.$httpProvider = $httpProvider;
+        });*/
+       }
+	};
+}]);
 
 
 /*MusicWhereYouAreApp.factory("loadPlaylist",[ '$q', '$rootScope', '$http', '$sce','PlaylistCreate','Spotify','retrieveLocation','$routeParams',

@@ -1,4 +1,5 @@
 /****************************String****************************/
+////////reverses a string/////////////
 String.prototype.reverse = function(){
 	str =this;
 	str=str.split('').reverse().join('');
@@ -173,7 +174,19 @@ String.prototype.findThe=function()
 	return str;
 };	 
 /****************************Array****************************/
-
+Array.prototype.removeItem=function(str_ind, item)
+{
+	var array=this;
+	if(str_ind=="ind")
+	{
+		array.splice(item, 1);	
+	}
+	if(str_ind=="str")
+	{
+		array.splice(array.indexOf(item), 1)
+	}
+	
+}
 Array.prototype.SortObjAsc=function(property, num_or_str, checkDupProperty)
  	{
  	var obj=this;	
@@ -513,7 +526,7 @@ Array.prototype.searchObjProperties=function(str, properties, checkDupProperty, 
 	 	}
 	  	return finalfilter;
 	 };
-Array.prototype.removeItemsFromArrObj=function(properties, strs, type, checkDupProperty){
+Array.prototype.removeArrObj=function(properties, strs, type, checkDupProperty){
 		var arr=this;
 		if(properties.length==1)
 		{

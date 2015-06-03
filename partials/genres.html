@@ -106,115 +106,15 @@
 	
 	<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
-		<div ng-model='avant_garde.isSelected' class = "checkbox" ng-class="{isSelected: avant_garde.checked == true}">
-			<input ng-model='avant_garde.checked' ng-click="checkGenre('avant garde')"  type="checkbox" class="check" name="check[]" value="Avant Garde" id="Avant_Garde">
-			<label for="Avant_Garde"><div class="avant_garde"></div>Avant Garde</label>
-		</div>
+		<ul event-delegate="li | checkGenre(genre.genre.genre)" type="click">
+			<li ng-repeat="genre in Genre">
+				
+				<div  class = "checkbox {{genre.genre.state}}" >
+			<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">
+			<label for="{{genre.genre.genre.replace(' ', '_')}}"><div class="{{genre.genre.genre}}"></div>{{genre.genre.genre.toTitleCase()}}</label>
+			</li>
+		</ul>
 		
-
-		<div class="checkbox" ng-class="{isSelected: blues.checked == true}">
-			<input ng-model='blues.checked' ng-click="checkGenre('blues')" type="checkbox" class="check" name="check[]" value="Blues" id="Blues">
-			<label for="Blues"><div class="blues"></div>Blues</label>
-		</div>
-		
-		<div class = "checkbox" ng-class="{isSelected: classic_rock.checked == true}">
-			<input ng-model='classic_rock.checked' ng-click="checkGenre('classic rock')" type="checkbox" class="check" name="check[]" value="Classic_Rock" id="Classic_Rock" >
-			<label for="Classic_Rock"><div class="classic_rock"></div>Classic Rock</label>
-		</div>
-		
-		<div class = "checkbox" ng-class="{isSelected: classical.checked == true}">
-			<input ng-model='classical.checked' ng-click="checkGenre('classical')" type="checkbox" class="check" name="check[]" value="Classical" id="Classical">
-			<label for="Classical"><div class="classical"></div>Classical</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: comedy.checked == true}">
-			<input ng-model='comedy.checked' ng-click="checkGenre('comedy')" type="checkbox" class="check" name="check[]" value="Comedy" id="Comedy">
-			<label for="Comedy"><div class="comedy"></div>Comedy</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: country.checked == true}">
-			
-			<input ng-model='country.checked' ng-click="checkGenre('country')" type="checkbox" class="check" name="check[]" value="Country" id="Country">
-			<label for="Country"><div class="country"></div>Country</label>
-		</div>
-		
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: drama.checked == true}">
-			<input ng-model='drama.checked' ng-click="checkGenre('drama')" type="checkbox" class="check" name="check[]" value="Drama" id="Drama">
-			<label for="Drama"><div class="drama"></div>Drama</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: electronic.checked == true}">
-			<input ng-model='electronic.checked' ng-click="checkGenre('electronic')" type="checkbox" class="check" name="check[]" value="Electronic" id="Electronic">
-			<label for="Electronic"><div class="electronic"></div>Electronic</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: folk.checked == true}">
-			<input ng-model='folk.checked' ng-click="checkGenre('folk')" type="checkbox" class="check" name="check[]" value="Folk" id="Folk">
-			<label for="Folk"><div class="folk"></div>Folk</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: hip_hop.checked == true}">
-			<input ng-model='hip_hop.checked' ng-click="checkGenre('hip hop')" type="checkbox" class="check" name="check[]" value="Hip Hop" id="Hip_Hop">
-			<label for="Hip_Hop"><div class="hip-hop"></div>Hip Hop</label>
-		</div>
-		
-		<div class = "checkbox" ng-class="{isSelected: holiday.checked == true}">
-			<input ng-model='holiday.checked' ng-click="checkGenre('holiday')"  type="checkbox" class="check" name="check[]" value="Holiday" id="Holiday">
-			<label for="Holiday"><div class="holiday"></div>Holiday</label>
-		</div>
-		
-		
-		<div class = "checkbox" ng-class="{isSelected: indie.checked == true}">
-			<input ng-model='indie.checked' ng-click="checkGenre('indie')"  type="checkbox" class="check" name="check[]" value="Indie" id="Indie">
-			<label for="Indie"><div class="indie"></div>Indie</label>
-		</div>
-		
-		<div class = "checkbox" ng-class="{isSelected: jazz.checked == true}">
-			<input ng-model='jazz.checked' ng-click="checkGenre('jazz')" type="checkbox" class="check" name="check[]" value="Jazz" id="Jazz">
-			<label for="Jazz"><div class="jazz"></div>Jazz</label>
-		</div>
-		
-		<div class = "checkbox" ng-class="{isSelected: latin.checked == true}">
-			<input ng-model='latin.checked' ng-click="checkGenre('latin')" type="checkbox" class="check" name="check[]" value="Latin" id="Latin">
-			<label for="Latin"><div class="latin"></div>Latin</label>
-		</div>
-		<div class = "checkbox" ng-class="{isSelected: new_age.checked == true}">
-			<input ng-model='new_age.checked' ng-click="checkGenre('new age')"  type="checkbox" class="check" name="check[]" value="New Age" id="New_Age">
-			<label for="New_Age"><div class="new_age"></div>New Age</label>
-		</div>
-
-		<div class = "checkbox" ng-class="{isSelected: motown.checked == true}">
-			<input ng-model='motown.checked' ng-click="checkGenre('motown')"  type="checkbox" class="check" name="check[]" value="Motown" id="Motown">
-			<label for="Motown"><div class="motown"></div>Motown</label>
-		</div>
-		<div class = "checkbox" ng-class="{isSelected: pop.checked == true}">
-			<input ng-model='pop.checked' ng-click="checkGenre('pop')" type="checkbox" class="check" name="check[]" value="Pop" id="Pop">
-			<label for="Pop"><div class="pop"></div>Pop</label>
-		</div>
-		<div class = "checkbox" ng-class="{isSelected: punk.checked == true}">
-			<input ng-model='punk.checked' ng-click="checkGenre('punk')" type="checkbox" class="check" name="check[]" value="Punk" id="Punk">
-			<label for="Punk"><div class="punk"></div>Punk</label>
-		</div>
-		<div class = "checkbox" ng-class="{isSelected: rock.checked == true}">
-			<input ng-model='rock.checked' ng-click="checkGenre('rock')" type="checkbox" class="check" name="check[]" value="Rock" id="Rock">
-			<label for="Rock"><div class="rock"></div>Rock</label>
-		</div>
-		<div class = "checkbox" ng-class="{isSelected: soft_rock.checked == true}">
-			<input ng-model='soft_rock.checked' ng-click="checkGenre('soft rock')" type="checkbox" class="check" name="check[]" value="Soft_Rock" id="Soft_Rock">
-			<label for="Soft_Rock"><div class="soft_rock"></div>Soft Rock</label>
-		</div>
-
-		<div class = "checkbox" ng-class="{isSelected: world.checked == true}">
-			<input ng-model='world.checked' ng-click="checkGenre('world')" type="checkbox" class="check" name="check[]" value="World" id="World">
-			<label for="World"><div class="world"></div>World</label>
-		</div>
 
 	</form>
 

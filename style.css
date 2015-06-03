@@ -257,6 +257,9 @@ h2{font-size:1.7em;}
 	margin-top: 10px;
 	margin-right: 10px;
 }
+
+#genre_holder ul{padding:0; margin:0}
+#genre_holder ul>li{padding:0; margin:0; list-style:none;}
 a {
 	text-decoration: none;
 }
@@ -848,92 +851,91 @@ padding-top: 6px;
 }
 
 
-.avant_garde {
+[class~=avant] {
 	background-image: url(genre_icons/avant_garde_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;	
 }
 
-.blues {
+[class~=blues] {
 	background-image: url(genre_icons/blues_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
-.classic_rock {
+[class~=classic_rock] {
 	background-image: url(genre_icons/classic_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
-.classical {
+[class~=classical] {
 	background-image: url(genre_icons/classical_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
-.country {
+[class~=country] {
 	background-image: url(genre_icons/country_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.drama {
+[class~=drama] {
 	background-image: url(genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.electronic {
+[class~=electronic] {
 	background-image: url(genre_icons/electronica_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.folk {
+[class~=folk] {
 	background-image: url(genre_icons/folk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.hip-hop {
+[class~=hip] {
 	background-image: url(genre_icons/hip-hop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.drama {
+[class~=drama] {
 	background-image: url(genre_icons/drama_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.holiday {
+[class~=holiday] {
 
 	background-image: url(genre_icons/holiday_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.indie {
+[class~=indie] {
 
 	background-image: url(genre_icons/indie_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.jazz {
+[class~=jazz] {
 
 	background-image: url(genre_icons/jazz_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.kid_music
+[class~=kid]
  {
 
 	background-image: url(genre_icons/kids_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.latin {
+[class~=latin] {
 
 	background-image: url(genre_icons/latin_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.comedy {
+[class~=comedy] {
 
 	background-image: url(genre_icons/mic_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.new_age {
+[class~=new] {
 
 	background-image: url(genre_icons/new_age_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.pop {
+[class~=pop] {
 
 	background-image: url(genre_icons/pop_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.punk {
+[class~=punk] {
 	background-image: url(genre_icons/punk_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.motown {
+[class~=motown] {
 
 	background-image: url(genre_icons/r&b_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.rock {
+[class~=rock] {
 
 	background-image: url(genre_icons/rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.soft_rock {
+[class~=soft_rock] {
 	background-image: url(genre_icons/soft_rock_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-.world {
+[class~=world] {
 
 	background-image: url(genre_icons/world_rw_sm.png);width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
-#avant_garde_button:hover .avant_garde, #blues_button:hover .blues, #classic_rock_button:hover .classic_rock, #classical_button:hover .classical, #mic_button:hover .comedy, #country_button:hover .country, #drama_button:hover .drama, #electronic_button:hover .electronic, #folk_button:hover .folk, #hip_hop_button:hover .hip-hop,  #holiday_button:hover .holiday, #indie_button:hover .indie, #jazz_button:hover .jazz, #kid_music_button:hover .childrens_music, #latin_button:hover .latin, #new_age_button:hover .new_age, #motown_button:hover .motown, #pop_button:hover .pop, #rock_button:hover .rock, #soft_rock_button:hover .soft_rock, #world_button:hover .world{background-color:#c53526; background-position:-27px 0px}
 
 #spot_holder .cards{margin-top:200px;}
 #spot_holder .iframehider{margin-top:115px;}	
@@ -1233,6 +1235,7 @@ top: 20%;
 #iframe_holder{display:none}
 #spot_holder .cards, #fav_holder .cards{margin-top:100px;}
 #spot_holder .cards {margin-top:112px;}	
+#spot_holder .about_section{margin-top:150px;}
 #fav_holder .cards{margin-top:85px;}
 #search {
 		width: 75%;
@@ -1492,7 +1495,7 @@ float: left;
 padding-top: 5px;
 margin-top: 5px;
 border-bottom: 1px dotted #ccc;}
-#selector div.checkbox:hover, div.isSelected {background:#c53526; color:white}
+#selector div.checkbox:hover, div.on {background:#c53526; color:white}
 
 label{cursor:pointer; padding:5px; color:#black;}
 
@@ -1510,277 +1513,13 @@ input[class="check"] + label div {
     cursor:pointer;	
 }
 
+
 input[type="checkbox"]:checked + label div,input[type="checkbox"]:checked + label div.isSelected input[type="checkbox"] + label div:hover {
-    background: -27px top no-repeat #c53526; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
+    background-position: -27px top ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
 }
 
 
 
-input[type="checkbox"]:checked + label div.avant_garde {
-	background-image: url(genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-input[type="checkbox"]:hover + label div.avant_garde {
-	background-image: url(genre_icons/avant_garde_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-#selector div.checkbox:hover .avant_garde {
-	background: url(genre_icons/avant_garde_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-
-input[type="checkbox"]:checked + label div.blues {
-	background-image: url(genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-input[type="checkbox"]:hover + label div.blues {
-	background-image: url(genre_icons/blues_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .blues {
-	background: url(genre_icons/blues_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.classic_rock {
-	background-image: url(genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.classic_rock {
-	background-image: url(genre_icons/classic_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .classic_rock {
-	background: url(genre_icons/classic_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.classical {
-	background-image: url(genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.classical {
-	background-image: url(genre_icons/classical_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .classical {
-	background: url(genre_icons/classical_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.country {
-	background-image: url(genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.country {
-	background-image: url(genre_icons/country_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .country {
-	background: url(genre_icons/country_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.drama {
-	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.drama {
-	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .drama {
-	background: url(genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.electronic {
-	background-image: url(genre_icons/electronica_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.electronic {
-	background-image: url(genre_icons/electronica_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-#selector div.checkbox:hover .electronic {
-	background: url(genre_icons/electronica_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.folk {
-	background-image: url(genre_icons/folk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.folk {
-	background-image: url(genre_icons/folk_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-#selector div.checkbox:hover .folk {
-	background: url(genre_icons/folk_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.hip-hop {
-	background-image: url(genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.hip-hop {
-	background-image: url(genre_icons/hip-hop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .hip-hop {
-	background: url(genre_icons/hip-hop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.drama {
-	background-image: url(genre_icons/drama_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.drama {
-	background-image: url(genre_icons/drama_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-#selector div.checkbox:hover .drama {
-	background: url(genre_icons/drama_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.holiday {
-
-	background-image: url(genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.holiday {
-	background-image: url(genre_icons/holiday_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .holiday {
-	background: url(genre_icons/holiday_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.indie {
-
-	background-image: url(genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.indie {
-	background-image: url(genre_icons/indie_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .indie {
-	background: url(genre_icons/indie_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.jazz {
-
-	background-image: url(genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.jazz {
-	background-image: url(genre_icons/jazz_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .jazz {
-	background: url(genre_icons/jazz_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.kid_music {
-
-	background-image: url(genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.kid_music {
-	background-image: url(genre_icons/kids_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .kid_music {
-	background: url(genre_icons/kids_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.latin {
-
-	background-image: url(genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.latin {
-	background-image: url(genre_icons/latin_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .latin {
-	background: url(genre_icons/latin_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.comedy {
-
-	background-image: url(genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.comedy {
-	background-image: url(genre_icons/mic_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-#selector div.checkbox:hover .comedy {
-	background: url(genre_icons/mic_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.new_age {
-
-	background-image: url(genre_icons/new_age_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.new_age {
-	background-image: url(genre_icons/new_age_rw_sm.png) ; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-#selector div.checkbox:hover .new_age {
-	background: url(genre_icons/new_age_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.pop {
-
-	background-image: url(genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.pop {
-	background-image: url(genre_icons/pop_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .pop {
-	background: url(genre_icons/pop_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.punk {
-	background-image: url(genre_icons/punk_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.punk {
-	background-image: url(genre_icons/punk_rw_sm.png)); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .punk {
-	background: url(genre_icons/punk_rw_sm.png)) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.motown {
-
-	background-image: url(genre_icons/r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.motown {
-	background-image: url(genre_icons//r&b_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .motown {
-	background: url(genre_icons//r&b_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.rock {
-
-	background-image: url(genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.rock {
-	background-image: url(genre_icons/rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .rock {
-	background: url(genre_icons/rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.soft_rock {
-	background-image: url(genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.soft_rock {
-	background-image: url(genre_icons/soft_rock_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .soft_rock {
-	background: url(genre_icons/soft_rock_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-
-
-input[type="checkbox"]:checked + label div.world {
-
-	background-image: url(genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
-input[type="checkbox"]:hover + label div.world {
-	background-image: url(genre_icons/world_rw_sm.png); width:27px; height:27px;margin:10px;float:left; margin-top:0px; 
-}
-#selector div.checkbox:hover .world {
-	background: url(genre_icons/world_rw_sm.png) no-repeat #c53526 -27px; width:27px; height:27px;margin:10px;float:left; margin-top:0px;
-}
 
 
 
