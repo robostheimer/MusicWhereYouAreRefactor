@@ -170,7 +170,7 @@
 #country_form input, .alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
 
 footer a, .footer_item{float:left; margin-right:5px;}
-#whereyouat{float:left; margin-top:30px;width:74%;}
+#whereyouat{display:inline-block; vertical-align:middle; margin-top:30px;width:74%;}
 h5{color:#c53526; font-size:1.1em;  margin:0px; padding:0px;line-height:1em; margin-top:.7em;}
 .ui-view{height:100%}
 .clear_border{clear:both; border-bottom: 1px dotted #ececec;margin-top:5px;}
@@ -208,8 +208,9 @@ a {
 	color: #c53526;
 	cursor:pointer;
 }
-a:hover{
-	color:#979797
+a:hover, a:active{
+	color:#979797;
+	text-decoration:underline
 	}
 
 body {
@@ -285,7 +286,8 @@ header {
 	margin-left: 15px;
 	padding-bottom: 0px;
 	margin-top: 17px;
-	float: left;
+	display:inline-block;
+	vertical-align:top;
 	width: 75px;
 }
 .angular-google-map {
@@ -648,7 +650,9 @@ margin-bottom:7px;
 	margin-left: 0px;
 	margin-right: 10px;
 }
-
+#spot_holder a div:hover, #fav_holder a div:hover, [class^="icon"]:hover, #spot_holder a div:active, #fav_holder a div:active, [class^="icon"]:active{
+	color:#FFD200
+}
 .info_button, .spot_button{color:white; background:#c53526;padding:10px; margin-bottom:10px; font-size:1.05em; border: 1px dotted #ccc; border-radius: 5px; -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px;  float:none; cursor:pointer}
 .info_button{width:220px;}
 .spot_button{width:295px;}
@@ -726,7 +730,8 @@ padding-top: 6px;
 	color: #ffffff;
 	overflow: hidden;
 	cursor: pointer;
-	float: left;
+	display:inline-block;
+	vertical-align:top;
 }
 .spot_link:hover, .spot_link_fav:hover {
 	color: #ececec
@@ -756,23 +761,27 @@ padding-top: 6px;
 	font-size: 24px;
 	margin-top: 2px;
 	font-weight: bold;
-	float: left;
+	
 	margin-left:4px;
 	margin-right:4px;
+	display:inline-block;
+	vertical-align:middle;
 	
 }
 .open_div_spot {
 	font-size: 26px;
 	margin-left:4px;
 	margin-right:4px;
-	float: left;
+	display:inline-block;
+	vertical-align:middle;
 	
 }
 .open_div_fav {
 	font-size: 24px;
 	margin-left: 4px
 	margin-right:4px;
-	float: left;
+	display:inline-block;
+	vertical-align:middle;
 	
 }
 .close_div_info{width:40px;  margin-left:auto; margin-right:auto;padding:10px;}
@@ -801,7 +810,7 @@ padding-top: 6px;
 	position:absolute;
 	z-index: 100001;
 	padding: 10px;
-	float:right;
+	
 	padding-bottom: 3px;
 	bottom:50px;
 	right:0;

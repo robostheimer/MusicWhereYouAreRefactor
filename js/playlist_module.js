@@ -18,6 +18,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	var era1='';
 		 	var era2='';
 		 	
+		 	
 		 	for (var i=0; i<genresSplit.length; i++)
 		 	{
 		 		
@@ -812,7 +813,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 			},
 			
 		lookUpTag: function(searchterm, number, qs, type) {
-				$rootScope.loading_tags=true;
+				$.loading_tags=true;
 				var deferred = $q.defer();
 				////////////////////Local Storage////////////////////////
 				var ls_removeOut = jQuery.parseJSON(localStorage.getItem('leaveOutArr'));
@@ -901,8 +902,12 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	$scope.counter = 0;
 	//Twitter.getOAuth();
 	
+	
 	$scope.runApp = function(start_number, counter, type, arr, arr2, index1, index2) {		
 		$rootScope.loading=true;
+		$scope.loading_tags=false;
+		$scope.noSongsAbout = false;
+		
 		var arr=[];
 		var holder_arr=[];
 		if(arr==undefined)
@@ -1054,7 +1059,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 																$rootScope.loading=false;
 																$rootScope.mapOpening=false;
 																$scope.checkForMore=true;
-																	
+																$scope.loading=false
+				
 																});
 												
 											},function(error){
@@ -1135,6 +1141,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 																$rootScope.loading=false;
 																$rootScope.mapOpening=false;
 																$scope.checkForMore=true;
+																$scope.loading=false;
+			
 																	
 																});
 																
@@ -1212,6 +1220,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 																$rootScope.loading=false;
 																$rootScope.mapOpening=false;
 																$scope.checkForMore=true;
+																$scope.loading=false;
+			
 																	
 																});
 																
@@ -1275,6 +1285,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 							$rootScope.loading=false;
 							$rootScope.mapOpening=false;
 							$scope.checkForMore=true;
+							$scope.loading=false;
+			
 								
 							});
 
@@ -1365,6 +1377,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$rootScope.loading=false;
 				$rootScope.mapOpening=false;
 				$scope.checkForMore=true;
+				$scope.loading=false;			
 					
 				});
 	
@@ -1396,7 +1409,9 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		/////////those items show up.
 		/////////Take the "JSON" from the local storage and create CSV to add to the Songs About DB//////////
 		///////////Once there is a backend, this will enable user-generated content - i.e. all searches will go to the DB and be held there.
-		$rootScope.loading_tags=true;
+		
+		$scope.loading_tags=true;
+		$scope.noSongsAbout = false;
 		
 		$scope.number = number;
 		
@@ -1470,7 +1485,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			
 		});	*/
 		
-	
 		if($rootScope.aboutMarked==false || LocationDataFetch.count<100000000000 ||$scope.finalcollector.length<50 && $scope.lookUpSongs.length==0)
 		{
 				$scope.finalcollector.idArr=[];
@@ -1480,8 +1494,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$scope.finalcollector.artistlocation='';
 				$scope.finalcollector.artistlocations ={latitude:[], longitude:[]};
 				var ft_length=0;
+				$scope.loading_tags=true;
 				////////////////Create the .3 dynamically so it re-runs until that number is over one////////////////	
-				
 				//////////////Runs the various functions  to create the songs about Cities array/////////////
 				///////////////collects the song in the $scope.collector_arr///////////////////
 				Spotify.runFusionTableJSON($rootScope.latitudeObj_root.latitude, $rootScope.longitudeObj_root.longitude, .3).then(function(data){
@@ -1516,16 +1530,15 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 								{
 											$scope.collector_arr=$scope.collector_arr.concat(data);
 											$scope.countRunUserSearch=2;
-											$scope.collector_arr =$scope.collector_arr.removeDuplicatesArrObj('name', true)
-								
-											$scope.parseSongData($scope.collector_arr.reverse(), 'yes')	
+											$scope.collector_arr =$scope.collector_arr.removeDuplicatesArrObj('name', true);
+											$scope.parseSongData($scope.collector_arr.reverse(), 'yes')	;
 								}
 								
 							else if(data.length==0 )
 								{
 									
 									$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
-									//$scope.runCitySearch(searchterm);
+									$scope.runCityStateSearch(searchterm);
 									$scope.countRunUserSearch++;
 									
 								}
@@ -1552,7 +1565,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 							});
 							}
 						else if(typeof(auto_or_user) ==='number' ){
-							console.log('test')
 							
 							Spotify.runSpotifySearch(searchterm, number, usergen).then(function(result) {
 											
@@ -1589,7 +1601,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		
 
 		else{
-					
+					$scope.loading_tags=false;	
 					var lat_range =Math.abs($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length)-2]-$scope.finalcollector.artistlocations.latitude[0]);
 					var lng_range = Math.abs($scope.finalcollector.artistlocations.longitude[($scope.finalcollector.artistlocations.longitude.length)-2]-$scope.finalcollector.artistlocations.longitude[0]);
 					var lat_avg = ($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length-2)]+$scope.finalcollector.artistlocations.latitude[0])/2;
@@ -1605,7 +1617,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 					}
 					$rootScope.aboutMarked =true;
 					$scope.zoom=Spotify.runRange(finalRange);
-					$scope.loading_tags=false;	
 					//$scope.parseSongData($scope.finalcollector, 'no')
 				
 					
@@ -1616,13 +1627,16 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	};
 	$scope.parseSongData=function(result, usergen)
 	{
+		
+		
 		var collector=[];
 		var arr=[];
 		var songStr='';
 		
 		if(result.length==0)
 		{
-		$scope.showCityMessage=true;	
+		$scope.showCityMessage=true;
+		$scope.loading_tags=false;	
 		}
 		else{
 		$scope.lengthy = $scope.lengthy+result.length;
@@ -1631,13 +1645,23 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			if(usergen=='yes')
 
 			{
-				var resultNoDups=$scope.finalcollector.preventDuplicates(result, 'name', 'push');
-				
+				var resultNoDups=result
+				if(resultNoDups.length==0)
+				{
+				$scope.showCityMessage = true;
+				$scope.loading_tags=false;
+				}
 			}	
 			else{
 				var resultNoDups=result;
+				if(resultNoDups.length==0)
+				{
+				$scope.showCityMessage = true;
+				$scope.loading_tags=false;
+
+				}
 			}	
-			
+		
 			var lengthy = resultNoDups.length;
 			
 				
@@ -1653,8 +1677,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 								
 								
 							result.num_id=t;
-							
-							
 							if(usergen=='yes')
 							{
 								$scope.finalcollector.splice(0, 0, result)
@@ -1685,15 +1707,16 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 						
 						if(lengthy==collector.length)
 						{
+							$scope.finalcollector=$scope.finalcollector.removeDuplicatesArrObj('name', true)
 							
 ;							$scope.createMapAbout($scope.finalcollector, 0);
 						}
 						
 						
+						
 			
 						});
 						}
-						
 					songStr+=resultNoDups[t].name;
 					$scope.loading_tags=false;
 					$scope.aboutShower=true;
@@ -1710,7 +1733,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	{
 			
 			$scope.finalcollector = arr;
-			
 			if($scope.finalcollector.length==0)
 			{
 				$scope.showCityMessage=true;
@@ -1940,7 +1962,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$scope.favorites = Favorites.addFavorites();
 			}
 			else {
-				console.log(songFav);
 				for (var x = 0; x < songFav.length; x++) {
 					songId.push(songFav[x].id);
 				}
@@ -2264,6 +2285,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.fromShower=true;
 			$scope.aboutShower=false;
 			$scope.shareBox=false;
+			
 		}
 		else if (id=="songs")
 		{
@@ -2271,6 +2293,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.fromShower=false;
 			$scope.aboutShower=true;
 			$scope.shareBox=false;
+			
 		}
 		for (var c = 0; c < $scope.buttons.length; c++) {
 			if ($scope.buttons[c].name == id) {
