@@ -7,19 +7,22 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 	return{
 			getGeoEvents: function(lat, lng)
 			{
-				return $http.get('http://ws.audioscrobbler.com/2.0/?method=geo.getevents&lat='+lat +'&long='+lng+'&api_key=174019d04974adad421f3fb19681277e&limit=50&format=json&distance=41.5').then(function(results)
+				
+				return $http.jsonp('http://api.bandsintown.com/events/search?location='+$location.path().split('/')[2].replace('*', ',').replace(/_/g, ' ')+'&radius=50&format=json&app_id=MusicWhereYouAre&callback=JSON_CALLBACK').then(function(results)
 				{
-					
-					return results;
+					return results.data;
+				},function(error) {
+					$rootScope.showLastFMError=true;
 				});
 			},
 			
 			getArtistEvents: function(artist)
 			{
-				return $http.get('http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist='+artist+'&api_key=174019d04974adad421f3fb19681277e&limit=25&format=json').then(function(results)
-				{
+				return $http.jsonp('http://api.bandsintown.com/artists/'+artist+'/events.json?app_id=MusicWhereYouAre&callback=JSON_CALLBACK').then(function(results){
 					
-					return results;
+					return results.data;
+				},function(error) {
+					$rootScope.showLastFMError=true;
 				});
 			}
 	};
@@ -380,34 +383,27 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	$scope.loadingEvents=true;
 	
 	 Events.getGeoEvents(lat,lng).then(function(result){
-		//$scope.events =[];
-		if(JSON.stringify(result).match('We could not find any upcoming events based on your specified location'))
+	 	//$scope.events =[];
+	 	if(JSON.stringify(result).match('error'))
 		{	
 			$scope.noShows =true;
 		}
 		else{
 			$scope.noShows =false;
-			if(typeof result.data.events.event!='array')
-			{
-			
-				$scope.events=[];
-				$scope.events.push(result.data.events.event);
-			}
-			else
-			{
-			$scope.events=(result.data.events.event);	
-			}
-			$scope.events=(result.data.events.event);
-			
+			$scope.events=result;
 			for(var t=0; t<$scope.events.length; t++)
 			{
-				if(typeof $scope.events[t].artists.artist=='string')
-				{
-					$scope.events[t].artists.artist=[$scope.events[t].artists.artist];
-				}
-				$scope.date=new Date($scope.events[t].startDate);
+				
+				
+				$scope.date=new Date($scope.events[t].datetime);
 				$scope.hours =$scope.date.getHours();
-				$scope.fin_hours = $scope.date.getHours()+2;
+				if($scope.hours<23)
+				{
+				$scope.fin_hours = $scope.hours+2;
+				}
+				else{
+					$scope.fin_hours = 0+2
+				}
 				$scope.month = ($scope.date.getMonth()+1);
 				if($scope.events[t].tags!=undefined&&$scope.events[t].tags.tag!=undefined)
 				{				
@@ -428,8 +424,8 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 					$scope.month =0+''+$scope.month;
 				}
 				
-				$scope.events[t].date =$scope.date.getFullYear()+''+($scope.month)+''+$scope.date.getDate()+'T'+$scope.hours+'0000/'+$scope.date.getFullYear()+''+($scope.month)+''+$scope.date.getDate()+'T'+$scope.fin_hours+'0000';
-		
+				$scope.events[t].date =($scope.month)+'/'+$scope.date.getDate()+'/'+$scope.date.getFullYear()+', '+$scope.hours+':00 - '+$scope.fin_hours+':00';
+		//	console.log($scope.events[t].date)
 				
 				
 			}
@@ -453,6 +449,9 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		
 	}
 }]);
+
+
+
 
 Events.controller('LoadBandEvents', ['$scope', '$q','$http', 'runSymbolChange', '$routeParams', '$location', '$sce', 'retrieveLocation', 'PlaylistCreate', 'MapCreate', '$rootScope', 'Events','LocationDataFetch','Spotify','Wiki','ChunkSongs',
 function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retrieveLocation, PlaylistCreate, MapCreate, $rootScope, Events, LocationDataFetch, Spotify, Wiki, ChunkSongs){
@@ -792,40 +791,41 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 
 	 Events.getArtistEvents($scope.artist).then(function(result){
 			//$scope.shows=[];
-
-		if(result.data.events.event==undefined)
+		
+		if(JSON.stringify(result).match('error'))
 		{	
 			$scope.noEvents =true;
 		}
 		else{
-			if(result.data.events.event.length==undefined)
-			{
-				
-				$scope.shows=[result.data.events.event]
+			
+			$scope.shows=result;
+			if($scope.shows.length==0){
+				$scope.noEvents =true;
 			}
-			else
-			{
-			$scope.shows=result.data.events.event;	
-			}
+			else{
 			$scope.noEvents =false;
 			$scope.shows.performers=[]
 			for(var t=0; t<$scope.shows.length; t++)
 			{
 				
 				
-				if(typeof $scope.shows[t].artists.artist=='string')
-				{
-					$scope.shows[t].artists.artist=[$scope.shows[t].artists.artist]
-				}
+			for(var t=0; t<$scope.shows.length; t++)
+			{
 				
 				
-				$scope.date=new Date($scope.shows[t].startDate);
+				$scope.date=new Date($scope.shows[t].datetime);
 				$scope.hours =$scope.date.getHours();
-				$scope.fin_hours = $scope.date.getHours()+2;
+				if($scope.hours<23)
+				{
+				$scope.fin_hours = $scope.hours+2;
+				}
+				else{
+					$scope.fin_hours = 0+2
+				}
 				$scope.month = ($scope.date.getMonth()+1);
 				if($scope.shows[t].tags!=undefined&&$scope.shows[t].tags.tag!=undefined)
 				{				
-					$scope.shows[t].tagsStr = $scope.shows[t].tags.tag.toString().replace(',', ' ')
+					$scope.events[t].tagsStr = $scope.events[t].tags.tag.toString().replace(/,/g, ', ')
 					
 				}
 				if($scope.hours.toString().length<2)
@@ -842,15 +842,26 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 					$scope.month =0+''+$scope.month;
 				}
 				
-				$scope.shows[t].date =$scope.date.getFullYear()+''+($scope.month)+''+$scope.date.getDate()+'T'+$scope.hours+'0000/'+$scope.date.getFullYear()+''+($scope.month)+''+$scope.date.getDate()+'T'+$scope.fin_hours+'0000';
-					
+				$scope.shows[t].date =($scope.month)+'/'+$scope.date.getDate()+'/'+$scope.date.getFullYear()+', '+$scope.hours+':00 - '+$scope.fin_hours+':00';
+		//	console.log($scope.events[t].date)
+				
+				
 			}
 		}
+		
 		$scope.eventBandData=true;
 		$rootScope.loading=false;
+		}
+		}	
+	 },function(error){$scope.errorMessage = true;});
+	
+		
+	
 		
 		
-	 });
+		
+		
+	
 	
 			
 	

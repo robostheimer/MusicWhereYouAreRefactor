@@ -1,12 +1,13 @@
 var Playlist=angular.module('Playlist', []);
 
 /*Services*/
-Playlist.factory('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
+Playlist.service('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States',
 function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States) {
 	
 
 	return {
 		 runPlaylist : function(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
+		 	///console.log(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number)
 		 	var lsTitleArr=[];
 			var lsIdArr=[];
 			var lsTitleStr='';
@@ -38,12 +39,12 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	songs = {};
 		 	 if(finalgenres=='' && era=='')
 		 	{
-			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number+'&callback=JSON_CALLBACK';
+			var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.3&start='+start_number;
 			}
 			else{
-				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=jsonp&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era+'&callback=JSON_CALLBACK'
+				var url = 'http://developer.echonest.com/api/v4/song/search?api_key=3KFREGLKBDFLWSIEC&format=json&results=50&min_latitude=' + lat_min + '&max_latitude=' + lat_max + '&min_longitude=' + long_min + '&max_longitude=' + long_max + '&bucket=artist_location&bucket=id:spotify-WW&bucket=tracks&limit=true&&song_type=studio&rank_type=familiarity&song_min_hotttnesss=.2&start='+start_number+finalgenres+era;
 			}
-			return $http.jsonp(url).then(function(data) {
+			return $http.get(url).then(function(data) {
 				
 				var songs = data.data.response.songs;
 				songs = songs.removeDuplicatesArrObj( 'title', true);
@@ -223,7 +224,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				});
 				
 				songs = songs.compareArraysObj(LeaveOut, 'title');
-				//console.log(songs)
 				return songs;
 				
 			},function(error){
@@ -272,7 +272,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 }]);
 
 
-Playlist.factory("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs',
+Playlist.service("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs',
 function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs){
 	return{
 		
@@ -714,7 +714,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 }]);	
 
 //////////////////Need to lose the rootScopes and run in different service calls in the controller @ runSongAboutSearch in hashedLocation Controller
-Playlist.factory("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch',
+Playlist.service("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch',
 function($q, $rootScope, $http, $sce, LocationDataFetch)
 {
 	return{
@@ -757,10 +757,12 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					//console.log(SongSlicer.length)
 					SongSlicer.forEach(function(SongSlicer)
 					{
+						if(SongSlicer.tracks[0]!==undefined)
+						{
 						//console.log(SongSlicer[x])
 						songsArr.push(SongSlicer);
 						songsArrStr+=SongSlicer.tracks[0].foreign_id.split(':')[2]+',';
-										
+						}				
 					});	
 					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
 					songsFinal.push({songs:songsArr, url:'https://api.spotify.com/v1/tracks/?ids='+songsArrStr, ids: songsArrStr});
@@ -773,9 +775,11 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					var SongSlicer =songs.slice(songs.length-remainder, songs.length);
 					SongSlicer.forEach(function(SongSlicer)
 					{
-						//console.log(SongSlicer[x])
+						if(SongSlicer.tracks[0]!==undefined)
+						{//console.log(SongSlicer[x])
 						songsArr.push(SongSlicer);
 						songsArrStr+=SongSlicer.tracks[0].foreign_id.split(':')[2]+',';
+						}
 										
 					});	
 					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
@@ -791,7 +795,7 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 }]);
 
 
-Playlist.factory("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
+Playlist.service("Wiki", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams','Spotify',
 function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) {
 	return{
 		getWikiLandmarks: function(lat,lng, country)
@@ -1409,66 +1413,75 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		/////////those items show up.
 		/////////Take the "JSON" from the local storage and create CSV to add to the Songs About DB//////////
 		///////////Once there is a backend, this will enable user-generated content - i.e. all searches will go to the DB and be held there.
-		
-		$scope.loading_tags=true;
-		$scope.noSongsAbout = false;
-		
-		$scope.number = number;
-		
-		var location_arr=[];
-		$scope.start_index=number;
-		$scope.iterator=20;
-
-			var location_stringy = $routeParams.location;
-			location_stringy = location_stringy.replace(/_/g, ' ');
-			if(location_stringy=="WASHINGTON*DISTRICT_OF_COLUMBIA")
-			{
-				location_stringy = "Washington, DC"
-			}
-			/////////City, State//////////
-			if(location_stringy.split('*').length>1)
-			{
-				var states = States.createStateObj();
-				for (var i = 0; i < states.length; i++) {
-					///////US city and full state name
-					
-					if (location_stringy.toLowerCase().split('*')[1] == states[i].name.toLowerCase()) {
-					var location_full = location_stringy.split('*')[0]+', '+states[i].name;
-					var location_ab = location_stringy.split('*')[0]+', '+states[i].abbreviation;
-					//$scope.runUserSearch(location_full, 15, 'no');
-					
-					}
-					/////////US city and abbrev
-					else if (location_stringy.toLowerCase().split('*')[1] == states[i].abbreviation.toLowerCase()){
-					var location_full = location_stringy.split('*')[0]+', '+states[i].name;
-					var location_ab=location_stringy.split('*')[0]+', '+states[i].abbreviation;
-					//$scope.runUserSearch(location_full, location_ab, 15, 'no');
-				
-					}
-						
-					///////////Foreign city////////////
-					else if (i==states.length-1 && location_full==undefined )
-					{
-					
-					var location_ab=location_stringy;
-					
-					}
-					
+		if($rootScope.aboutMarked==false || LocationDataFetch.count<=1 ||$scope.finalcollector.length<50 && $scope.lookUpSongs.length==0)
+		{
+			if(LocationDataFetch.count<=1)
+			{	
+			$scope.loading_tags=true;
+			$scope.noSongsAbout = false;
+			
+			$scope.number = number;
+			
+			var location_arr=[];
+			$scope.start_index=number;
+			$scope.iterator=20;
+	
+				var location_stringy = $routeParams.location;
+				location_stringy = location_stringy.replace(/_/g, ' ');
+				if(location_stringy=="WASHINGTON*DISTRICT_OF_COLUMBIA")
+				{
+					location_stringy = "Washington, DC"
 				}
-				$scope.runUserSearch(location_ab, 30, 'no', 'auto')	;	
-				//$scope.countRunUserSearch = $scope.countRunUserSearch+1;
+				/////////City, State//////////
+				if(location_stringy.split('*').length>1)
+				{
+					var states = States.createStateObj();
+					for (var i = 0; i < states.length; i++) {
+						///////US city and full state name
+						
+						if (location_stringy.toLowerCase().split('*')[1] == states[i].name.toLowerCase()) {
+						var location_full = location_stringy.split('*')[0]+', '+states[i].name;
+						var location_ab = location_stringy.split('*')[0]+', '+states[i].abbreviation;
+						//$scope.runUserSearch(location_full, 15, 'no');
+						
+						}
+						/////////US city and abbrev
+						else if (location_stringy.toLowerCase().split('*')[1] == states[i].abbreviation.toLowerCase()){
+						var location_full = location_stringy.split('*')[0]+', '+states[i].name;
+						var location_ab=location_stringy.split('*')[0]+', '+states[i].abbreviation;
+						//$scope.runUserSearch(location_full, location_ab, 15, 'no');
 					
+						}
+							
+						///////////Foreign city////////////
+						else if (i==states.length-1 && location_full==undefined )
+						{
+						
+						var location_ab=location_stringy;
+						
+						}
+						
+					}
+					$scope.runUserSearch(location_ab, 30, 'no', 'auto')	;	
+					//$scope.countRunUserSearch = $scope.countRunUserSearch+1;
+						
+				}
+	
+					
+				/////////////no songs/////////////
+				else
+				{
+						
+					$scope.runUserSearch(location_stringy, 30, 'no', 'auto')
+				}	
+			}else{
+				$scope.loading_tags=false;
 			}
-
-				
-			/////////////no songs/////////////
-			else
-			{
-					
-				$scope.runUserSearch(location_stringy, 30, 'no', 'auto')
-			}	
-		
-		LocationDataFetch.count=100000000000;
+		}
+		else{
+			$scope.loading_tags=false;	
+			
+		}
 		
 		//}
 		
@@ -1484,9 +1497,10 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.data=data;
 			
 		});	*/
-		
-		if($rootScope.aboutMarked==false || LocationDataFetch.count<100000000000 ||$scope.finalcollector.length<50 && $scope.lookUpSongs.length==0)
+		if($rootScope.aboutMarked==false ||$scope.finalcollector.length<50 && $scope.lookUpSongs.length==0)
 		{
+		
+			
 				$scope.finalcollector.idArr=[];
 				$scope.finalcollector.savSpotArr=[];
 				$scope.finalcollector.location_arr=[];
@@ -1494,7 +1508,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$scope.finalcollector.artistlocation='';
 				$scope.finalcollector.artistlocations ={latitude:[], longitude:[]};
 				var ft_length=0;
-				$scope.loading_tags=true;
+				//$scope.loading_tags=true;
 				////////////////Create the .3 dynamically so it re-runs until that number is over one////////////////	
 				//////////////Runs the various functions  to create the songs about Cities array/////////////
 				///////////////collects the song in the $scope.collector_arr///////////////////
@@ -1515,7 +1529,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 										
 											/*if(scope.countRunUserSearch<2)
 												{*/
-												//$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
+												$scope.runNearbySearch($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude,searchterm);
 												$scope.runCityStateSearch(searchterm);
 												
 												$scope.countRunUserSearch++;
@@ -1573,8 +1587,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 											$scope.countRunUserSearch=2;
 											if($scope.pass_length-1== auto_or_user)
 											{
-											$scope.collector_arr =$scope.collector_arr.removeDuplicatesArrObj('name', true)
-									
+											$scope.collector_arr =$scope.collector_arr.removeDuplicatesArrObj('name', true);
 											$scope.parseSongData($scope.collector_arr, 'no')
 											}
 									});		
@@ -1602,6 +1615,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 		else{
 					$scope.loading_tags=false;	
+					$scope.about_shower=true;
 					var lat_range =Math.abs($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length)-2]-$scope.finalcollector.artistlocations.latitude[0]);
 					var lng_range = Math.abs($scope.finalcollector.artistlocations.longitude[($scope.finalcollector.artistlocations.longitude.length)-2]-$scope.finalcollector.artistlocations.longitude[0]);
 					var lat_avg = ($scope.finalcollector.artistlocations.latitude[($scope.finalcollector.artistlocations.latitude.length-2)]+$scope.finalcollector.artistlocations.latitude[0])/2;
@@ -1661,7 +1675,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 				}
 			}	
-		
+			 resultNoDups=resultNoDups.removeDuplicatesArrObj('name',true);
 			var lengthy = resultNoDups.length;
 			
 				
@@ -1707,9 +1721,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 						
 						if(lengthy==collector.length)
 						{
-							$scope.finalcollector=$scope.finalcollector.removeDuplicatesArrObj('name', true)
-							
-;							$scope.createMapAbout($scope.finalcollector, 0);
+							//$scope.finalcollector=$scope.finalcollector.removeDuplicatesArrObj('name', true)
+							$scope.createMapAbout($scope.finalcollector, 0);
 						}
 						
 						
@@ -1731,8 +1744,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	
 	$scope.createMapAbout=function(arr, start_index)
 	{
-			
-			$scope.finalcollector = arr;
+			$scope.finalcollector =arr;
+			//$scope.finalcollector = $scope.finalcollector.removeDuplicatesArrObj('name',true);
 			if($scope.finalcollector.length==0)
 			{
 				$scope.showCityMessage=true;
@@ -1923,7 +1936,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 	$scope.switchFavorite = function(id, num_id, about_or_from) {
 		//$scope.favoritesArr=[];
-		
 		var songId = [];
 		if (localStorage.getItem('FavoriteArr') != null && localStorage.getItem('FavoriteArr') != '') {
 			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
@@ -1935,6 +1947,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		if (about_or_from == 'from') {
 			
 ;			if ($scope.songs[num_id].favorite == 'off') {
+					
 				$scope.songs[num_id].favorite = 'on';
 				songFav.push($scope.songs[num_id]);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
@@ -1952,7 +1965,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		}
 		else if(about_or_from=='about')
 		{
-			
 			if ($scope.lookUpSongs[num_id].favorite == 'off') {
 				if(id= $scope.lookUpSongs[num_id].id)
 				$scope.lookUpSongs[num_id].favorite = 'on';
@@ -2010,13 +2022,16 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			Spotify.createPlaylist($scope.holder_arr).then(function(result) {
 						
 						$scope.songs = result.songs.slice(index1, index2)
+						$scope.songs.forEach(function(song){
+							var i=$scope.songs.indexOf(song)
+							song.num_id=i;
+						});
 						$scope.songs.spot_arr = result.spot_arr.slice(index1, index2)
 						artistlocation = result.artistlocation.slice(index1, index2)
 						$scope.songs.location_arr = result.location_arr.slice(index1, index2)
 						$scope.songs.spot_strFinal =$sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.songs.spot_arr.toString());
 						$rootScope.songs_root = $scope.songs;
-						
-							Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
+						Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
 						LocationDataFetch.count=1;
 						$rootScope.mapdata = data;
 						$scope.stillLooking = false;
@@ -2096,6 +2111,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			for(var x=0; x<$scope.lookUpSongs.length; x++)
 			{
 				$scope.lookUpSongs.idStr+=$scope.lookUpSongs[x].id+',';
+				$scope.lookUpSongs[x].num_id=x;
 				
 			}
 			$scope.lookUpSongs.idStr= $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.lookUpSongs.idStr);
@@ -2113,6 +2129,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			for(var x=0; x<$scope.lookUpSongs.length; x++)
 			{
 				$scope.lookUpSongs.idStr+=$scope.lookUpSongs[x].id+',';
+				$scope.lookUpSongs[x].num_id=x
 				
 			}
 			$scope.lookUpSongs.idStr= $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.lookUpSongs.idStr);
@@ -2365,6 +2382,12 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		
 	}
 	$scope.detectDevice();
+	
+	$scope.minus = function(x, y){
+		$scope.x=10;
+		$scope.y=1;
+		$scope.z=$scope.x-$scope.y;
+	};
 
 }]).controller('PostController',['$scope', '$http', function($scope, $http){
 	
@@ -2374,7 +2397,8 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.response = response;
 			console.log($scope.response)
 		 });
-	}
+	};
+	
 	
 }]);
 Playlist.controller('Spotify', ['$scope', '$location', '$rootScope', 'runSymbolChange', '$routeParams',

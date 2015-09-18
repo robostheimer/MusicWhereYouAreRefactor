@@ -44,6 +44,13 @@
 
 	<div class="clear"></div>
 </section>
+<section class="alert"  ng-show="showLastFMError==true;" >
+	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="showLastFMError=false"></div>
+	<p>
+		Unfortunately, there is an error with the LastFM Events API.  Once this is fixed, EventsWhereYouAre will work again.  Thanks for your patience.</p>
+
+	<div class="clear"></div>
+</section>
 <section id="spot_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
@@ -58,14 +65,11 @@
 	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loadingEvents==true">
 		<div class="event_image info" ng-hide="event.venue.image[1]['#text']==''"><img src="{{event.venue.image[1]['#text']}}"/></div>
 			<div style="padding-left:10px;">
-				<h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{event.artists.headliner}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
+				<h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{event.artists[0].name}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
 					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br> </span><br>
-					Date: {{event.startDate}}<br>
-					Address:{{event.venue.location.street}}<br>
-					City: {{event.venue.location.city}}, {{event.venue.location.country}}<br>
-					Phone: {{event.venue.phonenumber}}<br>
-					<span style="font-size: .5em" >Genres: {{event.tagsStr}}</span> <br>
+					Date: {{event.date}}<br>
+					City: {{event.venue.city}}, {{event.venue.region}}<br>
 					
 					
 					

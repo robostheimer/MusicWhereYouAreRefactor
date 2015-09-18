@@ -1,7 +1,7 @@
 var Location=angular.module('Location', []);
 /*Services*/
 
-Location.factory("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope',
+Location.service("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope',
 function( $http, $sce, $location,States, $routeParams, $rootScope) {
 	
 	//////////////////////MAKE WORK for LOWERCASE
@@ -51,7 +51,7 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 					};
 					
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+				var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					
 					if(latorlng=="lat")
@@ -90,6 +90,7 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 					return	$http.jsonp(long_url).then(function(data){
 						
 						if (data.data.rows != null) {
+							console.log('null')
 							data.data.rows.forEach(function(data)
 								{
 									longs += parseFloat(data[0]);
@@ -137,9 +138,9 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 				else {
 					var location =location;
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key CONTAINS IGNORING CASE AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql CONTAINS IGNORING CASE SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+				
 
 					location = location.toTitleCase();
 					if(latorlng=="lat")
@@ -207,15 +208,17 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 }]);
 
 
-Location.factory("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
+Location.service("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
 function($q, $rootScope, $http, $sce, $location, $routeParams) {
 	return{
 			runHash : function(lat, lng, url_change, ratio) {
+			
 			$rootScope.hideiconHolder=false;
 			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
 			return $http.get(url).then(function(data) {
+				console.log(data)
 				
-				if (data.data.rows != null || data.stringify.match('error')) {
+				if (data.data.rows != null) {
 				
 					var city = data.data.rows[0][0];
 					var state = data.data.rows[0][1];
@@ -243,13 +246,16 @@ function($q, $rootScope, $http, $sce, $location, $routeParams) {
 					
 
 				} 
+				else{
+					$rootScope.noGeo=true;
+				}
 								
 			});
 		}
 	};	
 }]);
 
-Location.factory('MapCreate', ['$q', '$http', '$sce','$rootScope',
+Location.service('MapCreate', ['$q', '$http', '$sce','$rootScope',
 function($q,  $http, $sce, $rootScope) {
 	
 	///Creates compiled variables for mwya-map directive to create the map////
@@ -276,7 +282,7 @@ function($q,  $http, $sce, $rootScope) {
 	};
 }]);
 
-Location.factory('LocationDataFetch', [ 'retrieveLocation',
+Location.service('LocationDataFetch', [ 'retrieveLocation',
 function(location, latorlng) {
 	//return {
 	var locationdata = {};
@@ -288,7 +294,7 @@ function(location, latorlng) {
 }]);
 
 
-Location.factory('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+Location.service('States', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
 	return {
 		createStateObj : function()

@@ -164,10 +164,10 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#country_form, .alert {width:260px; background:white; border:1px solid #cccccc; min-height:50px;z-index:100000000000; position:absolute; left:30%; padding:10px;top:30%; border:1px solid #C53526;box-shadow: 5px 5px 50px #cccccc;font-family:'Arvo',Tahoma,Arial, sans-serif; font-weight:400;font-size:12px;
+#country_form, .ng-scope.alert {width:260px; background:white; border:1px solid #cccccc; min-height:50px;z-index:100000000000; position:absolute; left:30%; padding:10px;top:30%; border:1px solid #C53526;box-shadow: 5px 5px 50px #cccccc;font-family:'Arvo',Tahoma,Arial, sans-serif; font-weight:400;font-size:12px;
  }
  #count_form p{margin-top:10px;}
-#country_form input, .alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
+#country_form input, .ng-scope.alert input{float:left; margin-right:10px;background:#cccccc;background:#ececec;width:180px;font-size:11px}
 
 footer a, .footer_item{float:left; margin-right:5px;}
 #whereyouat{display:inline-block; vertical-align:middle; margin-top:30px;width:74%;}
@@ -1171,7 +1171,7 @@ margin-left: 290px;
 		margin-bottom: 0px;
 		
 	}
-#country_form, .alert{
+#country_form, .ng-scope.alert{
 left: 25%;
 top: 30%;
 }
@@ -1196,7 +1196,7 @@ top: 30%;
 	}
 .event_description{width:75%}
 
-#country_form, .alert{
+#country_form, .ng-scope.alert{
 left: 25%;
 top: 20%;
 }
@@ -1251,7 +1251,7 @@ top: 20%;
 		margin-bottom: 0px;
 		
 	}
-#country_form, .alert{
+#country_form, .ng-scope.alert{
 left: 25%;
 top: 20%;
 }
@@ -1303,7 +1303,7 @@ header{float:left; margin-left:15px;}
 		
 	}
 
-#country_form, .alert{left:15px; top:30%}
+#country_form, .ng-scope.alert{left:15px; top:30%}
 #artistsearch{width:35%}
 #info-area #artist_holder{height:87%}
 #spot_holder .cards {margin-top:112px;}	
@@ -1553,4 +1553,20 @@ div.sharer_icon{margin:0px; color:#C53526; cursor:pointer}
 .viewall{font-family:'Arvo',Tahoma,Arial, sans-serif;font-size:9px; position:absolute; bottom:7px;}
 .event_image{float:left; padding:10px;}
 .event_description{float:left; width:64%; font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:.64em; margin-top:10px; margin-bottom:0px;  padding:bottom:10px; padding-right:10px;}
+p.event_description{margin-top:0; margin-left:10px;}
+/*For Testing*/
 
+
+.jasmine_html-reporter {
+    background-color: #eee;
+    padding: 5px;
+    margin: -8px;
+    font-size: 11px;
+    font-family: Monaco,"Lucida Console",monospace;
+    line-height: 14px;
+    color: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+    overflow:scroll;

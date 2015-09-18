@@ -1,6 +1,6 @@
 /*Services*/
 var Geolocation = angular.module('Geolocation', []);
-Geolocation.factory("getLocation", ['$q', '$http', '$sce', 'HashCreate','$rootScope','$location',
+Geolocation.service("getLocation", ['$q', '$http', '$sce', 'HashCreate','$rootScope','$location',
 function($q, $http, $sce, HashCreate, $rootScope, $location) {
 	
 	
@@ -19,6 +19,7 @@ function($q, $http, $sce, HashCreate, $rootScope, $location) {
 	//$rootScope.location = [];
 	var Geolocation = {
 		_checkGeoLocation : function() {
+			
 			////////Checks if Geolocation is available;
 			/////If it is is runs the handle_geolocation_query or the handle Gelocation.handle)errors function if access to the Geolocation API is denied by the user
 			
@@ -37,6 +38,7 @@ function($q, $http, $sce, HashCreate, $rootScope, $location) {
 			var long_max = currentLong + .25;
 			////Creates a promise that runs the Playlist creation Function and then the Map Create function.
 			HashCreate.runHash(currentLat, currentLong, true, .05).then(function(data){
+				console.log(data)
 				$location.path(data);	
 			
 			});
