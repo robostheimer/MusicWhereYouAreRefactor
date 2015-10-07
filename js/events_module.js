@@ -5,10 +5,10 @@ var Events = angular.module('Events', []);
 Events.factory("Events", ['$q', '$rootScope', '$http', '$sce', '$location','States','$routeParams',
 function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 	return{
-			getGeoEvents: function(lat, lng)
+			getGeoEvents: function(lat, lng, date1, date2)
 			{
 				
-				return $http.jsonp('http://api.bandsintown.com/events/search?location='+$location.path().split('/')[2].replace('*', ',').replace(/_/g, ' ')+'&radius=50&format=json&app_id=MusicWhereYouAre&callback=JSON_CALLBACK').then(function(results)
+				return $http.jsonp('http://api.bandsintown.com/events/search?location='+$location.path().split('/')[2].replace('*', ',').replace(/_/g, ' ')+'&radius=50&date='+date1+','+date2+'&format=json&app_id=MusicWhereYouAre&callback=JSON_CALLBACK').then(function(results)
 				{
 					return results.data;
 				},function(error) {
@@ -35,8 +35,39 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 Events.controller('LoadEvents', ['$scope', '$q','$http', 'runSymbolChange', '$routeParams', '$location', '$sce', 'retrieveLocation', 'PlaylistCreate', 'MapCreate', '$rootScope', 'Events','getLocation','Spotify', 'LocationDataFetch','Wiki','ChunkSongs',
 function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retrieveLocation, PlaylistCreate, MapCreate, $rootScope, Events, getLocation, Spotify, LocationDataFetch, Wiki, ChunkSongs){
 		$rootScope.noGeo=false;
-		var songs_for_service=[];
+		var songs_for_service=[],
+		date = new Date();
+		date2 = new Date(+date + 12096e4),
+		date1_fmt ={
+			year: date.getFullYear().toString(),
+			month:(date.getMonth()+1).toString(),
+			day:date.getDate().toString()
+		};
+		date2_fmt ={
+			year: date2.getFullYear().toString(),
+			month:(date2.getMonth()+1).toString(),
+			day:date2.getDate().toString()
+		};
+		console.log(date1_fmt.month.length)
+		if(date1_fmt.month.length<2){
+			date1_fmt.month = 0+date1_fmt.month;
+		}
+
+		if(date1_fmt.day.length<2){
+			date1_fmt.day = 0+date1_fmt.day;
+		}
+		if(date2_fmt.month.length<2){
+			date2_fmt.month = 0+date2_fmt.month;
+		}
+
+		if(date2_fmt.day.length<2){
+			date2_fmt.day = 0+date2_fmt.day;
+		}
+
 		
+		$scope.date1 = date1_fmt.year+'-'+date1_fmt.month+'-'+date1_fmt.day;
+		$scope.date2 = date2_fmt.year+'-'+date2_fmt.month+'-'+date2_fmt.day;
+
 	$scope.runApp = function(start_number, counter, type, arr, arr2, index1, index2) {	
 		$rootScope.loading=true;
 		if(arr==undefined)
@@ -376,13 +407,17 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	$scope.runApp(0,1);	
 	}
 	}
-	
+	$scope.lookUpDates = function(){
+		$scope.runEvents($scope.lat, $scope.lng, $scope.date1, $scope.date2)
+	}
 	$scope.runEvents = function(lat, lng)
 	{
+	$scope.lat= lat;
+	$scope.lng = lng;	
 	$scope.eventData=false;
 	$scope.loadingEvents=true;
 	
-	 Events.getGeoEvents(lat,lng).then(function(result){
+	 Events.getGeoEvents(lat,lng, $scope.date1, $scope.date2).then(function(result){
 	 	//$scope.events =[];
 	 	if(JSON.stringify(result).match('error'))
 		{	

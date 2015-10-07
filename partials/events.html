@@ -58,6 +58,11 @@
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<h4><span style="color:#979797">Upcoming Concerts for</span> {{artist}}</h4><br>
+	<form  class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
+		
+		<input type="date"  name="search events" class="text searchy" ng-model="dates" ng-enter="lookUpDates(date1, date2)">
+		<input type="date"  name="search events" class="text searchy"   ng-model="dates" ng-enter="lookUpDates(date1, date2)">
+		
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
 	
@@ -65,8 +70,7 @@
 		<div class="event_holder">
 		
 	<div ng-repeat="event in shows track by $index" class="gray card"ng-show="loading==false">
-		<div class="event_image info"><img src="{{event.venue.image[1]['#text']}}"/></div>
-			
+					
 				<div style="padding-left:10px;"><h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{artist}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.name}}+at+{{event.venue.name}}location={{event.venue.name}},+ {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
 					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br> </span><br>

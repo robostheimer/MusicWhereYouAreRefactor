@@ -578,6 +578,15 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	margin-bottom:10px;
 	background:#ececed;
 }
+.dates  input{
+	width:45%;
+	font-size:14px;
+	padding:3px;
+	overflow:hidden;
+	margin-right:1%;
+	font-family:'PT Sans', san-serif;
+	margin:10px 0 10px 0;
+}
 #song_form input, #selector_genre input.searchy #artistsearch input
 {
 width:265px;

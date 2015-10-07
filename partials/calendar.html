@@ -51,10 +51,22 @@
 
 	<div class="clear"></div>
 </section>
-<section id="spot_holder" ng-swipe-left="goBack()" >
+<section id="spot_holder" ng-swipe-left="goBack()" class="dates" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
+	
 		<h4><span style="color:#979797">Upcoming Concerts for</span> <span ng-hide="loadingEvents==true">{{location}}</span></h4><br>
+		<form  class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
+		<input type="date"  name="search events" class="text searchy" ng-model="date1" ng-change="lookUpDates(date1, date2)">
+		<input type="date"  name="search events" class="text searchy"   ng-model="date2" ng-change="lookUpDates(date1, date2)">
+		
+			<div class="clear"><div>
+	
+	
+	
+		
+
+	</form>
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loadingEvents==true"><img src="loading.gif" alt="loadingEvents"/></div>
 		<div class="clear"></div>
 		
@@ -63,7 +75,6 @@
 		
 		
 	<div ng-repeat="event in events track by $index" class="gray card" ng-hide="loadingEvents==true">
-		<div class="event_image info" ng-hide="event.venue.image[1]['#text']==''"><img src="{{event.venue.image[1]['#text']}}"/></div>
 			<div style="padding-left:10px;">
 				<h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{event.artists[0].name}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.headliner}}+at+{{event.venue.name}}&details=For+details,+link+here%3a+{{event.url}}&location={{event.venue.name}},+{{event.venue.location.street}}, {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
