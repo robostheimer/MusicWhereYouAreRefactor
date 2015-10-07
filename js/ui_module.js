@@ -238,7 +238,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 					states.forEach(function(item){
 						if(item.abbreviation==ab)
 						{
-							$scope.location =(states[x].name);
+							$scope.location =(item.name);
 						}
 						
 					});

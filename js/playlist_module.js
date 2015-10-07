@@ -656,7 +656,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			
 		runRange:function(number)
 		{
-			//console.log(number)
+			
 			if(number>15 )
 			{
 				zoom=2;
@@ -707,6 +707,10 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			{
 				zoom=15
 			}
+			else{
+				zoom=10;
+			}
+			console.log(zoom)
 			return zoom;
 		}
 		

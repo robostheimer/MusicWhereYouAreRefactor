@@ -51,8 +51,8 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 					};
 					
 				}	
-				var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+loc2.toUpperCase()+'%27+AND+CityName CONTAINS IGNORING CASE %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+				var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+loc2.toUpperCase()+'%27+AND+CityName = %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+loc2.toUpperCase()+'%27+AND+CityName = %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 					
 					if(latorlng=="lat")
 					{
@@ -60,16 +60,20 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 						if (data.data.rows != null) {
 							data.data.rows.forEach(function(data)
 								{
+									console.log(data)
 									lats += parseFloat(data[0]);
 									
 								});
+
 							geolocation.latitude=lats/data.data.rows.length;
-							var miles_to_lat = distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = distance_to_degrees_lat(3*ratio);
+							var miles_to_lon = distance_to_degrees_lon(geolocation.latitude , 3*ratio);
+							console.log(miles_to_lat, miles_to_lon);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
+
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
-							
+							console.log(miles_to_lat,geolocation.lat_max, geolocation.lat_min)
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
 							if(localStorage.country==null)
@@ -79,6 +83,7 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 						} else {
 							$rootScope.noSongs=true;
 						}	
+						console.log(geolocation)
 						return (geolocation);
 					});
 					
@@ -99,15 +104,17 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 								
 							geolocation.longitude=longs/data.data.rows.length;;
 							var latitude=lats/data.data.rows.length;
-							var miles_to_lat = distance_to_degrees_lat(7*ratio);
-							var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
+							var miles_to_lat = distance_to_degrees_lat(3*ratio);
+							var miles_to_lon = distance_to_degrees_lon(latitude , 3*ratio);
 							geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
+							console.log(miles_to_lat, miles_to_lon);
 							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
 						} else {
 							$rootScope.noSongs=true;
 						}
+						console.log(geolocation)
 						return (geolocation);
 					});
 					}
@@ -138,8 +145,8 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 				else {
 					var location =location;
 				}	
-					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region CONTAINS IGNORING CASE %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
+					var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
 				
 
 					location = location.toTitleCase();
