@@ -344,6 +344,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						songs.forEach(function(song)
 						{
 							songsArr.push(song);
+							
 							songsArrStr+=song.tracks[0].foreign_id.split(':')[2]+',';
 											
 						});	
@@ -352,9 +353,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					var url='https://api.spotify.com/v1/tracks/?ids='+songsArrStr;
 					return $http.get(url).then(function(results){
 						var tracks= results.data.tracks;
-					
-					
-							
 							tracks.forEach(function(track)
 							{
 								var y= tracks.indexOf(track);
@@ -362,6 +360,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 								{
 								track.favorite='off';
 								track.num_id=finalSongs.length;
+							
 								track.artist_location = songsArr[y].artist_location;
 								if(track.available_markets.toString().match(localStorage.country))
 								{
@@ -372,14 +371,13 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 							}
 							else{
 							track.favorite='off';
-							tracks=num_id=finalSongs.length;
-							tracks.artist_location = songsArr[y].artist_location;
-							finalSongs.push(tracks);
+							track.num_id=finalSongs.length;
+							track.artist_location = songsArr[y].artist_location;
+							finalSongs.push(track);
 							
 								
 							}
 						});
-						
 							return finalSongs;	
 					});
 					
@@ -398,6 +396,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			songs.artistlocation ='';
 			songs.spot_str='';
 			songs.location_arr=[];
+			
 			songlist.forEach (function(song) {
 				var x = songlist.indexOf(song);
 				song.artists[0].name=song.artists[0].name.findThe();
@@ -408,7 +407,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				songs.savSpotArr.push('spotify:track:'+song.id);
 				songs.artistlocation = $routeParams.location;
 				songs.tracks=[{foreign_id: song.uri}]
-				
 				songs.location_arr.push(song.artist_location.location + '@@' + song.artist_location.latitude + ':' + song.artist_location.longitude + '&&<h5>' + song.name + '</h5><p>' + song.artists[0].name + '</p><a href="spotify:track:' + song.id + '" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+songs.length></div></a><a><a a href="#/info/' + songs.artistlocation + '/' + song.artists[0].name.replace('The ', '') + '" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+songs.length  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
 				
 			});
@@ -968,7 +966,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		$scope.counter = counter;
 		if (LocationDataFetch.count == 0 || $rootScope.songs_root == undefined ||$rootScope.noSongs==true ) {
 			$rootScope.mapOpening = true;
-			$scope.lookUpSongs = [];
 			$rootScope.holder=[];
 			$rootScope.loading=true;
 			$scope.lookupSongs=[];

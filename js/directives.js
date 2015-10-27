@@ -263,7 +263,8 @@ MusicWhereYouAreApp.directive('yearSlider', function($compile){
 		scope.d=d.getFullYear()	;
 		$compile(elm.contents())(scope);
 		},
-		template:'Start Year: <input class="year_slider" type="range" ng-model="start_year" min="1890" max="{{d}}" step="1"  name="start" value="{{start_year}}"> End Year<input class="year_slider" type="range" ng-model="end_year" min="1890" max="{{d}}"  step="1"  name="end" value="{{end_year}}"> '
+		template:'Start Year: <input class="year_slider" type="range" ng-model="start_year" min="1890" max="{{d}}" step="1"  name="start" value="{{start_year}}">
+        <br> End Year<input class="year_slider" type="range" ng-model="end_year" min="1890" max="{{d}}"  step="1"  name="end" value="{{end_year}}"> '
 	};
 	
 	
@@ -319,6 +320,73 @@ MusicWhereYouAreApp.directive('fastRepeat', function(){
           }
       };
 });
+
+
+MusicWhereYouAreApp.directive('naviGation', function($injector, $compile, $q) {
+    ////creates navigation tag
+    var linkFunction = function(scope, elm, attr) {
+        scope.navWidth = $('.navigation').width();
+
+        //scope.listWidth = $('.nav_ul ').width();
+        //scope.threequarterWidth= scope.yearsWidth*.75;
+
+        scope.marginLeft = 0;
+
+        scope.next = function(item, iteration) {
+
+            if (scope.marginLeft < (scope.yearsWidth * .95) - scope.navWidth) {
+                scope.marginLeft += iteration;
+
+            } else {
+                scope.marginLeft = 0;
+            }
+
+            var item = '#' + item;
+
+            $(item).css({
+                'transition' : 'transform 0ms',
+                '-webkit-transition' : 'transform 0ms',
+                'transform-origin' : '0px 0px 0px',
+                'transform' : 'translate(-' + scope.marginLeft + 'px, 0px) scale(1) translateZ(0px)'
+            });
+
+        };
+        scope.prev = function(item, iteration) {
+            if (attr.length == "") {
+                scope.lengthy = scope.data.length;
+                scope.adder = scope.adder;
+            } else {
+                scope.lengthy = attr.length;
+                scope.adder = parseInt(attr.width);
+            }
+
+            if (scope.marginLeft > 0) {
+                scope.marginLeft -= iteration;
+
+            } else {
+                scope.marginLeft = (scope.yearsWidth * .95) - scope.navWidth;
+            }
+
+            var item = '#' + item;
+            $(item).css({
+                'transition' : 'transform 0ms',
+                '-webkit-transition' : 'transform 0ms',
+                'transform-origin' : '0px 0px 0px',
+                'transform' : 'translate(-' + scope.marginLeft + 'px, 0px) scale(1) translateZ(0px)'
+            });
+        };
+
+    };
+
+    return {
+        restrict : 'AE',
+        scope : true,
+        templateUrl : 'partials/navigation.html',
+        link : linkFunction,
+    };
+    
+    //////////////<section feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
+})
  MusicWhereYouAreApp.directive(
             "eventDelegate",
             function( $parse ) {

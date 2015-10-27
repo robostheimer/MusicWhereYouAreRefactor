@@ -147,8 +147,12 @@ UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $l
 			roadsoda_class.classy = "roadsoda";
 			roadsoda_class.state = 'off';
 			//roadsoda_class.href = '#/roadsoda/' + location;
+
+			info_class.name = 'info';
+			info_class.classy = "info";
+			info_class.state = 'off';
 		
-			icons = [genre_class, playlist_class, favorite_class, map_class, jukebox_class];
+			icons = [genre_class, playlist_class, favorite_class, map_class, jukebox_class, info_class];
 			$rootScope.icons = icons;
 			return icons;
 		},
@@ -304,10 +308,16 @@ function($scope, $location, $rootScope, runSymbolChange) {
 	$scope.roadsoda_class.state = 'off';
 	$scope.roadsoda_class.href = '#/roadsoda/' + $scope.location;
 
+
+
 	$scope.calendar_class.name = 'calendar';
 	$scope.calendar_class.classy = "calendar";
 	$scope.calendar_class.state = 'off';
 	$scope.calendar_class.href = '#/calendar/' + $scope.location;
+
+
+
+
 
 	$scope.icons = [$scope.genre_class, $scope.playlist_class, $scope.favorite_class, $scope.map_class, $scope.jukebox_class, $scope.calendar_class];
 	$rootScope.icons = $scope.icons;

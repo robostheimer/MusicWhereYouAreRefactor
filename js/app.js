@@ -101,7 +101,7 @@ function($compileProvider)
       }).
         when('/genres', {
         templateUrl: 'partials/map.html',
-        controller:'Geolocate',
+        controller:'Geolocate'
       }).
        
        when('/info', {
@@ -149,13 +149,13 @@ function($compileProvider)
     {
     	templateUrl:'partials/playlist.html',
     	controller:'hashedLocation',
-    	 animation: 'from-left'
+    	 animation: 'from-bottom'
     }).
      when('/genres/:location',
     {
     	templateUrl:'partials/genres.html',
     	controller:'GenreController',
-    	 animation: 'from-left'
+    	 animation: 'from-bottom'
     }).
   
     when('/favorites/:location', {
@@ -180,47 +180,47 @@ function($compileProvider)
      {
         templateUrl: 'partials/calendar.html',
         controller: 'LoadEvents',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }).  
    
      when('/calendar/', 
      {
         templateUrl: 'partials/map.html',
        controller: 'Geolocate',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }).  
       
      when('/events/:location/:artist', 
      {
         templateUrl: 'partials/events.html',
         controller: 'LoadBandEvents',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }). 
        when('/events/:location/', 
      {
         templateUrl: 'partials/events.html',
         controller: 'LoadBandEvents',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }).  
    
      when('/events/', 
      {
         templateUrl: 'partials/map.html',
        controller: 'Geolocate',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }).   
     when('/genres/:location/:genre',
     {
     	templateUrl:'partials/genres.html',
     	controller:'GenreController',
-    	animation: 'from-left'
+    	animation: 'from-bottom'
     }).
     when('/playlist/:location/:qs',
     {
     	
     	templateUrl:'partials/playlist.html',
     	controller:'hashedLocation',
-    	animation: 'from-left'
+    	animation: 'from-bottom'
     }).
      when('/songs_about',
     {

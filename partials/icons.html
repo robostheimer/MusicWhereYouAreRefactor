@@ -1,5 +1,5 @@
 
-	<section id="icon_holder" ng-controller="controlSymbol" ng-hide="hideiconHolder==true;" >
+	<!--<section id="icon_holder" ng-controller="controlSymbol" ng-hide="hideiconHolder==true;" >
 		<a><div class="open_div"><span class= "icon iconarrowleft3" ng-click="toggleIcons()" ng-hide = "hideIcons==false"></span></div></a>
 		<a><div class="open_div"><span class= "icon iconarrow-right2" ng-click="toggleIcons()" ng-hide = "hideIcons==true"></span></div></a>
 		<a ng-href="{{map_class.href}}" ng-hide="hideIcons==true">
@@ -13,8 +13,6 @@
 		<a ng-href="{{genre_class.href}}" ng-hide="hideIcons==true">
 		<div class="open_div">
 			<span ng-model='genre_class.state'  class='icon {{genre_class.classy}}' ng-class="{boxyge: genre_class.state=='on', iconequalizer12: genre_class.state=='off'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>
-			<!--
-			<span ng-model='genre_class.state'  class='{{genre_class.classy}}' ng-class="{iconequalizer12: genre_class.state=='off',boxyge: genre_class.state=='on'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>-->
 		</div></a>
 		
 		<a ng-href="{{favorite_class.href}}" ng-hide="hideIcons==true">
@@ -25,18 +23,87 @@
 		<div class="open_div" style="margin-right:7px;">
 			<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar')"></span>
 			</div></a>
-<!--<div class="clear"></div>
-		<a ng-href="{{jukebox_class.href}}">
+	<a ng-href="{{jukebox_class.href}}">
 		<div class="open_div" style="margin-right:7px;">
 			<span ng-model='jukebox_class.state' class='icon {{jukebox_class.classy}}' ng-class="{jukebox: jukebox_class.state=='off',boxyjb: jukebox_class.state=='on'}" ng-click="changeClass(jukebox_class.state, jukebox_class, 'jukebox','jukebox', 'jukebox')"></span>
 		</div></a>
 		<a ng-href="{{roadsoda_class.href}}">
 		<div class="open_div" style="margin-right:7px;">
 			<span ng-model='roadsoda_class.state' class='icon {{roadsoda.classy}}' ng-class="{roadsoda: roadsoda_class.state=='off',boxyrs: roadsoda_class.state=='on'}" ng-click="changeClass(roadsoda_class.state, roadsoda_class, 'roadsoda','roadsoda', 'roadsoda')"></span>
-		</div></a>-->
-		
-
-		
-		
-		
+		</div></a>
+	</section>-->
+<navi-gation class="ng-scope" ng-controller="controlSymbol">
+<nav class="navigation_holder no-background ng-animate ng-hide" ng-hide="showDiv==true" style="">
+	<section class="settings" ng-click="controlSubNav()">
+		<span class="icon-cog"></span>
 	</section>
+</nav>
+
+<nav class="navigation_holder" ng-hide="showDiv==false" style="">
+		
+	
+	<section class="navigation" style="width:100%">
+		<section style="width:355px;" id="nav">
+			<ul class="nav_ul">
+				
+				<li>
+						<a ng-href="{{map_class.href}}" ng-hide="hideIcons==true">
+					<div class="open_div" ng-hide="">
+						<span ng-model='map_class.state'  class='icon {{map_class.classy}}' ng-class="{iconsong: map_class.state=='off', boxyma: map_class.state=='on'}"  ng-click="changeClass(map_class.state, map_class, 'iconmap', 'map', 'map')"></span>
+					</div>
+					</a>
+				</li>
+				<li>
+					<a ng-href="{{playlist_class.href}}" ng-hide="hideIcons==true">
+						<div class="open_div">
+							<span ng-model='playlist_class.state'  class='{{playlist_class.classy}}' ng-class="{iconsong: playlist_class.state=='off', boxypl: playlist_class.state=='on'}"  ng-click="changeClass(playlist_class.state, playlist_class, 'iconsong', 'playlist', 'playlist')"></span>
+						</div>
+					</a>
+				</li>
+				<li>
+						<a ng-href="{{genre_class.href}}" ng-hide="hideIcons==true">
+						<div class="open_div">
+							<span ng-model='genre_class.state'  class='icon {{genre_class.classy}}' ng-class="{boxyge: genre_class.state=='on', iconequalizer12: genre_class.state=='off'}"  ng-click="changeClass(genre_class.state, genre_class, 'iconequalizer12', 'genres', 'genres')"></span>
+						</div>
+						</a>
+				</li>
+				<li>			
+					<a ng-href="{{favorite_class.href}}">
+						<div class="open_div">
+							<span ng-model='favorite_class.state' class='icon {{favorite_class.classy}}' ng-class="{iconsong: favorite_class.state=='off',boxyfa: favorite_class.state=='on'}" ng-click="changeClass(favorite_class.state, favorite_class, 'iconfavorite','favorites', 'favorites')"></span>
+						</div></a>
+				</li>		
+				<li>
+						<a ng-href="{{calendar_class.href}}" >
+						<div class="open_div" style="margin-right:7px;">
+							<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar')"></span>
+						</div>
+					</a>
+				</li>
+				<!--<li>	
+					<a ng-href="{{jukebox_class.href}}">
+						<div class="open_div" style="margin-right:7px;">
+							<span ng-model='jukebox_class.state' class='icon {{jukebox_class.classy}}' ng-class="{jukebox: jukebox_class.state=='off',boxyjb: jukebox_class.state=='on'}" ng-click="changeClass(jukebox_class.state, jukebox_class, 'jukebox','jukebox', 'jukebox')"></span>
+						</div>
+					</a>
+				</li>
+				<li>	
+						<a ng-href="{{roadsoda_class.href}}">
+						<div class="open_div" style="margin-right:7px;">
+							<span ng-model='roadsoda_class.state' class='icon {{roadsoda.classy}}' ng-class="{roadsoda: roadsoda_class.state=='off',boxyrs: roadsoda_class.state=='on'}" ng-click="changeClass(roadsoda_class.state, roadsoda_class, 'roadsoda','roadsoda', 'roadsoda')"></span>
+						</div>
+						</a>
+				</li>-->
+				<li>	
+						<a>
+						<div class="open_div" style="margin-right:7px;">
+							<span ng-model='info_class.state' class='iconinfo {{info.classy}}' ng-class="{info: info_class.state=='off',boxyrs: info_class.state=='on'}" ng-click="showInfo()"></span>
+						</div>
+						</a>
+				</li>
+
+			</ul>
+			</section>			
+	</section>
+</nav>
+</navi-gation>

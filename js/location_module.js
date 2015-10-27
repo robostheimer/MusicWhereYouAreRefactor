@@ -11,6 +11,7 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 		runLocation : function(location, latorlng, ratio) {
 			$rootScope.hideiconHolder=false;
 			$rootScope.noGeo=false;
+		//	 $rootScope.lookUpSongs_arr;=[];
 			//$rootScope.lookUpSongs=[];
 			var location = location.replace('*',', ');
 			var lat_min;
@@ -60,7 +61,6 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 						if (data.data.rows != null) {
 							data.data.rows.forEach(function(data)
 								{
-									console.log(data)
 									lats += parseFloat(data[0]);
 									
 								});
@@ -68,12 +68,10 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 							geolocation.latitude=lats/data.data.rows.length;
 							var miles_to_lat = distance_to_degrees_lat(3*ratio);
 							var miles_to_lon = distance_to_degrees_lon(geolocation.latitude , 3*ratio);
-							console.log(miles_to_lat, miles_to_lon);
 							geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
 
 							
 							geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
-							console.log(miles_to_lat,geolocation.lat_max, geolocation.lat_min)
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
 							if(localStorage.country==null)
@@ -83,7 +81,6 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 						} else {
 							$rootScope.noSongs=true;
 						}	
-						console.log(geolocation)
 						return (geolocation);
 					});
 					
@@ -95,7 +92,6 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 					return	$http.jsonp(long_url).then(function(data){
 						
 						if (data.data.rows != null) {
-							console.log('null')
 							data.data.rows.forEach(function(data)
 								{
 									longs += parseFloat(data[0]);
@@ -107,14 +103,12 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 							var miles_to_lat = distance_to_degrees_lat(3*ratio);
 							var miles_to_lon = distance_to_degrees_lon(latitude , 3*ratio);
 							geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
-							console.log(miles_to_lat, miles_to_lon);
 							geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
 							geolocation.location = location;
 							geolocation.country = data.data.rows[0][3];
 						} else {
 							$rootScope.noSongs=true;
 						}
-						console.log(geolocation)
 						return (geolocation);
 					});
 					}
@@ -223,7 +217,6 @@ function($q, $rootScope, $http, $sce, $location, $routeParams) {
 			$rootScope.hideiconHolder=false;
 			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
 			return $http.get(url).then(function(data) {
-				console.log(data)
 				
 				if (data.data.rows != null) {
 				

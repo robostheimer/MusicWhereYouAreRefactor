@@ -101,10 +101,11 @@
 	<form id="selector_genre" class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
 		
 		<input type="text"  name="search genre" id="findmusic" placeholder="Genre, Genre, Genre"  class="text searchy"   ng-model="genre" ng-enter="lookUpGenre(genre)" ng-show="noPickedGenre==false">
+		<div class-="clear"></div>
 			<div class="search tag_holder"  aria-hidden="true" data-icon="e" ng-click="lookUpGenre(genre)" ng-show="noPickedGenre==false"></div>
-			<div class="clear"><div>
+		
 	
-	<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
+			<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
 		<ul event-delegate="li | checkGenre(genre.genre.genre)" type="click">
 			<li ng-repeat="genre in Genre">
@@ -113,10 +114,13 @@
 			<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">
 			<label for="{{genre.genre.genre.replace(' ', '_')}}"><div class="{{genre.genre.genre}}"></div>{{genre.genre.genre.toTitleCase()}}</label>
 			</li>
+
 		</ul>
-		
+
+
 
 	</form>
+	
 </div>
 	<form novalidate id="selector_era" class="{{buttons[1].state}}" >
 		<div ng-hide="range_message==false">It's probably Rob's fault, but maybe your start year is a little past your end year.  Why don't you try to fix that and try submitting again.</div>
@@ -126,7 +130,7 @@
 		
 		<div class="years" ng-swipe-left="goBack()">{{start_year}} - {{end_year}}</div>
 		<year-slider ng-swipe-left="stayPut()"></year-slider>
-		
+		<div class="clear"></div>
 		<input type="text" class="EraInput" name="start_year"  placeholder="Artist Start Year"  class="text"  ng-model="start_year" ng-enter="checkEra(start_year, end_year)" ng-swipe-left="goBack()" >
 		<input type="text" class="EraInput" name="end year"  placeholder="Aritst End Year "  class="text"  ng-model="end_year" ng-enter="checkEra(start_year, end_year)" ng-swipe-left="goBack()">
 		<br><br>
@@ -140,7 +144,13 @@
 	</form>
 	<br>
 	<br>
-	<span style="font-size:9.0px">*If you would like for there to be no end year, leave the end year field blank.</span>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<!--<span style="font-size:9.0px">*If you would like for there to be no end year, leave the end year field blank.</span>-->
 
 	<!--form id="selector_era" class="{{buttons[1].state}}">
 
