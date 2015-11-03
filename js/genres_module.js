@@ -168,6 +168,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 	}
 	$scope.runApp = function(start_number, counter, type, arr, arr2, index1, index2) {	
 		$rootScope.loading=true;
+		$rootScope.infoMessage=false;
 		if(arr==undefined)
 		{
 			 var arr=[];

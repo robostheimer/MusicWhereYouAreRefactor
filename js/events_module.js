@@ -35,6 +35,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 Events.controller('LoadEvents', ['$scope', '$q','$http', 'runSymbolChange', '$routeParams', '$location', '$sce', 'retrieveLocation', 'PlaylistCreate', 'MapCreate', '$rootScope', 'Events','getLocation','Spotify', 'LocationDataFetch','Wiki','ChunkSongs',
 function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retrieveLocation, PlaylistCreate, MapCreate, $rootScope, Events, getLocation, Spotify, LocationDataFetch, Wiki, ChunkSongs){
 		$rootScope.noGeo=false;
+		$rootScope.infoMessage=false;
 		var songs_for_service=[],
 		date = new Date();
 		date2 = new Date(+date + 12096e4),
@@ -491,6 +492,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 Events.controller('LoadBandEvents', ['$scope', '$q','$http', 'runSymbolChange', '$routeParams', '$location', '$sce', 'retrieveLocation', 'PlaylistCreate', 'MapCreate', '$rootScope', 'Events','LocationDataFetch','Spotify','Wiki','ChunkSongs',
 function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retrieveLocation, PlaylistCreate, MapCreate, $rootScope, Events, LocationDataFetch, Spotify, Wiki, ChunkSongs){
 	$rootScope.noGeo=false;
+	$rootScope.infoMessage=false;
 	$scope.location = $routeParams.location.replace(/\*/, ', ').replace(/_/g, ' ');
 	$scope.location_link = $routeParams.location;
 	$scope.artist = $location.path().split('/')[3];
@@ -778,23 +780,15 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 																$scope.errorMessage = true;
 															});
 															}
-														
-												
-														
 														}
-														
 													}
-													
-														
-												
-													});
-												}
+												});
+											}
 												
 												
-											},function(error){
-														$scope.errorMessage = true;
-													});		
-														
+										},function(error){
+													$scope.errorMessage = true;
+												});		
 										}
 										
 								}
@@ -889,16 +883,5 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		}
 		}	
 	 },function(error){$scope.errorMessage = true;});
-	
-		
-	
-		
-		
-		
-		
-	
-	
-			
-	
 	
 }]);

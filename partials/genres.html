@@ -36,7 +36,20 @@
 	</p>
 	
 	<div class="clear"></div>
-</section>		
+</section>	
+	<section class="alert" ng-show="infoMessage==true">
+			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
+			<br/>
+			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+			<br>
+			<footer>
+			<span class="footer_item">Powered By:</span> <a href="http://the.echonest.com/" target="_blank" class=""><img height ="15" width="15" src="genre_icons/echonest.svg" alt="echonest"/></a>
+			<a href="http://commons.wikimedia.org/wiki/Main_Page" target="_blank"><img height ="15" width="15" src="genre_icons/wikimedia.png" alt="wikimedia"/></a>
+			<a href="http://spotify.com" target="_blank"><img height ="15" width="15" src="genre_icons/spotify_green.svg" alt="spotify"/></a>
+			<a href="http://www.openstreetmap.org/" target="_blank"><img height ="15" width="15" src="genre_icons/20121123222537!Public-images-osm_logo.svg" alt="open street map "/></a><a href="http://leafletjs.com/" target="_blank"><img height ="15" width="15" src="genre_icons/leaflet.jpeg" alt="open street map "/></a>
+			<a href="http://www.bandsintown.com/api/overview" target="_blank"><img src ="genre_icons/bit.png" alt="bands in twon"/></a>
+			</footer>
+		</section>	
 <section class="alert"  ng-show="noSongs==true;" >
 		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
@@ -104,15 +117,17 @@
 		<div class-="clear"></div>
 			<div class="search tag_holder"  aria-hidden="true" data-icon="e" ng-click="lookUpGenre(genre)" ng-show="noPickedGenre==false"></div>
 		
-	
-			<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
+
+		<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
 		<ul event-delegate="li | checkGenre(genre.genre.genre)" type="click">
 			<li ng-repeat="genre in Genre">
-				
-				<div  class = "checkbox {{genre.genre.state}}" >
-			<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">
-			<label for="{{genre.genre.genre.replace(' ', '_')}}"><div class="{{genre.genre.genre}}"></div>{{genre.genre.genre.toTitleCase()}}</label>
+			<div class = "checkbox {{genre.genre.state}}" >
+				<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">
+					<label for="{{genre.genre.genre.replace(' ', '_')}}">
+						<div class="{{genre.genre.genre}}"></div>
+						<div class="genre_text">{{genre.genre.genre.toTitleCase()}}</div>
+					</label>
 			</li>
 
 		</ul>
@@ -142,14 +157,7 @@
 		</button>
 
 	</form>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
+	
 	<!--<span style="font-size:9.0px">*If you would like for there to be no end year, leave the end year field blank.</span>-->
 
 	<!--form id="selector_era" class="{{buttons[1].state}}">

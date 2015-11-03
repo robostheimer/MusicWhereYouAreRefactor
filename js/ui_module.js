@@ -275,7 +275,8 @@ function($scope, $location, $rootScope, runSymbolChange) {
 	$scope.map_class = {};
 	$scope.jukebox_class = {};
 	$scope.roadsoda_class = {};
-	$scope.calendar_class = {}
+	$scope.calendar_class = {};
+	$scope.info_class={};
 	//$scope.menuPos=true;
 
 	$scope.playlist_class.name = 'playlist';
@@ -315,6 +316,11 @@ function($scope, $location, $rootScope, runSymbolChange) {
 	$scope.calendar_class.state = 'off';
 	$scope.calendar_class.href = '#/calendar/' + $scope.location;
 
+	$scope.info_class.name = 'iconinfo';
+	$scope.info_class.classy = "iconinfo";
+	$scope.info_class.state = 'off';
+	$scope.info_class.href = '';
+
 
 
 
@@ -333,21 +339,42 @@ function($scope, $location, $rootScope, runSymbolChange) {
 		}
 	};
 	$scope.changeClass = function(state, obj, classy, url, link) {
-		$scope.location = $location.path().split('/')[2];
-		var hashy = $location.path().split('/')[2];
-		if (state == 'on') {
-			obj.state = 'off';
-			obj.href = '#/map/' + $scope.location;
-		} else {
-			obj.state = 'on';
-			obj.href = '#/' + link + '/' + $scope.location;
-		}
-		for (var i = 0; i < $scope.icons.length; i++) {
-			if ($scope.icons[i].name != obj.name) {
-				$scope.icons[i].state = 'off';
-			}
 
-		};
+		if(link=='info'){
+				if($rootScope.infoMessage==true)
+				{
+					$rootScope.infoMessage=false;
+					console.log($rootScope.infoMessage)
+				}
+				else{
+					$rootScope.infoMessage=true;
+					console.log($rootScope.infoMessage)
+				}
+				if (state == 'on') {
+					obj.state = 'off';
+					
+				} else {
+					obj.state = 'on';
+					
+				}
+		}
+		else{
+			$scope.location = $location.path().split('/')[2];
+			var hashy = $location.path().split('/')[2];
+			if (state == 'on') {
+				obj.state = 'off';
+				obj.href = '#/map/' + $scope.location;
+			} else {
+				obj.state = 'on';
+				obj.href = '#/' + link + '/' + $scope.location;
+			}
+			for (var i = 0; i < $scope.icons.length; i++) {
+				if ($scope.icons[i].name != obj.name) {
+					$scope.icons[i].state = 'off';
+				}
+
+			};
+		}
 
 	};
 	$scope.goBack = function() {
@@ -365,6 +392,7 @@ function($scope, $location, $rootScope, runSymbolChange) {
 		}
 
 	};
+
 }]);
 
 /*Directives*/
@@ -536,12 +564,54 @@ UI.directive('yearSlider', function($compile){
 		scope.d=d.getFullYear()	;
 		$compile(elm.contents())(scope);
 		},
-		template:'Start Year: <input class="year_slider" type="range" ng-model="start_year" min="1890" max="{{d}}" step="1"  name="start" value="{{start_year}}"> End Year<input class="year_slider" type="range" ng-model="end_year" min="1890" max="{{d}}"  step="1"  name="end" value="{{end_year}}"> '
+		template:'Start Year: <input class="year_slider" type="range" ng-model="start_year" min="1890" max="{{d}}" step="1"  name="start" value="{{start_year}}"><br>End Year: &nbsp;<input class="year_slider" type="range" ng-model="end_year" min="1890" max="{{d}}"  step="1"  name="end" value="{{end_year}}"> '
 	};
 	
 	
 });
-
+UI.directive('drawerHeight', function($window, $location, $timeout) {
+	return function(rootScope, element) {
+		
+			
+			var w = angular.element($window);
+			rootScope.getWindowDimensions = function() {
+				return {
+					'h' : w.height(),
+					'w' : w.width()
+				};
+			};
+			$timeout(function(){
+			rootScope.$watch(rootScope.getWindowDimensions, function(newValue, oldValue) {
+					if($location.path().match('genres')){
+					rootScope.drawerHeight = $('#genre_holder').height()+10
+						if(rootScope.drawerHeight<w.height()){
+							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
+						}else{
+							alert(w.height()+':'+rootScope.drawerHeight)
+							rootScope.drawerHeight=w.height();
+							rootScope.drawerTop=0;
+						}
+				}
+			
+				
+				
+			}, true);
+		},100);
+			w.bind('resize', function() {
+				if($location.path().match('genres')){
+					rootScope.drawerHeight = $('#genre_holder').height()
+						if(rootScope.drawerHeight<w.height()){
+							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
+						}else{
+							rootScope.drawerHeight=w.height();
+							rootScope.drawerTop=0;
+						}
+				}
+				rootScope.$apply();
+			
+		});
+	};
+});
 
 UI.directive('ngDelay', ['$timeout', function ($timeout) {
     return {

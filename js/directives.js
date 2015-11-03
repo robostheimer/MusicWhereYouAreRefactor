@@ -98,9 +98,7 @@ MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
          
           }  
        };
-    });      
- /////////////Can be used to download Data if necessary/////////////////   
-MusicWhereYouAreApp.directive('downloadButton',  function ($compile) {
+    }).directive('downloadButton',  function ($compile) {
  return {
  		restrict: 'AE',
  		link: function(scope,elem, attrs)
@@ -123,78 +121,7 @@ MusicWhereYouAreApp.directive('downloadButton',  function ($compile) {
  		});
  		}
  	};
- });
- 
- 
-/*MusicWhereYouAreApp.directive('mwyaMap',  function ($rootScope) {
- return {
- 	 	
-    	 restrict: 'AE',
-         scope: { }, 
-         transclude: true,
-            link: function(rootScope, element, attrs ) {
-            	$rootScope.mapdata={};
-				$rootScope.mapdata.locationarrstr=''
-            	attrs.$observe('change', function(){	
-            	var loc_arr_string='';	
-            	
-            	var loc_arr=[];
-            	var zoom =parseInt(attrs.zoom);
-            	var iw_content=''
-            	var styles=[{"featureType":"landscape","stylers":[{"color":"#fefef3"},{"saturation":100},{"lightness":40.599999999999994},{"gamma":.75}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":30.4000000000000057},{"gamma":.75}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
-				//$rootScope.noSongs=false;
-				loc_arr_string = $rootScope.mapdata.locationarrstr
-				loc_arr_string= loc_arr_string.replace(/,%%/g, '%%');
-				loc_arr = loc_arr_string.split('%%');
-				var LatLng = new google.maps.LatLng(attrs.latitude, attrs.longitude);
-				var infowindow_textArr =[];
-				var mapOptions = {
-					center : LatLng,
-					zoom : zoom,
-					mapTypeId : google.maps.MapTypeId.ROADMAP,
-					draggable : true,
-					 styles: styles
-				};
-
-				var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-				
-				
-				var marker_image = 'genre_icons/marker_sm.svg';
-				for (var i = 1; i < loc_arr.length; i++) {
-					iw_content+=('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>'))
-					var LatLng_marker = new google.maps.LatLng(loc_arr[i].split('@@')[1].split(':')[0], loc_arr[i].split('@@')[1].split(':')[1].split('&&')[0]);
-					var geomarker = new google.maps.Marker({
-						position : LatLng_marker,
-						map : map,
-						icon : marker_image
-					});
-					var infowindow = new google.maps.InfoWindow();
-					var geomarker, i;
-										google.maps.event.addListener(geomarker, 'click', (function(geomarker, i) {
-							return function() {
-															
-								infowindow.setContent('<b>'+loc_arr[(i)].split('@@')[0].replace(/, US/g,'')+'</b><br/>'+loc_arr[(i)].split('&&')[1].replace(/,\<h5\>/g, '<h5>')+'<br/>');
-								infowindow.open(map, geomarker);
-							};
-						})(geomarker, i));
-						
-					
-				}		
-            	
-            	
-            
-           });	
-				
-
-            }
-          };
-
-
-});*/
-
-
-
-MusicWhereYouAreApp.directive('buttonToggle', function() {
+ }).directive('buttonToggle', function() {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -212,10 +139,7 @@ MusicWhereYouAreApp.directive('buttonToggle', function() {
             });
         }
     };
-});
-
-	
-MusicWhereYouAreApp.directive('viewAnimation', function ($route) {
+}).directive('viewAnimation', function ($route) {
   return {
     restrict: 'A',
     link: function (scope, element) {
@@ -223,10 +147,7 @@ MusicWhereYouAreApp.directive('viewAnimation', function ($route) {
       if (animation) element.addClass(animation);
     }
   };
-});
-
-
-MusicWhereYouAreApp.directive('ngEnter', function () {
+}).directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
@@ -238,9 +159,7 @@ MusicWhereYouAreApp.directive('ngEnter', function () {
             }
         });
     };
-});
-
-MusicWhereYouAreApp.directive('backButton', function(){
+}).directive('backButton', function(){
     return {
       restrict: 'A',
  
@@ -252,9 +171,7 @@ MusicWhereYouAreApp.directive('backButton', function(){
         }
       }
     };
-});
-
-MusicWhereYouAreApp.directive('yearSlider', function($compile){
+}).('yearSlider', function($compile){
 	return{
 		restrict: 'AE',
 		link: function(scope, elm, attrs)
@@ -268,10 +185,27 @@ MusicWhereYouAreApp.directive('yearSlider', function($compile){
 	};
 	
 	
-});
-
-
-MusicWhereYouAreApp.directive('ngDelay', ['$timeout', function ($timeout) {
+}).directive('genreHeight', function($window) {
+    return {
+        restrict : 'AE',
+        link : function(scope, element){
+            var w = angular.element($window);
+                scope.navHeight = w.height()*.75;
+                if(w.height()<285)
+                {
+                    
+                    element.css({
+                        'height':scope.navHeight+'px'
+                        });
+                }
+                else{
+                    element.css({
+                        'height': '285px'
+                    });
+                }
+            }
+    };
+}).directive('ngDelay', ['$timeout', function ($timeout) {
     return {
         restrict: 'A',
         scope: true,
@@ -302,9 +236,7 @@ MusicWhereYouAreApp.directive('ngDelay', ['$timeout', function ($timeout) {
             }
         }
     };
-}]);
-
-MusicWhereYouAreApp.directive('fastRepeat', function(){
+}]).directive('fastRepeat', function(){
       return{
           restrict: 'AE',
           scope:{
@@ -319,10 +251,7 @@ MusicWhereYouAreApp.directive('fastRepeat', function(){
               });
           }
       };
-});
-
-
-MusicWhereYouAreApp.directive('naviGation', function($injector, $compile, $q) {
+}).directive('naviGation', function($injector, $compile, $q) {
     ////creates navigation tag
     var linkFunction = function(scope, elm, attr) {
         scope.navWidth = $('.navigation').width();
@@ -460,4 +389,5 @@ MusicWhereYouAreApp.directive('naviGation', function($injector, $compile, $q) {
                     restrict: "A"
                 });
 
-            });;
+            });
+

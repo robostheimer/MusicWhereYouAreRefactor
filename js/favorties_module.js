@@ -233,6 +233,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		
 			
 			$rootScope.mapOpening = true;
+			$rootScope.infoMessage=false;
 			var arr=[];
 			$scope.songs = [];
 			$scope.songs.spot_arr = [];

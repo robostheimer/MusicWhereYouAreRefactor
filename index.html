@@ -112,7 +112,7 @@
 		-->
 		</ul>
 
-		<div ng-view view-animation >
+		<div ng-view view-animation drawer-height style="height:{{drawerHeight}}px; top:{{drawerTop}}px">
 
 		</div>
 		<!--<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
@@ -151,20 +151,7 @@
 		<div ng-include="'partials/icons.html'"></div>
 		<div style="clear:both"></div>
 
-		<section class="attribute">
-			
-			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
-			<br/>
-			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-			<br>
-			<footer>
-			<span class="footer_item">Powered By:</span> <a href="http://the.echonest.com/" target="_blank" class=""><img height ="15" width="15" src="genre_icons/echonest.svg" alt="echonest"/></a>
-			<a href="http://commons.wikimedia.org/wiki/Main_Page" target="_blank"><img height ="15" width="15" src="genre_icons/wikimedia.png" alt="wikimedia"/></a>
-			<a href="http://spotify.com" target="_blank"><img height ="15" width="15" src="genre_icons/spotify_green.svg" alt="spotify"/></a>
-			<a href="http://www.openstreetmap.org/" target="_blank"><img height ="15" width="15" src="genre_icons/20121123222537!Public-images-osm_logo.svg" alt="open street map "/></a><a href="http://leafletjs.com/" target="_blank"><img height ="15" width="15" src="genre_icons/leaflet.jpeg" alt="open street map "/></a>
-			<a href="http://www.bandsintown.com/api/overview" target="_blank"><img src ="genre_icons/bit.png" alt="bands in twon"/></a>
-			</footer>
-		</section>
+
 		
 		<script src="bower_components/leaflet-0.7.3/leaflet-src.min.js"></script>	
 		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine.min.js"></script>
@@ -209,6 +196,7 @@
 		<script src="js/ui_module.js"></script>
 		<script src="js/animation.js"></script>
 		<script src="js/prototypes.js"></script>
+		
 		<!--<script src ="tests/test.js"></script>	-->
 		
 		<script>

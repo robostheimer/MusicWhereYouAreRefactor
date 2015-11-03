@@ -1575,7 +1575,7 @@ h4, #spot_holder .spot_icon {
 	position: absolute;
 }
 #spot_holder .close, #spot_holder .closey, #fav_holder .close, #fav_holder .close {
-	position: absolute;
+	position: fixed;
 	right: 1%
 }
 #spot_holder .share_box .closey, #fav_holder .share_box .closey {

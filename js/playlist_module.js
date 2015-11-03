@@ -18,7 +18,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 		 	var finalgenres = '';
 		 	var era1='';
 		 	var era2='';
-		 	
+		 	$rootScope.infoMessage=false;
 		 	
 		 	for (var i=0; i<genresSplit.length; i++)
 		 	{

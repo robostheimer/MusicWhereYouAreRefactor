@@ -51,7 +51,21 @@
 
 	<div class="clear"></div>
 </section>
-<section id="genre_holder" ng-swipe-left="goBack()" class="dates" >
+		<section class="alert" ng-show="infoMessage==true">
+			
+			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
+			<br/>
+			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+			<br>
+			<footer>
+			<span class="footer_item">Powered By:</span> <a href="http://the.echonest.com/" target="_blank" class=""><img height ="15" width="15" src="genre_icons/echonest.svg" alt="echonest"/></a>
+			<a href="http://commons.wikimedia.org/wiki/Main_Page" target="_blank"><img height ="15" width="15" src="genre_icons/wikimedia.png" alt="wikimedia"/></a>
+			<a href="http://spotify.com" target="_blank"><img height ="15" width="15" src="genre_icons/spotify_green.svg" alt="spotify"/></a>
+			<a href="http://www.openstreetmap.org/" target="_blank"><img height ="15" width="15" src="genre_icons/20121123222537!Public-images-osm_logo.svg" alt="open street map "/></a><a href="http://leafletjs.com/" target="_blank"><img height ="15" width="15" src="genre_icons/leaflet.jpeg" alt="open street map "/></a>
+			<a href="http://www.bandsintown.com/api/overview" target="_blank"><img src ="genre_icons/bit.png" alt="bands in twon"/></a>
+			</footer>
+		</section>
+<section id="spot_holder" ng-swipe-left="goBack()" class="dates" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	

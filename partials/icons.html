@@ -43,7 +43,7 @@
 		
 	
 	<section class="navigation" style="width:100%">
-		<section style="width:355px;" id="nav">
+		<section style="width:365px;" id="nav">
 			<ul class="nav_ul">
 				
 				<li>
@@ -76,7 +76,7 @@
 				<li>
 						<a ng-href="{{calendar_class.href}}" >
 						<div class="open_div" style="margin-right:7px;">
-							<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar')"></span>
+							<span ng-model='calendar_class.state'  class='icon {{calendar_class.classy}}' ng-class="{boxycal: calendar_class.state=='on', calendar: calendar_class.state=='off'}"  ng-click="changeClass(calendar_class.state, calendar_class, 'icon-calendar', 'calendar', 'calendar');"></span>
 						</div>
 					</a>
 				</li>
@@ -95,11 +95,11 @@
 						</a>
 				</li>-->
 				<li>	
-						<a>
-						<div class="open_div" style="margin-right:7px;">
-							<span ng-model='info_class.state' class='iconinfo {{info.classy}}' ng-class="{info: info_class.state=='off',boxyrs: info_class.state=='on'}" ng-click="showInfo()"></span>
+					<a>
+						<div class="open_div" style="margin-right:7px;" >
+							<span ng-click="changeClass(info_class.state, info_class, 'iconinfo', 'info', 'info');" class='iconinfo {{info.classy}}' ng-class="{boxyrs: info_class.state=='on'}"></span>
 						</div>
-						</a>
+					</a>
 				</li>
 
 			</ul>

@@ -155,13 +155,13 @@ function($compileProvider)
     {
     	templateUrl:'partials/genres.html',
     	controller:'GenreController',
-    	 animation: 'from-bottom'
+    	 animation: 'from-bottom-genre'
     }).
   
     when('/favorites/:location', {
         templateUrl: 'partials/favorites.html',
         controller: 'LoadFav',
-        animation: 'from-left'
+        animation: 'from-bottom'
       }).
     
    /* when('/info/:location', {
@@ -213,7 +213,7 @@ function($compileProvider)
     {
     	templateUrl:'partials/genres.html',
     	controller:'GenreController',
-    	animation: 'from-bottom'
+    	animation: 'from-bottom-genre'
     }).
     when('/playlist/:location/:qs',
     {
