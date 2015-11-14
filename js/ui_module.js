@@ -8,12 +8,18 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 	
 	 return {
 			
-			showHint : function(location)
+			showHint : function(location, guess)
 			{
-
-			var states = States.createStateObj();
-		 	var hints={};
-		 	
+		
+			var states = States.createStateObj(),
+			hints={},
+			contains='';
+		 	if(guess==true){
+				contains = '%20CONTAINS%20IGNORING%20CASE%20'
+			}
+			else{
+				 contains = "="
+			}
 		 	if(location.length==3)
 			{
 			var state_location = location[1]	
@@ -22,12 +28,14 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				states.forEach(function(state){
 					if(location[1].toUpperCase().match(states.abbreviation))
 					{
-
+						state_location = state.name;
 					}
 				});
 			
 			}	
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+state_location+'%27+AND+CityName=%27'+location[0]+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+
+
+			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location+'%27+AND+CityName'+contains+'%27'+location[0]+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				hints = result.data.rows;
 				if(result.data.rows!=undefined)
 				{
@@ -52,7 +60,7 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				
 			}	
 				           
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region=%27'+state_location.toUpperCase()+'%27+AND+CityName=%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location.toUpperCase()+'%27+AND+CityName'+contains+'%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				if(result.data.rows!=undefined)
 				{
 					hints = result.data.rows;
@@ -76,7 +84,7 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				
  
 				//return $http.get('/php/geolocation.php?city='+location[0].toUpperCase(), { timeout: canceller.promise }).then(function(result) {
-				return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName=%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+				return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName'+contains+'%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				
 			 	if(result.data.rows!=undefined)
 				{
@@ -186,13 +194,12 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 
 	var count = 0;
 	count2 = 0;
-	$scope.hintShower = function(location) {
+	$scope.hintShower = function(location, guess) {
 		count = count + 1;
-
 		$timeout(function() {
 			
 
-				HintShower.showHint($scope.type_location).then(function(result) {
+				HintShower.showHint($scope.type_location, guess).then(function(result) {
 					if (result != undefined) {
 						$rootScope.showHint = true;
 						$scope.hints = result.finalArr;
@@ -227,31 +234,35 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 
 	$scope.controlForm = function(location) {
 		var states = States.createStateObj();
-		
-		$scope.genres = '';
-		if ($scope.location == undefined || $scope.location == "") {
-			var deferred_loc = $q.defer();
-			getLocation.checkGeoLocation();
-		} else {
-			$scope.location = location.replace(' ', '_');
-			if($scope.location.length==2)
-				{
-					var ab = location.toUpperCase();
-					
-					
-					states.forEach(function(item){
-						if(item.abbreviation==ab)
-						{
-							$scope.location =(item.name);
-						}
+if(location.split('_').length>1)
+		{
+			$scope.genres = '';
+			if ($scope.location == undefined || $scope.location == "") {
+				var deferred_loc = $q.defer();
+				getLocation.checkGeoLocation();
+			} else {
+				$scope.location = location.replace(' ', '_');
+				if($scope.location.length==2)
+					{
+						var ab = location.toUpperCase();
+						states.forEach(function(item){
+							if(item.abbreviation==ab)
+							{
+								$scope.location =(item.name);
+							}
+							
+						});
 						
-					});
-					
-				}
-			$location.path('playlist/' + $scope.location.replace(', ', '*'));
-		};
-
+					}
+				$location.path('playlist/' + $scope.location.replace(', ', '*'));
+			};
+		}
+		else{
+			$scope.hintShower(location, true)
+		}
 	};
+
+	
 	$scope.closeHint = function() {
 
 		$rootScope.showHint = false;
@@ -583,23 +594,19 @@ UI.directive('drawerHeight', function($window, $location, $timeout) {
 			$timeout(function(){
 			rootScope.$watch(rootScope.getWindowDimensions, function(newValue, oldValue) {
 					if($location.path().match('genres')){
-					rootScope.drawerHeight = $('#genre_holder').height()+10
+					rootScope.drawerHeight = $('#genre_holder').height()+25
 						if(rootScope.drawerHeight<w.height()){
 							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
 						}else{
-							alert(w.height()+':'+rootScope.drawerHeight)
 							rootScope.drawerHeight=w.height();
 							rootScope.drawerTop=0;
 						}
 				}
-			
-				
-				
 			}, true);
 		},100);
 			w.bind('resize', function() {
 				if($location.path().match('genres')){
-					rootScope.drawerHeight = $('#genre_holder').height()
+					rootScope.drawerHeight = $('#genre_holder').height()+25
 						if(rootScope.drawerHeight<w.height()){
 							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
 						}else{

@@ -73,7 +73,7 @@
 
 		<section id="whereyouat" ng-controller="formController">
 			<form novalidate class="simple-form" id="search" >
-				<input type="text"  name="find music" id="findmusic" placeholder="Type Your Location"  class="text"  ng-model="location" ng-enter="controlForm(location);closeHint()" ng-change="hintShower(location)">
+				<input type="text"  name="find music" id="findmusic" placeholder="Type Your Location"  class="text"  ng-model="location" ng-enter="controlForm(location);closeHint()" ng-change="hintShower(location, false)">
 
 			</form>
 			<div class="search"  aria-hidden="true" data-icon="e" ng-click="controlForm(location); closeHint()" ></div>

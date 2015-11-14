@@ -708,7 +708,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			else{
 				zoom=10;
 			}
-			console.log(zoom)
 			return zoom;
 		}
 		

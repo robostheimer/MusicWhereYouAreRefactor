@@ -483,6 +483,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 	};
 
 	$scope.checkGenre = function(genre) {
+		alert('checking')
 
 		$rootScope.noSongs=false;
 	
@@ -502,6 +503,8 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 					$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
 				};
 			} else if (genre == $scope.Genre[x].genre.genre && $scope.Genre[x].genre.state == 'on') {
+				$scope.Genre[x].genre.checked = false;
+				$scope.Genre[x].genre.isSelected = true;
 				$scope.Genre[x].genre.state = 'off';
 				var genreSplitter = $rootScope.genres.split('**');
 				for(var g=0; g<genreSplitter.length; g++)
@@ -515,6 +518,8 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 				$rootScope.genres = '';
 				
 			} else if ($scope.Genre[x].genre.state == 'on') {
+				$scope.Genre[x].genre.checked = false;
+				$scope.Genre[x].genre.isSelected = true;
 				$rootScope.genres += '****' + $scope.Genre[x].genre.similarSettings;
 				for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
 				{

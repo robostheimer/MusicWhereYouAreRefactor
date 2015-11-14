@@ -104,7 +104,6 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 
 	/////////////////////////Move this object to Services and bring it in? -- See TAS Project////////////////////////
 	$scope.Genre = loadGenreCheckData.getGenre();
-	console.log($scope.Genre)
 	$scope.avant_garde = $scope.Genre[0].genre;
 	$scope.blues = $scope.Genre[1].genre;
 	$scope.classic_rock = $scope.Genre[2].genre;
@@ -492,33 +491,32 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 			if (genre == $scope.Genre[x].genre.genre && $scope.Genre[x].genre.state == 'off') {
 				$scope.Genre[x].genre.state = 'on';
 				$scope.Genre[x].genre.isSelected = true;
-				$scope.Genre[x].genre.checked = true;
-				console.log($scope.Genre[x].genre)
-				
+				$scope.Genre[x].genre.checked = true;				
 				$rootScope.genres += '****' + $scope.Genre[x].genre.similarSettings;
-				for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
-				{
-					$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
-				};
+				// for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
+				// {
+				// 	$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
+				// };
 			} else if (genre == $scope.Genre[x].genre.genre && $scope.Genre[x].genre.state == 'on') {
 				$scope.Genre[x].genre.state = 'off';
+				$scope.Genre[x].genre.checked = false;
 				var genreSplitter = $rootScope.genres.split('**');
-				for(var g=0; g<genreSplitter.length; g++)
-					{
-					var index = $rootScope.genreSans.indexOf(genreSplitter[g]);
-					if (index > -1) {
-						$rootScope.genreSans.splice(index, 1);
+				// for(var g=0; g<genreSplitter.length; g++)
+				// 	{
+				// 	var index = $rootScope.genreSans.indexOf(genreSplitter[g]);
+				// 	if (index > -1) {
+				// 		$rootScope.genreSans.splice(index, 1);
 							
-					}
-				}
+				// 	}
+				// }
 				$rootScope.genres = '';
 				
 			} else if ($scope.Genre[x].genre.state == 'on') {
 				$rootScope.genres += '****' + $scope.Genre[x].genre.similarSettings;
-				for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
-				{
-					$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
-				};
+				// for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
+				// {
+				// 	$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
+				// };
 			}
 		}
 		if ($rootScope.genres == "") {
