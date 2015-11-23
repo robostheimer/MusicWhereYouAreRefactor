@@ -39,7 +39,7 @@
 <section class="alert"  ng-show="tooMany==true;">
 			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="tooMany=false"></div>
 			<p>
-				Unfortunately, there were too many songs in your playlist to create a Bit.ly link.  So that you can share at least part of your playlist on Twitter, we have removed songs from the bottom of your playlist. If you would like to share your complete playlist with your friends via email or even Facebook, you can copy the following link and paste it into an email or as a Facebook Status:<br><br> <textarea  rows="9" style="width:97%" >{{long_url.replace('%23','#')}} </textarea>	</p>
+				Unfortunately, there were too many songs in your playlist to create a Bit.ly link.  So that you can share at least part of your playlist on Twitter, we have removed songs from the bottom of your playlist. If you would like to share your complete playlist with your friends via email or even Facebook, you can copy the following link and paste it into an email or as a Facebook Status:<br><br> <textarea  rows="9" style="width:97%" >http://musicwhereyour.com/{{long_url.replace('%23','#')}} </textarea>	</p>
 </section>
 		<section class="alert" ng-show="infoMessage==true">
 			

@@ -339,7 +339,6 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 													tmparr.push(y);
 													
 													Spotify.checkSongMarket(data[y].songs).then(function(result) {
-													console.log(result)	
 													
 													for (var x = 0; x < result.length; x++) {
 														
@@ -493,30 +492,16 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 				$scope.Genre[x].genre.isSelected = true;
 				$scope.Genre[x].genre.checked = true;				
 				$rootScope.genres += '****' + $scope.Genre[x].genre.similarSettings;
-				// for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
-				// {
-				// 	$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
-				// };
+
 			} else if (genre == $scope.Genre[x].genre.genre && $scope.Genre[x].genre.state == 'on') {
 				$scope.Genre[x].genre.state = 'off';
 				$scope.Genre[x].genre.checked = false;
 				var genreSplitter = $rootScope.genres.split('**');
-				// for(var g=0; g<genreSplitter.length; g++)
-				// 	{
-				// 	var index = $rootScope.genreSans.indexOf(genreSplitter[g]);
-				// 	if (index > -1) {
-				// 		$rootScope.genreSans.splice(index, 1);
-							
-				// 	}
-				// }
 				$rootScope.genres = '';
 				
 			} else if ($scope.Genre[x].genre.state == 'on') {
 				$rootScope.genres += '****' + $scope.Genre[x].genre.similarSettings;
-				// for(var y=0; y<$scope.Genre[x].genre.similarSettings.split('**').length;y++)
-				// {
-				// 	$rootScope.genreSans.push($scope.Genre[x].genre.similarSettings.split('**')[y])
-				// };
+			
 			}
 		}
 		if ($rootScope.genres == "") {
@@ -633,10 +618,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		}
 		if ($rootScope.genreSans.length > 0) {
 			
-
 				$rootScope.genres = '****' + $rootScope.genreSans.toString().replace(/,/g,'**');
-				
-			
 			
 			$scope.runApp(0, 1, 'button');
 		} else {
@@ -649,14 +631,9 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 	
 
 	$scope.close = function() {
-
 		$scope.noCountry = false;
-
-	
-			localStorage.setItem('country', '');
-			$location.path(localStorage.path);
-			LocationDataFetch.count=0;
-		
+		localStorage.setItem('country', '');
+		LocationDataFetch.count=0;
 	};
 
 	$scope.setCountry = function(country) {
@@ -664,7 +641,6 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		localStorage.country = country;
 		localStorage.setItem('country', country)
 		$scope.noCountry = false;
-		$location.path(localStorage.path)
 		LocationDataFetch.count = 0;
 	};
 	

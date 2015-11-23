@@ -190,7 +190,7 @@ height: 100%;
 	border: 1px solid #cccccc;
 	min-height: 50px;
 	z-index: 100000000000;
-	position: absolute;
+	position: fixed;
 	left: 30%;
 	padding: 10px;
 	top: 30%;
@@ -839,12 +839,14 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 #genre_holder, #spot_holder, #fav_holder {
 	position: absolute;
-	top: 0;
-	z-index: 1000;
-	width: 96%;
-	background-color: white;
-	padding: 2%;
-	padding-top: 0px;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: white;
+    padding: 1%;
+    padding-top: 0px;
+    margin: 1%;
+    margin-top: 0;
 }
 #spot_holder, #fav_holder {
 	height: 100%;
@@ -1463,10 +1465,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 #spot_holder .cards {
-	margin-top: 200px;
+	margin-top: 210px;
 }
 #spot_holder .iframehider {
-	margin-top: 115px;
+	margin-top: 120px;
 }
 
 #spot_holder .about_section {
@@ -1476,7 +1478,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	margin-top: 148px;
 }
 .fixed {
-	padding-top: 10px;
+	padding-top: 5px;
 	position: fixed;
 	background: white;
 	width: 100%;
@@ -1634,7 +1636,7 @@ input[type="checkbox"] {
 input[class="check"] + label div {
 	display: inline-block;
 	width: 25px;
-	height: 20px;
+G	height: 20px;
 	vertical-align: middle;
 	cursor: pointer;
 }
@@ -1643,7 +1645,6 @@ input[type="checkbox"]:checked + label div, input[type="checkbox"]:checked + lab
 	background-position: -27px top;
 	width: 27px;
 	height: 27px;
-	margin: 5px;
 	margin-top: 0px;
 }
 
@@ -2035,7 +2036,7 @@ p.event_description {
 	font-weight: 400;
 	font-style: italic;
 	position: absolute;;
-	width: 300px;
+	width: 290px;
 	background: white;
 	border: 1px solid #ccc;
 	padding: 7px;
@@ -2059,7 +2060,7 @@ p.event_description {
 	cursor: pointer;
 	font-family: Tahoma, Arial, sans-serif;
 	font-style: normal;
-	margin-left: 290px;
+	margin-left: 275px;
 }
 
 @media screen and (min-width: 1025px) and (max-width: 1280px) {
@@ -2343,10 +2344,10 @@ p.event_description {
 		margin-top: 100px;
 	}
 	#spot_holder .cards {
-		margin-top: 112px;
+		margin-top: 125px;
 	}
 	#spot_holder .about_section {
-		margin-top: 150px;
+		margin-top: 160px;
 	}
 	#fav_holder .cards {
 		margin-top: 85px;
@@ -2365,7 +2366,7 @@ p.event_description {
 @media screen and (max-width: 480px) {
 	.gray, .red:hover {
 
-		width: 95%
+		width: 96%
 	}
 	header {
 		width: 0px;
@@ -2533,7 +2534,7 @@ p.event_description {
 
 	#country_form, .ng-scope.alert {
 		left: 15px;
-		top: 30%
+		top: 75px
 	}
 	#artistsearch {
 		width: 35%
@@ -2542,13 +2543,13 @@ p.event_description {
 		height: 87%
 	}
 	#spot_holder .cards {
-		margin-top: 112px;
+		margin-top: 125px;
 	}
 	#fav_holder .cards {
 		margin-top: 85px;
 	}
 	#spot_holder .about_section {
-		margin-top: 135px;
+		margin-top: 160px;
 	}
 
 }

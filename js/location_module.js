@@ -175,7 +175,7 @@ function( $http, $sce, $location,States, $routeParams, $rootScope) {
 						{
 						
 						return	$http.jsonp(long_url).then(function(data){
-							if (data.data.rows != null || data.stringify.match('error')) {
+							if (data.data.rows != null || !data.stringify.match('error')) {
 								geolocation.longitude=data.data.rows[0][0];
 								data.data.rows.forEach(function(data)
 								{

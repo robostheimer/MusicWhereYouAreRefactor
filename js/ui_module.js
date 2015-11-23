@@ -10,7 +10,6 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 			
 			showHint : function(location, guess)
 			{
-		
 			var states = States.createStateObj(),
 			hints={},
 			contains='';
@@ -22,7 +21,7 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 			}
 		 	if(location.length==3)
 			{
-			var state_location = location[1]	
+			
 			if(location[1].length<3)
 			{
 				states.forEach(function(state){
@@ -31,48 +30,36 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 						state_location = state.name;
 					}
 				});
-			
 			}	
-
-
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location+'%27+AND+CityName'+contains+'%27'+location[0]+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+			console.log($rootScope.latitude);
+			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ")+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				hints = result.data.rows;
 				if(result.data.rows!=undefined)
 				{
 				hints.finalArr=[];
 				 	result.data.rows.forEach(function(hint){
 					 		hints.stateArr.push(hint[0]);
-							hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
+							hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;		
 					 });
 				}
 				});
 		 	}
 		 	if(location.length==2)
 			{	
-			var state_location = location[1];
-				
-			if(location[1].length<3)
-			{
-				result.data.rows.forEach(function(hint){
-				 		hints.stateArr.push(hint[0]);
-						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
-				 });
-				
-			}	
-				           
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location.toUpperCase()+'%27+AND+CityName'+contains+'%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+			var state_location = location[1];           
+			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location.toUpperCase()+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ").toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0')
+				.then(function(result) {
 				if(result.data.rows!=undefined)
 				{
 					hints = result.data.rows;
+
 					hints.finalArr=[];
 				 	
 					if(result.data.rows.length!=null)
 					{
-					
 			 		result.data.rows.forEach(function(hint){
-						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
+						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'),fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;		
 				 	});
-					
 					return hints;
 					}
 				}
@@ -80,11 +67,9 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 		 	}
 		 	if(location.length==1)
 			{	
-					           
-				
- 
+ 				
 				//return $http.get('/php/geolocation.php?city='+location[0].toUpperCase(), { timeout: canceller.promise }).then(function(result) {
-				return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName'+contains+'%27'+location[0].toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+				return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName'+contains+'%27'+location[0].replace(/_/g, " ").toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
 				
 			 	if(result.data.rows!=undefined)
 				{
@@ -92,7 +77,7 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 					hints.finalArr=[];
 			 		result.data.rows.forEach(function(hint){
 				 		
-						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_')})	;		
+						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat:hint[3], long:hint[4]})	;		
 				 	});	
 				 	
 					
@@ -100,11 +85,6 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				return hints;
 				}
 				});
-				 
-				
-				
-
-				
 			}
 		},	
 			
@@ -178,18 +158,15 @@ UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $l
 					
 				}
 			});
-			
 		}	
-	
-		
 	}
 };
 	
 }]);
 
 /*Controllers*/
-UI.controller('formController', ['$scope', '$rootScope', 'retrieveLocation', 'getLocation', '$q', 'HashCreate', '$location', 'HintShower', '$timeout', 'States', '$routeParams',
-function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $location, HintShower, $timeout, States, $routeParams) {
+UI.controller('formController', ['$scope', '$rootScope', 'retrieveLocation', 'getLocation', '$q', 'HashCreate', '$location', 'HintShower', '$timeout', 'States', '$routeParams','LocationDataFetch',
+function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $location, HintShower, $timeout, States, $routeParams, LocationDataFetch) {
 	$rootScope.showHint = false;
 
 	var count = 0;
@@ -200,23 +177,22 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 			
 
 				HintShower.showHint($scope.type_location, guess).then(function(result) {
+					console.log(result)
 					if (result != undefined) {
 						$rootScope.showHint = true;
-						$scope.hints = result.finalArr;
-						$scope.finalHints = [];
-
-						var city_str = '';
-						var state_str = '';
-						for (var i = 0; i < $scope.hints.length; i++) {
-							if (!state_str.replace(/\W/g, '').match($scope.hints[i].state.replace(/\W/g, ''))) {
-								$scope.finalHints.push($scope.hints[i]);
+						$scope.hints = result.finalArr;								
+						$scope.finalHints=$scope.hints.removeDuplicatesArrObj('fullname', false);
+						$scope.finalHints = $scope.finalHints.removeDuplicatesArr();
+							if($rootScope.mapdata.latitude!==0&&$rootScope.mapdata.longitude!==0)
+							{
+							$scope.finalHints=orderCitiesByDistance($scope.finalHints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude);
 							}
-
-							city_str += $scope.hints[i].city;
-							state_str += $scope.hints[i].state;
-
+							else{
+								retrieveLocation.runLocation($location.path().split('/')[2]).then(function(result){
+									$scope.finalHints=orderCitiesByDistance($scope.finalHints, result.latitude, result.longitude);
+								})
+							}
 						}
-					}
 				});
 			
 		}, 300);
@@ -233,34 +209,51 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	};
 
 	$scope.controlForm = function(location) {
-		var states = States.createStateObj();
-if(location.split('_').length>1)
+		LocationDataFetch.count=0;
+		if(location!=undefined)
 		{
-			$scope.genres = '';
-			if ($scope.location == undefined || $scope.location == "") {
-				var deferred_loc = $q.defer();
-				getLocation.checkGeoLocation();
-			} else {
-				$scope.location = location.replace(' ', '_');
-				if($scope.location.length==2)
-					{
-						var ab = location.toUpperCase();
-						states.forEach(function(item){
-							if(item.abbreviation==ab)
+			if(location[location.length-3]==' ')
+			{
+				var location =location.slice(0, (location.length-3))+ ','+location.slice(location.length-2, location.length);
+				location = location.replace(/ /g, '_')
+			}
+			else{
+				var location=location.replace(/ /g, '_');
+			}
+
+		var states = States.createStateObj();
+		if(location.split(',').length>1)
+				{
+					$scope.genres = '';
+					if ($scope.location == undefined || $scope.location == "") {
+						var deferred_loc = $q.defer();
+						getLocation.checkGeoLocation();
+					} else {
+						$scope.location = location.replace(' ', '_');
+						if($scope.location.length==2)
 							{
-								$scope.location =(item.name);
+								var ab = location.toUpperCase();
+								states.forEach(function(item){
+									if(item.abbreviation==ab)
+									{
+										$scope.location =(item.name);
+									}
+									
+								});
+								
 							}
-							
-						});
-						
-					}
-				$location.path('playlist/' + $scope.location.replace(', ', '*'));
+						$scope.location = $scope.location.replace(',_', '*').replace(',', '*')
+						$location.path('playlist/' + $scope.location);
+					};
+				}
+				else{
+					$scope.hintShower(location, true)
+				}
+			}	
+			else{
+			getLocation.checkGeoLocation();
+				}	
 			};
-		}
-		else{
-			$scope.hintShower(location, true)
-		}
-	};
 
 	
 	$scope.closeHint = function() {
