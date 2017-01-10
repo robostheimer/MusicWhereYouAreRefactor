@@ -6,18 +6,17 @@
 
 	<div class="clear"></div>
 </section>
-			
+
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="errorMessage=false; moreHider=true"></div>
 	<p>
-		Uh, Oh.  Something has gone wrong.  Try refreshing your browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
-
+		Unforutnately the Echonest api has been deprecated as part of it's merging with Spotify.  Spotify's new endpoint does not make artist location publicly available which is crucial for this app to work.  Developers are currently working on a strategy to get things up and running.  If you used and liked the app in the past, please tweet @musicwhereyour and @spotify to let them know.  Thanks.  We'll see you again soon.
 	</p>
-	
+
 	<div class="clear"></div>
-</section>		
+</section>
 <section class="alert"  ng-show="noMoreSongs==true;" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noMoreSongs=false; moreHider=true"></div>
 	<p>
@@ -48,7 +47,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-	
+
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
@@ -76,7 +75,7 @@
 </section>
 
 <section class="alert" ng-show="infoMessage==true">
-			
+
 			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 			<br/>
 			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
@@ -90,10 +89,10 @@
 			</footer>
 		</section>
 
- 
+
 <!--<CAN BE USED To download song data if ever necessary<section class="alert" download-button data="{{songs}}">
 	<div class="datalink">
-		
+
 	</div>
 	<div class="post" ng-controller="PostController">
 		<a ng-click ="runPost(songs)" >Run Post</a>
@@ -164,9 +163,9 @@
 	</div>
 
 	<div ng-hide="loading==true" ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[0].state}} cards"  >
-		
+
 			<div id="locationsongs">
-				<div ng-repeat="song in songs " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
+				<div ng-repeat="song in songs.spotify_info.data.tracks " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
 					<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'from')"></div>
 					<p class="info" id="pinfo{{song.num_id}}">
 						{{song.name}}
@@ -221,8 +220,8 @@
 						</div> </a>
 					</form>
 					<form class="{{sm_btns[1].classy}}">
-						<textarea maxlength="160" rows="9" ng-model="message"> </textarea>																									
-					
+						<textarea maxlength="160" rows="9" ng-model="message"> </textarea>
+
  <a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" >
 						<div class="button_txt">
 							Share on Twitter »
@@ -245,13 +244,13 @@
 
 			</div>
 
-	
+
 	</div>
 	<div style="width:100px; margin-left:auto; margin-right:auto" class="about_section " ng-hide="loading_tags==false"><img src="loading.gif" alt="loading"/>
 	</div>
 	<div  ng-hide="aboutShower==false"  ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[1].state}} about_section"  >
 		<div class="aboutsongs">
-			
+
 
 			<div ng-repeat="song in lookUpSongs track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'about')" type="click">
 				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'about')"></div>
@@ -281,7 +280,7 @@
 			<br>
 			<br>
 			<br>
-			<br>	
+			<br>
 		</div>
 		<div class="sharer" >
 
@@ -312,8 +311,8 @@
 					</div> </a>
 				</form>
 				<form class="{{sm_btns[1].classy}}">
-					<textarea maxlength="160" rows="9" ng-model="message"> </textarea>														
-					
+					<textarea maxlength="160" rows="9" ng-model="message"> </textarea>
+
  <a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" >
 					<div class="button_txt">
 						Share on Twitter »
@@ -332,7 +331,7 @@
 
 			<div class="sharer_icon" ng-show="sharer==false" >
 				<span class='icon share' ng-click="getSongs(lookUpSongs);"></span>
-			
-		</div>			
+
+		</div>
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

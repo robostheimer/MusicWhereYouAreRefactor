@@ -416,7 +416,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	$scope.lat= lat;
 	$scope.lng = lng;	
 	$scope.eventData=false;
-	$scope.loadingEvents=true;
+	$rootScope.loadingEvents=true;
 	
 	 Events.getGeoEvents(lat,lng, $scope.date1, $scope.date2).then(function(result){
 	 	//$scope.events =[];
@@ -467,7 +467,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 			}
 		}
 		$scope.eventData=true;
-		$scope.loadingEvents=false;
+		$rootScope.loadingEvents=false;
 	 },function(error){$scope.errorMessage = true;});
 	
 		};	
@@ -480,7 +480,7 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 		}
 	else
 	{
-		$scope.loadingEvents=true
+		$rootScope.loadingEvents=true
 		$scope.runEvents($rootScope.latitudeObj_root.latitude,$rootScope.longitudeObj_root.longitude);
 		
 	}

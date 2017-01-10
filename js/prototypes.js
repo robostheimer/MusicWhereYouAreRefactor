@@ -7,14 +7,14 @@ String.prototype.reverse = function(){
 }
 
 String.prototype.removeHTML = function(){
-	 		
+
 	 		var str =  jQuery('<div />', { html: this }).text();
 	        str = 		jQuery('<p />', { html: this }).text();
 	        str = jQuery('<i />', { html: this }).text();
 			return str;
 };
 String.prototype.removeSpecialChar=function() {
-		var str=this; 
+		var str=this;
 		str = str.replace('&', 'and');
 		str = str.replace(/[^a-zA-Z, ^1-9 ]/g, "");
 		return str;
@@ -22,7 +22,7 @@ String.prototype.removeSpecialChar=function() {
 String.prototype.diggPatt = function(char){
 	 var checkDigit = (this.lastIndexOf(char)+1);
 	 var digPatt = this.slice(checkDigit, this.length);
-      
+
        if(digPatt.match(/\d/g))
        {
        	name = this.split('-')[0];
@@ -57,40 +57,40 @@ String.prototype.createTitleFromURL=function()
 	{
 		var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		var str=this;
-		
+
 		str =str.replace('https://teacheratsea.wordpress.com','');
 		str = str.replace('http://teacheratsea.wordpress.com','');
-		
+
 		str = str.split('/')[4];
-		
+
 		str = str.replace(/-/g, ' ');
-		
+
 		str=str.toTitleCase();
-		
+
 		var strSplitter = this.split(' ');
 		var substr = strSplitter[1];
 		var str = str.replace(substr, substr+',');
-		
+
 		str = str.replace(' 20', ', 20');
 		console.log(str)
-		
+
 		monthArr.forEach(function(item){
 			if(str.replace(/\W/g,'').match(item))
 			{
 				str = str.replace(item, ', '+item).replace(' , ', ', ');
-				
+
 			}
-			
-		});	
+
+		});
 		return str;
-		
+
 	};
-	
+
 String.prototype.toTitleCase = function()
 {
-	
+
 	    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-	
+
 };
 
 
@@ -98,7 +98,7 @@ String.prototype.strSplitter = function(splitter)
 	{
 		var str = this;
 		var strObj ={arr:[], orig: ''};
-		var start_index = str.indexOf(splitter) 
+		var start_index = str.indexOf(splitter)
 		var end_index=str.lastIndexOf(splitter)+1;
 		var slicer = str.slice(start_index,end_index);
 		strObj.orig=this.toString();
@@ -126,22 +126,22 @@ String.prototype.strSplitter = function(splitter)
 		else{
 			strObj.regStr=false;
 		}
-		
-		
+
+
 		if(slicer.split('"').length>2)
 	 		{
 	 			strQuoteSplit =slicer.split(splitter) || slicer.split(splitter);
-	 			
+
 	 			strQuoteSplit.forEach(function(item){
 	 				var i= strQuoteSplit.indexOf(item);
 	 				if(item=="" || item==" "){
 	 					strQuoteSplit.splice(i, 1);
 	 				}
-	 					
-	 				
+
+
 	 			});
 	 			strQuoteSplit.forEach(function(item){
-	 			
+
 	 				strObj.arr.push(item);
 	 			});
 
@@ -151,8 +151,8 @@ String.prototype.strSplitter = function(splitter)
 	 		strObj.arr =strObj.arr.concat(noSplitter)
 	 		}
 	 		return strObj;
-	 		
-	 		
+
+
 	};
 String.prototype.Slicer = function(number)
 	 {
@@ -164,7 +164,7 @@ String.prototype.Slicer = function(number)
 		//alert(slicer2);
 		return slicer2;
 	 };
-	 
+
 String.prototype.findThe=function()
 {
 	var str =this;
@@ -172,34 +172,34 @@ String.prototype.findThe=function()
 	strSlice = strSlice.replace('The', 'the');
 	str = str.slice(0, 3)+strSlice;
 	return str;
-};	 
+};
 /****************************Array****************************/
 Array.prototype.removeItem=function(str_ind, item)
 {
 	var array=this;
 	if(str_ind=="ind")
 	{
-		array.splice(item, 1);	
+		array.splice(item, 1);
 	}
 	if(str_ind=="str")
 	{
 		array.splice(array.indexOf(item), 1)
 	}
-	
+
 }
 Array.prototype.SortObjAsc=function(property, num_or_str, checkDupProperty)
  	{
- 	var obj=this;	
+ 	var obj=this;
  	if(num_or_str=='str')
  	{
- 		
+
  		obj.sort(function(a,b) {return (a[property] > b[property]) ? 1 : ((b[property] > a[property]) ? -1 : 0);}) ;
- 	
+
  		return obj.reverse();
  	}
  	else{
  		obj.sort(function(a, b){
- 			
+
  				 var aprop=parseInt(a[property]);
 				 var bprop =parseInt(b[property]);
 				 return bprop-aprop;
@@ -207,33 +207,33 @@ Array.prototype.SortObjAsc=function(property, num_or_str, checkDupProperty)
  	}
  		obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
  		return obj.reverse();
- 		
+
  };
- 
+
 Array.prototype.SortObjDsc=function(property, num_or_str, checkDupProperty)
 	 {
-	 	
+
 	 	var obj = this
 	 	if(num_or_str=='str')
 	 	{
-	 	
+
 	 	var sortable =[];
-	 
-	 	obj.sort(function(a,b) {return (a[property] > b[property]) ? 1 : ((b[property] > a[property]) ? -1 : 0);}) 
-	 	
+
+	 	obj.sort(function(a,b) {return (a[property] > b[property]) ? 1 : ((b[property] > a[property]) ? -1 : 0);})
+
 	 	return obj;
 	 	}
 	 	else{
 	 		obj.sort(function(a, b){
-	 			
+
 	 				 var aprop=parseInt(a[property]);
 					 var bprop =parseInt(b[property]);
 					 return bprop-aprop;
 					});
-	 	}	
+	 	}
 	 		obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
 	 		return obj;
-	 		
+
 	 };
 
 Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequal){
@@ -241,7 +241,7 @@ Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequ
 	var array=this;
 	function isUnique ()
 	{
-		
+
 		if(checkmatch==true)
 		{
 			array.forEach(function(item){
@@ -257,7 +257,7 @@ Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequ
 			}
 			else{
 				array.forEach(function(item){
-				
+
 				if (unique.title.indexOf(item[property]) < 0)
 		        {
 		        	unique.title.push(item[property]);
@@ -266,14 +266,14 @@ Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequ
 		        else{
 		        	unique.notunique.push(item);
 		        }
-		       
+
 			});
 		}
 		return unique.finalArr;
 	}
-	
+
 	return isUnique(array);
-};	
+};
 
 Array.prototype.removeDuplicatesArr = function(){
 		var unique = [];
@@ -287,24 +287,24 @@ Array.prototype.removeDuplicatesArr = function(){
 		   });
 	    return unique;
 	};
- 
+
 Array.prototype.savArrayDups =function(){
 	var dups={title:[], finalArr:[], };
 			var array =this;
 			array.forEach(function(item){
-				
+
 				if (dups.title.indexOf(item) < 0)
 		        {
 		        	 dups.title.push(item);
-		        	
+
 		        }
 		        else{
-		        	
+
 		        	dups.finalArr.push(item);
-		        	
+
 		        }
-	        
-	        
+
+
 		});
 		dups.finalArr = dups.finalArr.removeDuplicatesArr();
 		return dups.finalArr;
@@ -314,19 +314,19 @@ Array.prototype.savArrayDupsObj=function( property){
 		var dups={title:[], finalArr:[], };
 			var array =this;
 			array.forEach(function(item){
-				
+
 				if (dups.title.indexOf(item[property]) < 0)
 		        {
 		        	 dups.title.push(item[property]);
-		        	
+
 		        }
 		        else{
-		        	
+
 		        	dups.finalArr.push(item);
-		        	
+
 		        }
-	        
-	        
+
+
 		});
 		dups.finalArr = dups.finalArr.removeDuplicatesArrObj(property, false);
 		return dups.finalArr;
@@ -339,18 +339,18 @@ Array.prototype.preventDuplicates=function(comparer, type)
  	console.log(array)
  	var tmpArr=[];
  	tmpArr =[];
- 	
+
  	///////////Adds to  the Beginning
 	if(type = 'splice'){
-		
+
 	 	array.forEach(function(item){
 		 	comparer.forEach(function(compare)
 			{
-				
-				
-				tmpArr.splice(0, 0, item)	
-				
-				
+
+
+				tmpArr.splice(0, 0, item)
+
+
 			});
 		});
 	}
@@ -360,32 +360,32 @@ Array.prototype.preventDuplicates=function(comparer, type)
 			comparer.forEach(function(compare)
 			{
 				console.log(compare+':'+item);
-				
-				tmpArr.push(compare)	
-				
+
+				tmpArr.push(compare)
+
 			});
-		});	
-		
-	}	
+		});
+
+	}
  	array = tmpArr.removeDuplicatesArr();
  	return array;
  };
-	 
+
 Array.prototype.preventDuplicatesValues=function(comparer, property, type)
  {
  	var array=this;
- 	
+
  	var tmpArr=[];
  	tmpArr =[]
- 	
+
  	///////////Adds to  the Beginning
 	if(type = 'splice'){
 	 	array.forEach(function(item){
 		 	comparer.forEach(function(compare)
 			{
-				
+
 				tmpArr.splice(0, 0, compare);
-					
+
 			});
 		});
 	}
@@ -394,18 +394,18 @@ Array.prototype.preventDuplicatesValues=function(comparer, property, type)
 		array.forEach(function(item){
 			comparer.forEach(function(compare)
 			{
-				
-				tmpArr.push(compare)	
-				
+
+				tmpArr.push(compare)
+
 			});
-		});	
-	}	
+		});
+	}
  	array = tmpArr.removeDuplicatesArrObj('type', true);
  	return array;
  };
- 
+
 Array.prototype.searchDataMatch = function(str, properties, checkDupProperty)
-	 { 
+	 {
 	 	/////Prepping string///////////
 	 	var str=str;
 	 	var array1=this;
@@ -426,10 +426,10 @@ Array.prototype.searchDataMatch = function(str, properties, checkDupProperty)
 		str = str.replace(/a /g, '');
 		str = str.replace(/an /g, '');
 		str=str.replace(/'/g, '"');
-	 	
+
 	 	if(str.indexOf('"')>=0|| str.indexOf("'")>=0)
 	 	{
-	 		
+
 	 		strObj = str.strSplitter('"');
 
 	 	}
@@ -438,64 +438,64 @@ Array.prototype.searchDataMatch = function(str, properties, checkDupProperty)
 	 	strSplitter = str.split('_');
 	 	strObj = {arr: strSplitter, noArr: true}
 	 	}
-	 	
-	 	
-	 	
+
+
+
 	 	var newArr=[];
 	 	if(array1.length==0)
 	 	{
 	 		newArr=[];
 	 	}
 	 	else if(strObj.arr.length==1)
-		 	{	
+		 	{
 		 		if(str[str.length-1]=='s')
 			 	{
 			 		str = str.slice(0,str.length-1);
 			 	}
-			 	
+
 			 	array1.forEach(function(item){
-			 		
+
 			 		if(item!=undefined){
 			 			if(JSON.stringify(item).toLowerCase().match(str.toLowerCase()))
 			 			{
 			 				newArr.push(item);
 			 			}
 			 		}
-			 		
+
 			 	});
-			
+
 		 	}
 		 else{
 
 		 		strObj.arr.forEach(function(str){
-		 			
-		 			
+
+
 		 			if(str[str.length-1]=='s')
 				 	{
 				 		str = str.slice(0,str.length-1);
 				 	}
 		 			array1.forEach(function(item){
 			 		if(item!=undefined){
-			 		
+
 			 					if(JSON.stringify(item).toLowerCase().match(str.toLowerCase()))
 				 				{
-				 					
+
 					 				newArr.push(item);
 					 			}
-			 		
+
 			 		}
 				 	});
 			 	});
 		 	}
-	 	
-	 	
+
+
 	 	newArr =newArr.removeDuplicatesArrObj(checkDupProperty, false);
 	 	obj = {arr:newArr.slice(0,50), fullArr: newArr}
-	 	
+
 	 	return obj;
-	 	
+
 	 };
-	 
+
 Array.prototype.searchObjProperties=function(str, properties, checkDupProperty, type, checking_prop)
 	 {
 	 	var arr=this;
@@ -504,11 +504,11 @@ Array.prototype.searchObjProperties=function(str, properties, checkDupProperty, 
 	 	var str = str.replace(/"/g,'');
 	 	arr.forEach(function(item){
 	 		properties.forEach(function(property){
-	 			
+
 	 			if(item[property]==str)
 	 			{
-	 				
-	 				filtered.push(item);	
+
+	 				filtered.push(item);
 	 			}
 	 		});
 	 	});
@@ -519,7 +519,7 @@ Array.prototype.searchObjProperties=function(str, properties, checkDupProperty, 
 		 			return true;
 		 		}
 		 	});
-	 	
+
 	 	}
 	 	else{
 	 	finalfilter = filtered.removeDuplicatesArrObj(checkDupProperty, false);
@@ -534,52 +534,52 @@ Array.prototype.removeArrObj=function(properties, strs, type, checkDupProperty){
 			if(strs.toString()!=item[properties.toString()])
 				{
 					return true;
-				}		
+				}
 			});
-		}	
+		}
 		else if (type!="" || type!=undefined && properties.length>1){
 			var tmpArr=[];
 			arr.forEach(function(item){
 				properties.forEach(function(property){
 					var i = properties.indexOf(property);
-					
+
 					if(strs[i]!=item[property])
 					{
 						tmpArr.push(item)
 					}
-					
-				});				
-			});	
-		}	
+
+				});
+			});
+		}
 		tmpArr = tmpArr.removeDuplicatesArrObj(checkDupProperty, false)
 		return tmpArr;
 	};
-	
+
 Array.prototype.Toggle = function(indiv, property, value1, value2){
-	 		
+
 	 		///add a map?
 	 		var arr=this;
-	 		
+
 	 		arr.forEach(function(item){
 	 			if(indiv.toLowerCase() ==item[property].toLowerCase() &&  item.state!=value1)
-	 			{	
+	 			{
 	 				item.state=value1
 	 			}
 	 			else{
 	 				item.state=value2;
 	 			}
-	 			
+
 	 		});
 	 		return arr;
 	 };
-	 
+
 Array.prototype.compareArraysObj =function(array2, property)
 	 {
 	 	var array1=this;
 	 	array1.forEach(function(item){
 	 		var x=array1.indexOf(item);
 	 		array2.forEach(function(item2){
-	
+
 	 			if(item[property]==item2[property])
 	 			{
 	 				array1.splice(x, 1);
@@ -588,7 +588,7 @@ Array.prototype.compareArraysObj =function(array2, property)
 	 	});
 		return array1;
 	 };
-	 
+
 
 /**********************Distance*********************/
 function distance(lat1, lon1, lat2, lon2, unit){
@@ -633,25 +633,25 @@ var distance=function(lat1, lon1, lat2, lon2, unit) {
     if (unit=="K") { dist = dist * 1.609344 }
     if (unit=="N") { dist = dist * 0.8684 }
     return dist
-    
+
 
 };
 
 
 var distance_to_degrees_lat=function(miles){
-	
+
 	var earth_radius = 3960.0;
 	var degrees_to_radians = Math.PI/180.0;
 	var radians_to_degrees = 180.0/Math.PI;
 	return (miles/earth_radius)*radians_to_degrees
-	
+
 };
 
  var distance_to_degrees_lon=function(lat, miles){
 	var earth_radius = 3960.0
 	var degrees_to_radians = Math.PI/180.0
 	var radians_to_degrees = 180.0/Math.PI
-	
+
 	var  r = earth_radius*Math.cos(lat*degrees_to_radians)
     return (miles/r)*radians_to_degrees
 };
@@ -659,11 +659,11 @@ var distance_to_degrees_lat=function(miles){
 /************************JQuery*********************/
 goToByScrollTop=function(id) {
 		// Remove "link" from the ID
-	
+
 		id = id.replace("link", "");
 		// Scroll
 		$('#' + id).animate({
 			scrollTop : 0
 		}, 'slow');
-	
+
 	};

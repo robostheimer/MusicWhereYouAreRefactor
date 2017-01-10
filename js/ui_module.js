@@ -5,93 +5,109 @@ var UI=angular.module('UI', []);
 UI.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States','retrieveLocation',
 function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 	var canceller = $q.defer();
-	
-	 return {
-			
-			showHint : function(location, guess)
-			{
-			var states = States.createStateObj(),
-			hints={},
-			contains='';
-		 	if(guess==true){
-				contains = '%20CONTAINS%20IGNORING%20CASE%20'
-			}
-			else{
-				 contains = "="
-			}
-		 	if(location.length==3)
-			{
-			
-			if(location[1].length<3)
-			{
-				states.forEach(function(state){
-					if(location[1].toUpperCase().match(states.abbreviation))
-					{
-						state_location = state.name;
-					}
-				});
-			}	
-			console.log($rootScope.latitude);
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ")+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
-				hints = result.data.rows;
-				if(result.data.rows!=undefined)
-				{
-				hints.finalArr=[];
-				 	result.data.rows.forEach(function(hint){
-					 		hints.stateArr.push(hint[0]);
-							hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;		
-					 });
-				}
-				});
-		 	}
-		 	if(location.length==2)
-			{	
-			var state_location = location[1];           
-			return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location.toUpperCase()+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ").toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0')
-				.then(function(result) {
-				if(result.data.rows!=undefined)
-				{
-					hints = result.data.rows;
-
-					hints.finalArr=[];
-				 	
-					if(result.data.rows.length!=null)
-					{
-			 		result.data.rows.forEach(function(hint){
-						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'),fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;		
-				 	});
-					return hints;
-					}
-				}
-				});
-		 	}
-		 	if(location.length==1)
-			{	
- 				
+	var locations;
+	//bring in locations object from json
+	if(!locations) {
+		$http.get('json/locations.json').then(function(result) {
+		 locations = result;
+	 	});
+	}
+	return {
+		showHint : function(location, guess)
+		{
+			// 	if(location.length==3)
+			// {
+			//
+			// if(location[1].length<3)
+			// {
+			// 	console.log('test3')
+			// 	states.forEach(function(state){
+			// 		if(location[1].toUpperCase().match(states.abbreviation))
+			// 		{
+			// 			state_location = state.name;
+			// 		}
+			//
+			// 	});
+			// }
+			// return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ")+'%27+AND+CountryID%=%27'+location[2]+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
+			// 	hints = result.data.rows;
+			// 	if(result.data.rows!=undefined)
+			// 	{
+			// 	hints.finalArr=[];
+			// 	 	result.data.rows.forEach(function(hint){
+			// 			states.forEach(function(state) {
+			// 				if(hint[0].toLowerCase() === state.name.toLowerCase()) {
+			// 					hint[0] = state.abbreviation
+			// 				}
+			// 			});
+			// 	 		hints.stateArr.push(hint[0]);
+			// 			hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;
+			// 		 });
+			// 	}
+			// 	});
+			// 	}
+			// 	if(location.length==2)
+			// {
+			// 	console.log('test1')
+			// var state_location = location[1];
+			// return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region'+contains+'%27'+state_location.toUpperCase()+'%27+AND+CityName'+contains+'%27'+location[0].replace(/_/g, " ").toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0')
+			// 	.then(function(result) {
+			// 	if(result.data.rows!=undefined)
+			// 	{
+			// 		hints = result.data.rows;
+			//
+			// 		hints.finalArr=[];
+			//
+			// 		if(result.data.rows.length!=null)
+			// 		{
+			//  		result.data.rows.forEach(function(hint){
+			// 			states.forEach(function(state) {
+			// 				if(hint[0].toLowerCase() === state.name.toLowerCase()) {
+			// 					hint[0] = state.abbreviation
+			// 				}
+			// 			})
+			// 			hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'),fullname: hint[1]+', '+hint[0]+', '+hint[2], lat: hint[3], long:hint[4] })	;
+			// 	 	});
+			// 		return hints;
+			// 		}
+			// 	}
+			// 	});
+			// 	}
+			// 	if(location.length==1)
+			// {
 				//return $http.get('/php/geolocation.php?city='+location[0].toUpperCase(), { timeout: canceller.promise }).then(function(result) {
-				return $http.get('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Region,CityName,CountryID,Lat,Long+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+CityName'+contains+'%27'+location[0].replace(/_/g, " ").toUpperCase()+'%27+ORDER%20BY+CityName&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0').then(function(result) {
-				
-			 	if(result.data.rows!=undefined)
-				{
-					hints = result.data.rows;
-					hints.finalArr=[];
-			 		result.data.rows.forEach(function(hint){
-				 		
-						hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat:hint[3], long:hint[4]})	;		
-				 	});	
-				 	
-					
-				
-				return hints;
+
+				// 	if(result.data.rows!=undefined)
+				// {
+				// 	hints = result.data.rows;
+				// 	hints.finalArr=[];
+				// 		result.data.rows.forEach(function(hint){
+				// 		states.forEach(function(state) {
+				// 			if(hint[0].toLowerCase() === state.name.toLowerCase()) {
+				// 				hint[0] = state.abbreviation
+				// 			}
+				// 		})
+				// 		hints.finalArr.push({city: hint[1], cityhref: hint[1].replace(/ /g, '_'), state: hint[0], statehref: hint[0].replace(/ /g, '_'), country: hint[2], countryhref: hint[2].replace(/ /g, '_'), fullname: hint[1]+', '+hint[0]+', '+hint[2], lat:hint[3], long:hint[4]})	;
+				//  	});
+				// return hints;
+				//}
+			//});
+			var states = States.createStateObj(),
+			hints=[],
+
+			location = location.toString().toLowerCase().replace(', ', ' ');
+			location_regex = new RegExp(location);
+
+			locations.data.forEach(function(location) {
+				if(location_regex.test(location.city.toLowerCase().replace(', ', ','))) {
+					hints.push({city: location.city, href: location.city.replace(/,/g, '*'), long: location.lng, lat: location.lat});
 				}
-				});
-			}
-		},	
-			
-				
-			
-		};
-	
+			});
+			return hints;
+		}
+
+	//},
+	};
 }]);
 
 UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $location)
@@ -110,27 +126,27 @@ UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $l
 			genre_class.classy = "iconequalizer12";
 			genre_class.state = 'off';
 			//genre_class.href = '#/genres/' + location;
-		
+
 			playlist_class.name = 'playlist';
 			playlist_class.classy = "icon-song";
 			playlist_class.state = 'off';
 			//playlist_class.href = '#/playlist/' + location;
-		
+
 			favorite_class.name = 'favorite';
 			favorite_class.classy = "iconfavorite";
 			favorite_class.state = 'off';
 			//favorite_class.href = '#/favorites/' + location;
-		
+
 			map_class.name = 'map';
 			map_class.classy = "iconmap";
 			map_class.state = 'off';
 			//map_class.href = '#/map/' + location;
-		
+
 			jukebox_class.name = 'jukebox';
 			jukebox_class.classy = "jukebox";
 			jukebox_class.state = 'off';
 			//jukebox_class.href = '#/jukebox/' + location;
-			
+
 			roadsoda_class.name = 'roadsoda';
 			roadsoda_class.classy = "roadsoda";
 			roadsoda_class.state = 'off';
@@ -139,12 +155,12 @@ UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $l
 			info_class.name = 'info';
 			info_class.classy = "info";
 			info_class.state = 'off';
-		
+
 			icons = [genre_class, playlist_class, favorite_class, map_class, jukebox_class, info_class];
 			$rootScope.icons = icons;
 			return icons;
 		},
-		
+
 		changeSymbol: function(state, obj, classy ,url, link, object2)
 		{
 		if($rootScope.icons!=undefined)
@@ -155,13 +171,13 @@ UI.factory("runSymbolChange", ['$rootScope','$location', function($rootScope, $l
 				if($location.path().match(icon.name))
 				{
 					icon.state ='on';
-					
+
 				}
 			});
-		}	
+		}
 	}
 };
-	
+
 }]);
 
 /*Controllers*/
@@ -173,42 +189,46 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	count2 = 0;
 	$scope.hintShower = function(location, guess) {
 		count = count + 1;
-		$timeout(function() {
-			
 
-				HintShower.showHint($scope.type_location, guess).then(function(result) {
-					console.log(result)
-					if (result != undefined) {
-						$rootScope.showHint = true;
-						$scope.hints = result.finalArr;								
-						$scope.finalHints=$scope.hints.removeDuplicatesArrObj('fullname', false);
-						$scope.finalHints = $scope.finalHints.removeDuplicatesArr();
-							if($rootScope.mapdata.latitude!==0&&$rootScope.mapdata.longitude!==0)
-							{
-							$scope.finalHints=orderCitiesByDistance($scope.finalHints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude);
-							}
-							else{
-								retrieveLocation.runLocation($location.path().split('/')[2]).then(function(result){
-									$scope.finalHints=orderCitiesByDistance($scope.finalHints, result.latitude, result.longitude);
-								})
-							}
-						}
-				});
-			
+		$timeout(function() {
+			$scope.hints =  HintShower.showHint($scope.type_location, guess);
+			$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude)
+			$rootScope.showHint = true;
+		// $timeout(function() {
+		// 	HintShower.showHint($scope.type_location, guess).then(function(result) {
+		// 		console.log(result)
+		// 		if (result != undefined) {
+		// 			$rootScope.showHint = true;
+		// 			$scope.hints = result.finalArr;
+		// 			$scope.finalHints=$scope.hints.removeDuplicatesArrObj('fullname', false);
+		// 			$scope.finalHints = $scope.finalHints.removeDuplicatesArr();
+		// 				if($rootScope.mapdata.latitude!==0&&$rootScope.mapdata.longitude!==0)
+		// 				{
+		// 				$scope.finalHints=orderCitiesByDistance($scope.finalHints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude);
+		// 				}
+		// 				else{
+		// 					retrieveLocation.runLocation($location.path().split('/')[2]).then(function(result){
+		// 						$scope.finalHints=orderCitiesByDistance($scope.finalHints, result.latitude, result.longitude);
+		// 					})
+		// 				}
+		// 			}
+			//});
 		}, 300);
+
 		$scope.location_ = location;
 		if ($scope.location_.toTitleCase().match('St.')) {
 			$scope.location_ = $scope.location_.replace('St.', 'Saint');
 		}
-		if ($scope.location_.toTitleCase().match('New York,')) {
-			$scope.location_ = $scope.location_.replace('New York,', 'New York City,');
-		}
-	
+		// if ($scope.location_.toTitleCase().match('New York,')) {
+		// 	$scope.location_ = $scope.location_.replace('New York,', 'New York City,');
+		// }
+
 		$scope.type_location = $scope.location_.split(', ');
 
 	};
 
 	$scope.controlForm = function(location) {
+		console.log(location)
 		LocationDataFetch.count=0;
 		if(location!=undefined)
 		{
@@ -238,9 +258,9 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 									{
 										$scope.location =(item.name);
 									}
-									
+
 								});
-								
+
 							}
 						$scope.location = $scope.location.replace(',_', '*').replace(',', '*')
 						$location.path('playlist/' + $scope.location);
@@ -249,17 +269,17 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 				else{
 					$scope.hintShower(location, true)
 				}
-			}	
+			}
 			else{
 			getLocation.checkGeoLocation();
-				}	
+				}
 			};
 
-	
+
 	$scope.closeHint = function() {
 
 		$rootScope.showHint = false;
-		
+
 		$scope.location = ''
 	};
 
@@ -356,10 +376,10 @@ function($scope, $location, $rootScope, runSymbolChange) {
 				}
 				if (state == 'on') {
 					obj.state = 'off';
-					
+
 				} else {
 					obj.state = 'on';
-					
+
 				}
 		}
 		else{
@@ -403,8 +423,7 @@ function($scope, $location, $rootScope, runSymbolChange) {
 UI.directive(
             "eventDelegate",
             function( $parse ) {
-            	console.log('clicked')
-            	
+
                 // I bind the DOM and event handlers to the scope.
                 function link( $scope, element, attributes ) {
                     // Right now, the delegate can be defined as
@@ -487,7 +506,7 @@ UI.directive('downloadButton',  function ($compile) {
 			var json = JSON.stringify(data);
 			var blob = new Blob([json], {type: "application/json"});
 			var url  = URL.createObjectURL(blob);
-			
+
 			elem.html($compile(
             '<a class="btn" download="data.json"' +
                 'href="' + url + '">' +
@@ -498,7 +517,7 @@ UI.directive('downloadButton',  function ($compile) {
  		}
  	};
  });
- 
+
  UI.directive('buttonToggle', function() {
     return {
         restrict: 'A',
@@ -519,7 +538,7 @@ UI.directive('downloadButton',  function ($compile) {
     };
 });
 
-	
+
 UI.directive('viewAnimation', function ($route) {
   return {
     restrict: 'A',
@@ -548,10 +567,10 @@ UI.directive('ngEnter', function () {
 UI.directive('backButton', function(){
     return {
       restrict: 'A',
- 
+
       link: function(scope, element, attrs) {
         element.bind('click', goBack);
- 
+
         function goBack() {
          $location.path('#/playlist')
         }
@@ -570,13 +589,13 @@ UI.directive('yearSlider', function($compile){
 		},
 		template:'Start Year: <input class="year_slider" type="range" ng-model="start_year" min="1890" max="{{d}}" step="1"  name="start" value="{{start_year}}"><br>End Year: &nbsp;<input class="year_slider" type="range" ng-model="end_year" min="1890" max="{{d}}"  step="1"  name="end" value="{{end_year}}"> '
 	};
-	
-	
+
+
 });
 UI.directive('drawerHeight', function($window, $location, $timeout) {
 	return function(rootScope, element) {
-		
-			
+
+
 			var w = angular.element($window);
 			rootScope.getWindowDimensions = function() {
 				return {
@@ -589,7 +608,7 @@ UI.directive('drawerHeight', function($window, $location, $timeout) {
 					if($location.path().match('genres')){
 					rootScope.drawerHeight = $('#genre_holder').height()+25
 						if(rootScope.drawerHeight<w.height()){
-							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
+							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);
 						}else{
 							rootScope.drawerHeight=w.height();
 							rootScope.drawerTop=0;
@@ -601,14 +620,14 @@ UI.directive('drawerHeight', function($window, $location, $timeout) {
 				if($location.path().match('genres')){
 					rootScope.drawerHeight = $('#genre_holder').height()+25
 						if(rootScope.drawerHeight<w.height()){
-							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);			
+							rootScope.drawerTop = (w.height()-rootScope.drawerHeight)-($('.navigation_holder').height()+25);
 						}else{
 							rootScope.drawerHeight=w.height();
 							rootScope.drawerTop=0;
 						}
 				}
 				rootScope.$apply();
-			
+
 		});
 	};
 });
@@ -662,4 +681,3 @@ UI.directive('fastRepeat', function(){
           }
       };
 });
-	

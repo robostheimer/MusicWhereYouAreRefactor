@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en" ng-app="MusicWhereYouAreApp">
 	<head>
-		
+
 		<link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 		<link rel="manifest" href="/manifest.json">
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine.min.css">
-	    
+
 		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/icons/apple-touch-icon-72x72.png" />
@@ -16,9 +16,9 @@
 		<link rel="apple-touch-icon-precomposed" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
 		<link rel="icon" sizes="192x192" href="icons/drawable-hdpi/ic_launcher.png">
-		
+
 		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
-	
+
 		<meta name="application-name" content="MusicWhereYouAre"/>
 		<meta name="msapplication-TileColor" content="#FFFFFF" />
 		<meta name="msapplication-TileImage" content="/icons/mstile-144x144.png" />
@@ -26,10 +26,10 @@
 		<meta name="msapplication-square150x150logo" content="/icons/mstile-150x150.png" />
 		<meta name="msapplication-wide310x150logo" content="/icons/mstile-310x150.png" />
 		<meta name="msapplication-square310x310logo" content="/icons/mstile-310x310.png" />
-		
-		
+
+
 		<meta charset="utf-8">
-		
+
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -45,13 +45,13 @@
 		<link rel ="stylesheet" href="style.css">
 		<link rel="stylesheet" href="leaflet.css" />
 		<link rel="stylesheet" href="bower_components/cubiq-add-to-homescreen-cd1e0ce/style/addtohomescreen.css">
-		
+
 	</head>
 	<body >
 		<!--<section id="country_form"  ng-show="OpeningMessage==true">
 			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="closeOpeningMessage()"></div>
 			<p>For MusicWhereYouAre to be able to find Spotify songs that are available in your location, it needs to know what country you are in. </p>
-			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p> 
+			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p>
 			<p>To Clear this country, please click on the settings icon and click <em>Reset Country</em> Button</p>
 			<form>
 				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country.toUpperCase())">
@@ -65,8 +65,8 @@
 			<div class="clear"></div>
 		</section>-->
 
-		
-	
+
+
 		<header>
 
 		</header>
@@ -82,8 +82,8 @@
 				<div ng-click="closeHint()" class="closer">
 					<strong>X</strong>
 				</div>
-				<div ng-click="closeHint()"  ng-repeat="hint in finalHints" >
-					<a ng-click="closeHint()" ng-href="#/playlist/{{hint.cityhref}}*{{hint.statehref}}">{{hint.city}}, {{hint.state}}, {{hint.country}}</a>
+				<div ng-click="closeHint()"  ng-repeat="hint in hints" >
+					<a ng-click="closeHint()" ng-href="#/playlist/{{hint.href}}">{{hint.city}}</a>
 				</div>
 <!-- 				<div ng-repeat="hint in finalHints"  ng-click="closeHint()" >
 					<a ng-click="closeHint()" ng-href="#/playlist/{{hint.statehref}}">{{hint.state}}, {{hint.country}}</a>
@@ -135,25 +135,25 @@
 
 		</section>-->
 		<section id="map-area" class="animate-show" >
-			
-			
+
+
 			<div mwya-map class="mwya-map" zoom="{{mapdata.zoom}}" id="map" longitude="{{mapdata.longitude}}" latitude="{{mapdata.latitude}}" maptype="roadmap" scrollwheel="false" change="{{mapdata.change}}"  >
-					
-					
+
+
 				</div>
 			</div>
-					
-				
 
-		
+
+
+
 
 		</section>
 		<div ng-include="'partials/icons.html'"></div>
 		<div style="clear:both"></div>
 
 
-		
-		<script src="bower_components/leaflet-0.7.3/leaflet-src.min.js"></script>	
+
+		<script src="bower_components/leaflet-0.7.3/leaflet-src.min.js"></script>
 		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine.min.js"></script>
 	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine-html.min.js"></script>
 	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/boot.min.js"></script>-->
@@ -171,17 +171,17 @@
 		<script src="bower_components/cubiq-add-to-homescreen-cd1e0ce/src/addtohomescreen.min.js"></script>
 		<script src="bower_components/angular-resource/angular-resource.min.js"></script>
 		<script src="bower_components/Base64/angular-base64.min.js"></script>
-		
-		
+
+
 		<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	
+
 	  ga('create', 'UA-57261483-1', 'auto');
 	  //ga('send', 'pageview');
-	
+
 	</script>
 
 		<script src="js/app.js"></script>
@@ -196,13 +196,13 @@
 		<script src="js/ui_module.js"></script>
 		<script src="js/animation.js"></script>
 		<script src="js/prototypes.js"></script>
-		
+
 		<!--<script src ="tests/test.js"></script>	-->
-		
+
 		<script>
 		addToHomescreen({maxDisplayCount:1, lifespan: 15, displayPace:1000, icon:false, skipFirstVisit:false});
-		
+
 		</script>
-		
+
 	</body>
 </html>

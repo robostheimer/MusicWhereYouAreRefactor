@@ -53,21 +53,21 @@ function addTracksToPlaylist(username, playlist, tracks, start, callback) {
 		'/tracks'; 
     var thisTracks = tracks.slice(start, start + maxTracksPerPlaylistAdd);
 	$.ajax(url, {
-		type: 'POST',
-		data: JSON.stringify(thisTracks),
-		dataType: 'json',
-        processData:false,
-		headers: {
+			type: 'POST',
+			data: JSON.stringify(thisTracks),
+			dataType: 'json',
+	    processData:false,
+			headers: {
 			'Authorization': 'Bearer ' + g_access_token,
 			'Content-Type': 'application/json'
 		},
 		success: function(r) {
-            if (start + maxTracksPerPlaylistAdd >= tracks.length) {
-                callback('good');
-            } else {
-                status(Math.round(100 * start / tracks.length)  + "% saved");
-                addTracksToPlaylist(username, playlist, tracks, start + maxTracksPerPlaylistAdd, callback);
-            }
+      if (start + maxTracksPerPlaylistAdd >= tracks.length) {
+          callback('good');
+      } else {
+          status(Math.round(100 * start / tracks.length)  + "% saved");
+          addTracksToPlaylist(username, playlist, tracks, start + maxTracksPerPlaylistAdd, callback);
+      }
 		},
 		error: function(r, status, err) {
 			callback(null);
