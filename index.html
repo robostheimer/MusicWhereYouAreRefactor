@@ -137,8 +137,12 @@
 		<section id="map-area" class="animate-show" >
 
 
-			<div mwya-map class="mwya-map" zoom="{{mapdata.zoom}}" id="map" longitude="{{mapdata.longitude}}" latitude="{{mapdata.latitude}}" maptype="roadmap" scrollwheel="false" change="{{mapdata.change}}"  >
-
+			<!-- <div mwya-map class="mwya-map" zoom="{{mapdata.zoom}}" id="map" longitude="{{mapdata.longitude}}" latitude="{{mapdata.latitude}}" maptype="roadmap" scrollwheel="false" change="{{mapdata.change}}"  > -->
+				<div mwya-map id="map" class="mwya-map" latitude="{{mapdata.lat}}" longitude="{{mapdata.lng}}" maptype="roadmap" scrollwheel="false" change="{{mapdata}}" ng-hide="mapOpening">
+				</div>
+				<div style="width:100px; margin-left:auto; margin-right:auto;" class="cards" ng-show="mapOpening==true">
+					<img src="loading.gif" alt="loading"/>
+				</div>
 
 				</div>
 			</div>

@@ -1,29 +1,45 @@
 var Location=angular.module('Location', []);
 /*Services*/
 
-Location.service("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope',
-function( $http, $sce, $location,States, $routeParams, $rootScope) {
+Location.service("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope','$q',
+function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 
 	//////////////////////MAKE WORK for LOWERCASE
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
 
 		runLocation : function(location, latorlng, ratio) {
-			var cities;
-			var city_matches = [];
-			var location_regex = new RegExp(location.replace(/\*/g, ',').toLowerCase().replace(/_/g, ' '));
-			console.log(location_regex)
-			return $http.get('json/locations.json').then(function(data) {
-				var cities = data.data;
-				cities.forEach(function(city){
-
+			var cities,
+				city_matches = [],
+				location_regex = new RegExp(location.replace(/\*/g, ',').toLowerCase().replace(/_/g, ' ')),
+				deferred = $q.defer();
+			//loads locations if they have not already been added
+			if(!$rootScope.locations) {
+				return $http.get('json/locations.json').then(function(data) {
+					$rootScope.locations = data.data;
+					$rootScope.locations.forEach(function(city){
+						if(location_regex.test(city.city.toLowerCase()))
+						{
+						city_matches.push(city.city_id);
+						}
+					});
+					console.log(city_matches)
+					return city_matches;
+				});
+			} else {
+				$rootScope.locations.forEach(function(city){
 					if(location_regex.test(city.city.toLowerCase()))
 					{
 					city_matches.push(city.city_id);
 					}
 				});
-				return city_matches;
-			});
+
+				deferred.resolve(city_matches);
+				return deferred.promise;;
+			}
+
+
+
 		// 	console.log(location)
 		// 	$rootScope.hideiconHolder=false;
 		// 	$rootScope.noGeo=false;

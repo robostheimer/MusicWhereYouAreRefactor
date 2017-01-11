@@ -5,15 +5,10 @@ var UI=angular.module('UI', []);
 UI.factory("HintShower", ['$q', '$rootScope', '$http', '$sce', '$location','States','retrieveLocation',
 function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 	var canceller = $q.defer();
-	var locations;
-	//bring in locations object from json
-	if(!locations) {
-		$http.get('json/locations.json').then(function(result) {
-		 locations = result;
-	 	});
-	}
+	//bring in locations object from json if they don't already exist
+
 	return {
-		showHint : function(location, guess)
+		showHint : function(location)
 		{
 			// 	if(location.length==3)
 			// {
@@ -92,15 +87,20 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				// return hints;
 				//}
 			//});
+			if(!$rootScope.locations) {
+				$http.get('json/locations.json').then(function(result) {
+				 $rootScope.locations = result.data;
+			 	});
+			}
 			var states = States.createStateObj(),
 			hints=[],
 
 			location = location.toString().toLowerCase().replace(', ', ' ');
 			location_regex = new RegExp(location);
 
-			locations.data.forEach(function(location) {
+			$rootScope.locations.forEach(function(location) {
 				if(location_regex.test(location.city.toLowerCase().replace(', ', ','))) {
-					hints.push({city: location.city, href: location.city.replace(/,/g, '*'), long: location.lng, lat: location.lat});
+					hints.push({city: location.city.replace(/,/g, ', '), href: location.city.replace(/,/g, '*'), long: location.lng, lat: location.lat});
 				}
 			});
 			return hints;
@@ -192,7 +192,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 
 		$timeout(function() {
 			$scope.hints =  HintShower.showHint($scope.type_location, guess);
-			$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude)
+			//$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude)
 			$rootScope.showHint = true;
 		// $timeout(function() {
 		// 	HintShower.showHint($scope.type_location, guess).then(function(result) {
@@ -213,7 +213,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 		// 				}
 		// 			}
 			//});
-		}, 300);
+		}, 500);
 
 		$scope.location_ = location;
 		if ($scope.location_.toTitleCase().match('St.')) {

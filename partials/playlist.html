@@ -165,7 +165,7 @@
 	<div ng-hide="loading==true" ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[0].state}} cards"  >
 
 			<div id="locationsongs">
-				<div ng-repeat="song in songs.spotify_info.data.tracks " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
+				<div ng-repeat="song in songs.spotify_info " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
 					<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id, 'from')"></div>
 					<p class="info" id="pinfo{{song.num_id}}">
 						{{song.name}}
