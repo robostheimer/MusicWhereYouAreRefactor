@@ -102,6 +102,8 @@ Geolocation.directive('mwyaMap',  function () {
 			map.addLayer(MAP);
 
     	attr.$observe('change', function() {
+				marker_content='';
+
 				scope.mapdata.markers.forEach(function(item){
     			map.removeLayer(item);
     		});
