@@ -56,7 +56,7 @@ function($q, $http, $sce, HashCreate, $rootScope, $location) {
 
 /*Controllers*/
 
-Geolocation.controller('Geolocate', ['$scope', '$window', '$http', '$sce', 'getLocation', '$rootScope', '$q', '$routeParams',
+Geolocation.controller('Geolocate', ['scope', '$window', '$http', '$sce', 'getLocation', '$rootScope', '$q', '$routeParams',
 function($scope, $window, $http, $sce, getLocation, $q, $rootScope, $routeParams) {
 		getLocation.checkGeoLocation()
 		$scope.location=""
@@ -65,22 +65,21 @@ function($scope, $window, $http, $sce, getLocation, $q, $rootScope, $routeParams
 
 
 /*Directives*/
-Geolocation.directive('mwyaMap',  function ($rootScope) {
+Geolocation.directive('mwyaMap',  function () {
 
  return {
 	 restrict: 'AE',
-     scope: { },
      transclude: true,
 
     link: function(scope, element, attr ) {
-	    $rootScope.markers =[];
-			$rootScope.mapdata={};
-			$rootScope.mapdata.lat = 41.654811;
-      $rootScope.mapdata.lng = -91.5380717;
-			$rootScope.mapdata.orig_lat=0;
-			$rootScope.mapdata.orig_lng=0;
-			$rootScope.mapdata.zoom=13;
-			$rootScope.mapOpening=true;
+			scope.mapdata={};
+			scope.mapdata.lat = 41.654811;
+      scope.mapdata.lng = -91.5380717;
+			scope.mapdata.markers = [];
+			scope.mapdata.orig_lat=0;
+			scope.mapdata.orig_lng=0;
+			scope.mapdata.zoom=13;
+			scope.mapOpening=true;
 
 
 			var map = new L.Map("map",{});
@@ -103,29 +102,27 @@ Geolocation.directive('mwyaMap',  function ($rootScope) {
 			map.addLayer(MAP);
 
     	attr.$observe('change', function() {
-				console.log('changing', $rootScope.mapdata.lat, $rootScope.mapdata.lng);
-    		markers.forEach(function(item){
+				scope.mapdata.markers.forEach(function(item){
     			map.removeLayer(item);
     		});
-				if($rootScope.mapdata.orig_lat === undefined || $rootScope.mapdata.orig_lng === undefined || $rootScope.mapdata.orig_lat===0 || $rootScope.mapdata.orig_lng === 0)
+				if(scope.mapdata.orig_lat === undefined || scope.mapdata.orig_lng === undefined || scope.mapdata.orig_lat===0 || scope.mapdata.orig_lng === 0)
 					{
-						$rootScope.mapdata.orig_lat = $rootScope.mapdata.lat
-						$rootScope.mapdata.orig_lng = $rootScope.mapdata.lng
+						scope.mapdata.orig_lat = scope.mapdata.lat
+						scope.mapdata.orig_lng = scope.mapdata.lng
 					}
-				var circle = L.circle([$rootScope.mapdata.orig_lat, $rootScope.mapdata.orig_lng], 125, {
-				    color: '#428bca',
-				    fillColor: '#428bca',
-				    fillOpacity: 0.15
-					}).addTo(map);
 
-      	if($rootScope.markers.length>0)
+      	if(scope.mapdata.markers.length>0)
       	{
       		markers =[];
-      		var i =0
-      		$rootScope.markers.forEach(function(marker) {
+      		var i =0;
+					var myIcon = L.icon({
+					    iconUrl: 'genre_icons/marker_sm.svg',
+						})
+
+      		scope.mapdata.markers.forEach(function(marker) {
       		i++
-					marker_content='<a href="'+marker.url+'" target="_blank">'+marker.name+'</a><br>'+marker.location.address[0]+'<br>'+marker.location.city+'<br><a href="tel://'+marker.display_phone+'">'+marker.display_phone+'</a><br><img src="'+marker.rating_img_url+'" alt="'+marker.rating+' stars">';
-					markers.push(L.marker([marker.location.coordinate.latitude, marker.location.coordinate.longitude]).bindPopup(marker_content));
+					marker_content+=`<a href="${marker.uri}"><b>${marker.name}</b></a><br>${marker.artists[0].name}</b><br><i>${marker.album.name}</i><br>${marker.location.city}<br><br>`
+					markers.push(L.marker([marker.location.lat, marker.location.lng]).bindPopup(marker_content));
 					});
        	}
 

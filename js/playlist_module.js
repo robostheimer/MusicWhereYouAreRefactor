@@ -87,7 +87,9 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
 					songs.spotify_info = data.data.tracks;
 					songs.spotify_info.forEach(function(track) {
+						let i = 0;
 						track.favorite = 'off';
+						track.location =songs.chunked_arr[0].info[i].location;
 					})
 					return songs;
 				})
@@ -1024,9 +1026,9 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
 						$scope.songs = data;
 						$scope.loading = false;
-						console.log(data.chunked_arr[0].info[0].location.lat, data.chunked_arr[0].info[0].location.lng)
-						$rootScope.mapdata.lat=data.chunked_arr[0].info[0].location.lat;
-						$rootScope.mapdata.lng=data.chunked_arr[0].info[0].location.lng;
+						$scope.mapdata.lat=data.spotify_info[0].location.lat;
+						$scope.mapdata.lng=data.spotify_info[0].location.lng;
+						$scope.mapdata.markers=data.spotify_info;
 						$scope.newlocation = false;
 						$rootScope.mapOpening = false;
 				});
