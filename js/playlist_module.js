@@ -53,46 +53,57 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 				songs.tracks =[];
 				songs.info = [];
+				songs.artists = [];
 				songs.spotify_info =[];
 				songs.songs_ids='';
+				songs.artists_ids='';
 				//Massaging the data so that all artists have the proper location info attached to them
 				data.data.forEach(function(item) {
 					item.artists.forEach(function(artist) {
 						artist.location = item.city;
 						songs.tracks.push(artist.songs[0].tid);
+						songs.artists.push(artist.sid)
 					});
 
 					songs.info.push(item.artists);
 				});
-
 				//Flattening songs.info arrays --> turn this into a util
 				songs.info = [].concat.apply([],songs.info);
 
 				num_groups = songs.info.length/50;
 				remainder = songs.info.length%50;
-
 				//turn this into a util/helper function
 				if(songs.info.length > 50) {
 					for(var i=1; i<num_groups; i++) {
-								songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
+								songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
 							}
 					} else {
-						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks}];
+						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
 				}
 				//will need to create a mechanism to change the index based on a click or infinite scroll
 				songs.songs_ids = songs.chunked_arr[index].tracks.toString();
+				songs.artist_ids = songs.chunked_arr[0].artists.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
 
 				//call to spotify api to get more info about songs for cards
-				return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
-					songs.spotify_info = data.data.tracks;
-					songs.spotify_info.forEach(function(track) {
+				return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.artist_ids}`).then(function(data) {
+					var artists = data.data.artists;
+					return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
 						let i = 0;
-						track.favorite = 'off';
-						track.location =songs.chunked_arr[0].info[i].location;
+						songs.spotify_info = data.data.tracks;
+						songs.spotify_info.forEach(function(track) {
+							//console.log(artists[i].genres)
+							track.genres = artists[i].genres;
+							track.favorite = 'off';
+							track.location = songs.chunked_arr[0].info[i].location;
+							i++;
+						})
+						//to get genre have to run an artist search through spotify api and add that to the spotify_info object
+						//https://api.spotify.com/v1/artists/{artist.id}
+						console.log(songs)
+						return songs;
 					})
-					return songs;
-				})
+				});
 
 				// var songs = data.data.response.songs;
 				// songs = songs.removeDuplicatesArrObj( 'title', true);

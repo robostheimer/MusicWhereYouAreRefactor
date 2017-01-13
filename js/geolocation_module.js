@@ -86,9 +86,9 @@ Geolocation.directive('mwyaMap',  function () {
 			var markers=[];
 			var cirlce;
 
-			var MAP = Esri_WorldTopoMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri&mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			//var MAP = Esri_WorldTopoMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri&mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
 
-			//var MAP = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			var MAP = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 				subdomains: '1234',
 				mapID: 'newest',
 				app_id: 'Y8m9dK2brESDPGJPdrvs',
@@ -117,19 +117,19 @@ Geolocation.directive('mwyaMap',  function () {
       	{
       		markers =[];
       		var i =0;
-					var myIcon = L.icon({
+					var mwyaIcon = L.icon({
 					    iconUrl: 'genre_icons/marker_sm.svg',
 						})
 
       		scope.mapdata.markers.forEach(function(marker) {
       		i++
 					marker_content+=`<a href="${marker.uri}"><b>${marker.name}</b></a><br>${marker.artists[0].name}</b><br><i>${marker.album.name}</i><br>${marker.location.city}<br><br>`
-					markers.push(L.marker([marker.location.lat, marker.location.lng]).bindPopup(marker_content));
+					markers.push(L.marker([marker.location.lat, marker.location.lng], { icon: mwyaIcon }).bindPopup(marker_content));
 					});
        	}
 
 	      map.animate=true;
-				map._zoom = 8;
+				map._zoom = 10;
 				map.scrollWheelZoom.disable();
 				map.panTo([attr.latitude, attr.longitude]);
 			 	map.zoomControl.options.position='topright';
