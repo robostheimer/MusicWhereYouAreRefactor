@@ -47,29 +47,7 @@
 		<link rel="stylesheet" href="bower_components/cubiq-add-to-homescreen-cd1e0ce/style/addtohomescreen.css">
 
 	</head>
-	<body >
-		<!--<section id="country_form"  ng-show="OpeningMessage==true">
-			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="closeOpeningMessage()"></div>
-			<p>For MusicWhereYouAre to be able to find Spotify songs that are available in your location, it needs to know what country you are in. </p>
-			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p>
-			<p>To Clear this country, please click on the settings icon and click <em>Reset Country</em> Button</p>
-			<form>
-				<input type ="text" maxlength="2"  name="check_spot"  ng-model="country" ng-enter="setCountry(country.toUpperCase())">
-				<button class="button_on" ng-click="setCountry(country.toUpperCase())" ng-enter="setCountry(country.toUpperCase())">
-
-					<div class="button_txt" >
-						Submit
-					</div>
-				</button>
-			</form>
-			<div class="clear"></div>
-		</section>-->
-
-
-
-		<header>
-
-		</header>
+	<body>
 
 		<section id="whereyouat" ng-controller="formController">
 			<form novalidate class="simple-form" id="search" >
@@ -85,9 +63,6 @@
 				<div ng-click="closeHint()"  ng-repeat="hint in hints" >
 					<a ng-click="closeHint()" ng-href="#/playlist/{{hint.href}}">{{hint.city}}</a>
 				</div>
-<!-- 				<div ng-repeat="hint in finalHints"  ng-click="closeHint()" >
-					<a ng-click="closeHint()" ng-href="#/playlist/{{hint.statehref}}">{{hint.state}}, {{hint.country}}</a>
-				</div> -->
 			</div>
 
 		</section>
@@ -103,41 +78,11 @@
 
 		</section>
 
-		<div style="clear:both"></div>
-		<!-- <ul id="chooser">
-
-		<li class="musicwhereyouare active" id="music_where" ></li>
-		<li class="geomix inactive" id="geomix" ></li>
-		<li class="folowwme inactive" id="follow_me" ></li>
-		-->
-		</ul>
-
 		<div ng-view view-animation drawer-height style="height:{{drawerHeight}}px; top:{{drawerTop}}px">
 
 		</div>
-		<!--<section id="geolocation_alert" class="noheight" ng-class="{addheight:noSongs==true, noheight:noSongs==false}">
-			<h2>Uh Oh, Looks like there's NO Music Where You Are.  At Least not the type of Music You are Looking for.</h2>
-			<div style="width:95px; margin:auto"><img src="/MusicWhereYouAre/no_mwya.png" alt="nothing doing music-wise where you are"/>
-			</div>
-
-			<p>
-				And as Nietsche said, "A world (or in this case a geolocation) without music is a mistake."
-			</p>
-			<p>
-				To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
-			</p>
-			<p>
-				Music Where You Are is a geolocation-based Music Discovery App.  It's Music Where You Are, Where You Are Going, and Where You Want to Be.
-			</p>
-			<p>
-				If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location and clear out the genres you have picked.
-			</p>
-
-		</section>-->
 		<section id="map-area" class="animate-show" >
 
-
-			<!-- <div mwya-map class="mwya-map" zoom="{{mapdata.zoom}}" id="map" longitude="{{mapdata.longitude}}" latitude="{{mapdata.latitude}}" maptype="roadmap" scrollwheel="false" change="{{mapdata.change}}"  > -->
 				<div mwya-map id="map" class="mwya-map" latitude="{{mapdata.lat}}" longitude="{{mapdata.lng}}" maptype="roadmap" scrollwheel="false" change="{{mapdata}}" ng-hide="mapOpening">
 				</div>
 				<div style="width:100px; margin-left:auto; margin-right:auto;" class="cards" ng-show="mapOpening==true">
@@ -205,7 +150,6 @@
 
 		<script>
 		addToHomescreen({maxDisplayCount:1, lifespan: 15, displayPace:1000, icon:false, skipFirstVisit:false});
-
 		</script>
 
 	</body>

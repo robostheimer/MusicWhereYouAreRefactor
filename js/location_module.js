@@ -9,10 +9,12 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 	return {
 
 		runLocation : function(location, latorlng, ratio) {
+			console.log(location)
 			var cities,
 				city_matches = [],
-				location_regex = new RegExp(location.replace(/\*/g, ',').toLowerCase().replace(/_/g, ' ')),
+				location_regex = new RegExp(location.replace(/\*/g, ', ').toLowerCase()),
 				deferred = $q.defer();
+								console.log(location_regex)
 			//loads locations if they have not already been added
 			if(!$rootScope.locations) {
 				return $http.get('json/locations.json').then(function(data) {
@@ -241,34 +243,41 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 }]);
 
 
-Location.service("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams',
-function($q, $rootScope, $http, $sce, $location, $routeParams) {
+Location.service("HashCreate", ['$q', '$rootScope', '$http', '$sce','$location','$routeParams','States',
+function($q, $rootScope, $http, $sce, $location, $routeParams, States) {
 	return{
 			runHash : function(lat, lng, url_change, ratio) {
 
 			$rootScope.hideiconHolder=false;
-			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0";
+			var url = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityName%2C+Region%2C+CountryID+FROM+1B8NpmfiAc414JhWeVZcSqiz4coLc_OeIh7umUDGs+WHERE+Lat+<=" + (lat+ratio) + "+AND+Lat>=" + (lat - ratio) + "+AND+Long<=" + (lng+ratio) + "+AND+Long>=" + (lng -ratio) + "&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0",
+			states =States.createStateObj();
 			return $http.get(url).then(function(data) {
+
 
 				if (data.data.rows != null) {
 
 					var city = data.data.rows[0][0];
-					var state = data.data.rows[0][1];
+					var state;
 					var country = data.data.rows[0][2];
+					states.forEach(function(item) {
+						if(data.data.rows[0][1] === item.name) {
+							state = item.abbreviation;
+						}
+					})
 					if(localStorage.country==null)
 					{
 					localStorage.country = country;
 					}
-					var obj={'city':city, 'state':state }
+					var obj={'city':city, 'state':state, 'country': country }
 					if (city.split(' ') > 1) {
 						city = city.replace(/ /g, '_');
 					}
 
-					if (state.split(' ') > 1) {
-						state = state.replace(/ /g, '_');
-					}
+					// if (state.split(' ') > 1) {
+					// 	state = state.replace(/ /g, '_');
+					// }
 					var hashy = $location.path().split('/')[1].split('/')[0];
-					var location = city + '*' +state+'/';
+					var location = `${city}*${state}*${country}/`;
 					if(url_change ==true)
 					{
 					return hashy+'/'+location.replace(/ /g, '_');
