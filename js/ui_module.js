@@ -228,7 +228,6 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	};
 
 	$scope.controlForm = function(location) {
-		console.log(location)
 		LocationDataFetch.count=0;
 		if(location!=undefined)
 		{

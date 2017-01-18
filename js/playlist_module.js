@@ -7,36 +7,8 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
-		 	///console.log(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number)
-			// 	var lsTitleArr=[];
-			// var lsIdArr=[];
-			// var lsTitleStr='';
-			// var lsIdStr='';
-			// var lsIdFavArr=[];
-			// 	var genresSplit = genres.split('**');
-			// 	var eraSplit=era.split('**');
-			// 	var finalgenres = '';
-			// 	var era1='';
-			// 	var era2='';
-
 		 	$rootScope.infoMessage=false;
 
-				// for (var i=0; i<genresSplit.length; i++)
-				// {
-				//
-				// 	if(genresSplit.length>0&& genresSplit[i]!="")
-				// 	{
-				// 		if(genresSplit[i]!='holiday')
-				// 		{
-				// 		finalgenres +='&style='+genresSplit[i];
-				// 		}
-				// 		else
-				// 		{
-				// 			finalgenres+='&song_type=christmas';
-				// 		}
-				// 	}
-				//
-				// }
 				songs = {};
 			// 	 if(finalgenres=='' && era=='')
 			// 	{
@@ -50,7 +22,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				var num_groups //to help chunk into groups of 50 (max number that can be sent to spotify api);
 				var remainder //to help to chunk into groups of 50 (max number that can be sent to spotify api);
 				songs.chunked_arr = [];
-
 				songs.tracks =[];
 				songs.info = [];
 				songs.artists = [];
@@ -58,8 +29,8 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				songs.songs_ids='';
 				songs.artists_ids='';
 				//Massaging the data so that all artists have the proper location info attached to them
-				data.data.forEach(function(item) {
-					item.artists.forEach(function(artist) {
+				data.data.map(function(item) {
+					item.artists.map(function(artist) {
 						artist.location = item.city;
 						songs.tracks.push(artist.songs[0].tid);
 						songs.artists.push(artist.sid)
@@ -75,32 +46,45 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				//turn this into a util/helper function
 				if(songs.info.length > 50) {
 					for(var i=1; i<num_groups; i++) {
-								songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
+								songs.chunked_arr.push({
+									info: songs.info.slice((i-1)*50,i*50),
+									tracks: songs.tracks.slice((i-1)*50,i*50),
+									artists: songs.artists.slice((i-1)*50,i*50),
+									songs_ids: songs.tracks.slice((i-1)*50,i*50).toString(),
+									artist_ids: songs.artists.slice((i-1)*50,i*50).toString(),
+									spot_strFinal:  $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.tracks.slice((i-1)*50,i*50).toString()}`)
+								}); // chunks song ids into an array of nested arrays with a lenght of 50
 							}
 					} else {
-						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
+						songs.chunked_arr = [{
+							info: songs.info,
+							tracks: songs.tracks,
+							artists: songs.artists,
+							song_ids: songs.tracks.toString(),
+							artist_ids: songs.artists.toString(),
+							spot_strFinal: $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.tracks.toString()}`)
+						}];
 				}
+				debugger;
 				//will need to create a mechanism to change the index based on a click or infinite scroll
-				songs.songs_ids = songs.chunked_arr[index].tracks.toString();
-				songs.artist_ids = songs.chunked_arr[0].artists.toString();
-				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
+
 
 				//call to spotify api to get more info about songs for cards
-				return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.artist_ids}`).then(function(data) {
+				//LOOP through all chunked_arr's and get the spotify_data
+				songs.chunked_arr.forEach(function(chunk) {
+
+				})
+				return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.chunked_arr[index].artist_ids}`).then(function(data) {
 					var artists = data.data.artists;
-					return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
+					return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.chunked_arr[index].songs_ids}`).then(function(data) {
 						let i = 0;
 						songs.spotify_info = data.data.tracks;
-						songs.spotify_info.forEach(function(track) {
-							//console.log(artists[i].genres)
+						songs.spotify_info.map(function(track) {
 							track.genres = artists[i].genres;
 							track.favorite = 'off';
 							track.location = songs.chunked_arr[0].info[i].location;
 							i++;
 						})
-						//to get genre have to run an artist search through spotify api and add that to the spotify_info object
-						//https://api.spotify.com/v1/artists/{artist.id}
-						console.log(songs)
 						return songs;
 					})
 				});
@@ -970,60 +954,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 
 	$scope.runApp = function(start_number, counter, type, arr, arr2, index1, index2) {
-		// $rootScope.loading=true;
-		// $rootScope.loading_tags=false;
-		// $scope.noSongsAbout = false;
-		//
-		// var arr=[];
-		// var holder_arr=[];
-		// if(arr==undefined)
-		// {
-		// 	 var arr=[];
-		// }
-		// else{
-		// 	var arr=arr;
-		// }
-		// 	if(arr2==undefined)
-		// {
-		// 	$scope.holder_arr=[];
-		//
-		// }
-		// else{
-		// 	$scope.holder_arr=arr2;
-		//
-		// }
-		// if(index1==undefined){
-		// 	 $scope.index1 = 0;
-		// }
-		// else{
-		// 	$scope.index1 = index1;
-		// }
-		//
-		// if(index2==undefined){
-		// 	$scope.index2 = 20;
-		// }
-		// else{
-		// 	$scope.index2 = index2;
-		// }
-
-		// $scope.songs = [];
-		// $scope.songs.spot_arr = [];
-		// $scope.spot_arr = [];
-		// $scope.savSpotArr = [];
-		// $scope.location_arr = [];
-		// $scope.final_loc_arr = [];
-		//
-		//
-		// $scope.shareBox = false;
-		//
-		// if(type=='button')
-		// {
-		// }
-		// $rootScope.trackStorage = localStorage.country;
-		// $scope.start_number = start_number;
-		// $scope.ratio = .5 * counter;
-		//
-		// $scope.counter = counter;
 		if (LocationDataFetch.count == 0 || $rootScope.songs_root == undefined ||$rootScope.noSongs==true ) {
 			$rootScope.mapOpening = true;
 			$rootScope.holder=[];
@@ -1035,7 +965,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-						$scope.songs = data;
+						$rootScope.songs = data;
 						$scope.loading = false;
 						$scope.mapdata.lat=data.spotify_info[0].location.lat;
 						$scope.mapdata.lng=data.spotify_info[0].location.lng;
@@ -1043,422 +973,12 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 						$scope.newlocation = false;
 						$rootScope.mapOpening = false;
 				});
-				// $scope.latitudeObj = data;
-				// $rootScope.latitudeObj_root = data;
-				// $scope.latitude = $scope.latitudeObj.latitude;
-				// retrieveLocation.runLocation($scope.location.replacePatterns(), 'long', counter).then(function(data) {
-				// 	console.log(data)
-				// 	if(data.longitude==undefined)
-				// 	{
-				// 		LocationDataFetch.count=0;
-				// 	}
-				// 	$rootScope.longitudeObj_root = {};
-				// 	$scope.longitudeObj = data;
-				// 	$rootScope.longitudeObj_root = data;
-				// 	$scope.longitude = $scope.longitudeObj.longitude;
-				// 	$scope.geolocation = [$scope.latitudeObj, $scope.longitudeObj];
-				// 	$scope.compare_location = data.location;
-				//
-				// 	var lat_range =Math.abs($scope.latitudeObj.lat_max - $scope.latitudeObj.lat_min);
-				// 	var lng_range =Math.abs($scope.longitudeObj.long_max - $scope.longitudeObj.long_min)
-				// 	var lat_avg =  ($scope.latitudeObj.lat_max + $scope.latitudeObj.lat_min)/2;
-				// 	var lng_avg = ($scope.longitudeObj.long_max + $scope.longitudeObj.long_min)/2;
-				//
-				// 	if(lat_range>lng_range)
-				// 	{
-				// 		var finalRange=lat_range
-				// 	}
-				// 	else
-				// 	{
-				// 		var finalRange=lng_range;
-				// 	}
-				//
-				// 	if($routeParams.location.split('*').length>1)
-				// 	{
-				// 	$scope.zoom=Spotify.runRange(finalRange)
-				// 	}
-				// 	else{
-				// 		$scope.zoom=6;
-				// 	}
-				//
-				// 	if ($routeParams.qs == undefined) {
-				// 		var tmparr=[];
-				// 		$scope.sharer = false;
-				// 		$scope.shareBox = false;
-				// 		//////////Work with preloading 500+  songs
-				// 		//console.log( $scope.latitudeObj.latitude);
-				//
-				// 		for(var t=0; t<5; t++)
-				// 		{
-				//
-				// 			$scope.start_number = t*50;
-				// 			PlaylistCreate.runPlaylist($scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.latitudeObj.lat_min, $scope.latitudeObj.lat_max, $scope.longitudeObj.long_min, $scope.longitudeObj.long_max, $rootScope.genres, $rootScope.era,$scope.start_number).then(function(data){
-				// 				arr = arr.concat(data);
-				// 				tmparr.push(t)
-				// 					if(tmparr.length==t)
-				// 					{
-				// 						///////////No songs from this geolocation///////////
-				// 						if(data.songsArr.length==0 && $scope.holder_arr.length>0)
-				// 						{
-				// 							$rootScope.loading=false;
-				// 							if($scope.btnCount>0)
-				// 							{
-				// 							$scope.noMoreSongs=true;
-				// 							$scope.moreHider=true;
-				// 							}
-				// 							else{
-				// 							$scope.noMoreSongs=false;
-				// 							$scope.moreHider=false;
-				// 							}
-				//
-				// 							$scope.donesy=true;
-				// 							var index1 = $scope.holder_arr.length-20;
-				// 							var index2 = $scope.holder_arr.length;
-				//
-				//
-				// 							Spotify.createPlaylist($scope.holder_arr).then(function(result) {
-				// 								$scope.songs = result.songs.slice($scope.index1, $scope.index2+20)
-				// 								$scope.songs.spot_arr = result.spot_arr.slice($scope.index1, $scope.index2+20)
-				// 								$scope.songs.savSpotArr = result.savSpotArr.slice($scope.index1, $scope.index2+20)
-				// 								artistlocation = result.artistlocation.slice($scope.index1, $scope.index2+20)
-				// 								$scope.songs.location_arr = result.location_arr.slice($scope.index1, $scope.index2+20)
-				//
-				// 								$scope.songs.spot_strFinal =$sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+$scope.songs.spot_arr.toString());
-				// 								$rootScope.songs_root = $scope.songs;
-				//
-				// 									Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
-				// 												LocationDataFetch.count=1;
-				// 												$rootScope.mapdata = data;
-				// 												$scope.stillLooking = false;
-				// 												$rootScope.loading=false;
-				// 												$rootScope.mapOpening=false;
-				// 												$scope.checkForMore=true;
-				// 												$rootScope.loading=false
-				//
-				// 												});
-				//
-				// 							},function(error){
-				// 								$scope.errorMessage = true;
-				// 							});
-				//
-				// 						}
-				//
-				// 						///////////Number of songs is less than 100 and geolocation needs to be extended and has not yet gone through 5 ratio changes
-				// 						else if (arr.length < 100 && $scope.counter<=5) {
-				//
-				//
-				// 							$scope.counter = $scope.counter + 1;
-				// 							if($rootScope.marked==true) {
-				// 							$scope.moreHider=true;
-				// 							$rootScope.loading=false;
-				// 							$scope.noMoreSongs = true;
-				// 							}
-				//
-				// 							else if ($scope.counter <= 5 && $scope.holder_arr.length<50) {
-				//
-				//
-				// 								if($scope.counter>3)
-				// 								{
-				// 								$scope.stillLooking = true;
-				// 								}
-				// 								$scope.start_number=$scope.start_number+50;
-				// 								LocationDataFetch.count = 0;
-				// 								$scope.runApp($scope.start_number, $scope.counter, '', arr, $scope.holder_arr);
-				//
-				//
-				// 							}
-				//
-				//
-				// 							else if(arr.length<100 && $scope.counter>=6){
-				//
-				// 							ChunkSongs.createChunks(arr, 50, $scope.counter).then(function(data){
-				// 							///////////////run the rest in a Service to cut down on amount of stuff in the controller////////////
-				// 							//////////////data returned should obj {songs:[], holder_arr:[]}
-				// 								var tmparr=[];
-				// 								var tmparr2 =[];
-				// 								for(var y=0; y<data.length; y++)
-				// 								{
-				// 									tmparr.push(y);
-				//
-				// 									Spotify.checkSongMarket(data[y].songs).then(function(result) {
-				// 										if(result.length==0)
-				// 										{
-				// 											$scope.noSongs=true;
-				// 										}
-				//
-				// 									for (var x = 0; x < result.length; x++) {
-				//
-				// 										tmparr2.push(x)
-				// 										songs_for_service.push(result[x]);
-				// 										if(tmparr.length==data.length &&tmparr2.length==result.length)
-				// 										{
-				// 										$scope.holder_songs ={};
-				// 										$scope.holder_arr = songs_for_service;
-				// 										$rootScope.holder_arr_root=songs_for_service;
-				//
-				// 										Spotify.createPlaylist(songs_for_service).then(function(result) {
-				//
-				// 											$scope.holder_songs.songs = result.songs;
-				// 											$scope.songs = result.songs.slice($scope.index1, $scope.index2+20);
-				// 											$scope.songs.spot_arr = result.spot_arr.slice($scope.index1, $scope.index2+20);
-				// 											$scope.songs.savSpotArr = result.savSpotArr.slice($scope.index1, $scope.index2+20);
-				// 											artistlocation = result.artistlocation.slice($scope.index1, $scope.index2+20);
-				// 											$scope.songs.location_arr = result.location_arr.slice($scope.index1, $scope.index2+20);
-				// 											$scope.holder_arr = $scope.holder_arr.removeDuplicatesArrObj('name', true);
-				// 											$scope.songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.songs.spot_arr.toString());
-				// 											$rootScope.songs_root = $scope.songs;
-				//
-				// 												Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
-				// 												LocationDataFetch.count=1;
-				// 												$rootScope.mapdata = data;
-				// 												$scope.stillLooking = false;
-				// 												$rootScope.loading=false;
-				// 												$rootScope.mapOpening=false;
-				// 												$scope.checkForMore=true;
-				// 												$rootScope.loading=false;
-				//
-				//
-				// 												});
-				//
-				//
-				// 										},function(error){
-				// 											$scope.errorMessage = true;
-				// 										});
-				// 										}
-				//
-				// 									}
-				// 									});
-				// 								}
-				//
-				//
-				// 							},function(error){
-				// 								$scope.errorMessage = true;
-				// 							});
-				//
-				// 						}
-				//
-				// 						else if($scope.counter==6)
-				// 							{
-				// 									$scope.noSongs=true;
-				// 							}
-				//
-				// 						}
-				// 						/////////////////Songs are over 50 and required fewer than 5 ratio changes////////////////
-				// 						////////////////This is generally what is used for larger cities//////////////////////////
-				// 						else if(arr.length>100 &&($scope.donesy==false||$scope.donesy==undefined)){
-				// 							ChunkSongs.createChunks(arr, 50, $scope.counter).then(function(data){
-				//
-				// 							///////////////run the rest in a Service to cut down on amount of stuff in the controller////////////
-				// 							//////////////data returned should obj {songs:[], holder_arr:[]}
-				//
-				// 								var tmparr=[];
-				// 								var tmparr2 =[];
-				// 								for(var y=0; y<data.length; y++)
-				// 								{
-				// 									tmparr.push(y);
-				// 									Spotify.checkSongMarket(data[y].songs).then(function(result) {
-				// 									for (var x = 0; x < result.length; x++) {
-				//
-				// 										tmparr2.push(x);
-				// 										songs_for_service.push(result[x]);
-				// 										if(tmparr.length==data.length &&tmparr2.length==result.length)
-				// 										{
-				// 										$scope.holder_songs ={};
-				// 										$scope.holder_arr = songs_for_service;
-				// 										$rootScope.holder_arr_root = songs_for_service;
-				// 											if(result.length>0 && $scope.counter<2 && $scope.holder_arr.length<150)
-				// 											{
-				// 												$scope.counter++;
-				// 												LocationDataFetch.count=0;
-				// 												$scope.runApp($scope.start_number, $scope.counter, '', [], $scope.holder_arr);
-				//
-				//
-				// 											}
-				// 											else{
-				// 												Spotify.createPlaylist(songs_for_service).then(function(result) {
-				//
-				// 												$scope.holder_songs.songs = result.songs;
-				// 												$scope.songs = result.songs.slice($scope.index1, $scope.index2+20);
-				// 												$scope.songs.spot_arr = result.spot_arr.slice($scope.index1, $scope.index2+20);
-				// 												$scope.songs.savSpotArr = result.savSpotArr.slice($scope.index1, $scope.index2+20);
-				// 												artistlocation = result.artistlocation.slice($scope.index1, $scope.index2+20);
-				// 												$scope.songs.location_arr = result.location_arr.slice($scope.index1, $scope.index2+20);
-				// 												$scope.holder_arr = $scope.holder_arr.removeDuplicatesArrObj('name', true);
-				// 												$scope.songs.spot_strFinal = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.songs.spot_arr.toString());
-				// 												$rootScope.songs_root = $scope.songs;
-				//
-				// 												Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
-				// 												LocationDataFetch.count=1;
-				// 												$rootScope.mapdata = data;
-				// 												$scope.stillLooking = false;
-				// 												$rootScope.loading=false;
-				// 												$rootScope.mapOpening=false;
-				// 												$scope.checkForMore=true;
-				// 												$rootScope.loading=false;
-				// 												});
-				//
-				// 											},function(error){
-				// 												$scope.errorMessage = true;
-				// 											});
-				// 											}
-				//
-				// 										}
-				//
-				// 									}
-				//
-				// 									});
-				// 								}
-				//
-				//
-				// 							},function(error){
-				// 										$scope.errorMessage = true;
-				// 									});
-				//
-				// 						}
-				//
-				//
-				//
-				// 				}
-				//
-				// 			},function(error){
-				// 				$scope.errorMessage = true;
-				// 			});
-				// 		}
-				// 	}  else {
-				//
-				// 		ShareSongs.createSongsList().then(function(result) {
-				// 			$scope.sharer = true;
-				// 			$scope.shareBox = false;
-				// 			$scope.songs = result;
-				// 			$scope.songs.pop();
-				// 			$scope.spot_arr = $scope.songs.spot_arr;
-				// 			$scope.savSpotArr = $scope.songs.savSpotArr;
-				// 			$rootScope.loading = false;
-				// 			if ($routeParams.location.split('*').length > 1) {
-				// 				$scope.zoom = 10;
-				//
-				// 			} else {
-				// 				$scope.zoom = 6;
-				// 			}
-				// 			$scope.counter=0;
-				//
-				// 			for (var b = 0; b < $scope.songs.length; b++) {
-				// 				$scope.songs[b].num_id = b;
-				// 				$scope.songs[b].favorite = 'off'
-				// 				Favorites.checkFavorites($scope.songs[b]);
-				// 			}
-				//
-				// 			$rootScope.songs_root = $scope.songs;
-				// 			$scope.moreHider=true;
-				// 			Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
-				// 			LocationDataFetch.count=1;
-				// 			$rootScope.mapdata = data;
-				// 			$scope.stillLooking = false;
-				// 			$rootScope.loading=false;
-				// 			$rootScope.mapOpening=false;
-				// 			$scope.checkForMore=true;
-				// 			$rootScope.loading=false;
-				//
-				//
-				// 			});
-				//
-				//
-				// 			LocationDataFetch.count = 0;
-				// 			//Favorites.runFavorites($scope.songs);
-				//
-				// 		});
-				// 	}
-				//
-				// });
-				//
+
 			},function(error){
 
 				$scope.errorMessage = true;
 			});
 
-		} else if (($rootScope.longitudeObj_root.location != undefined && location_comp.replace('*', ', ').replace(/_/g, ' ').toLowerCase() != $rootScope.longitudeObj_root.location.replace(/_/g, ' ').toLowerCase() && locationdatacount != 0)||$rootScope.songs_root.length==0) {
-
-			LocationDataFetch.count = 0;
-			$rootScope.latitudeObj_root.location = $routeParams.location.replace('*', ' ');
-			$rootScope.era = '';
-			$rootScope.start_year = '';
-			$rootScope.end_year = '';
-			$rootScope.loading=true;
-			$scope.runApp(0, 1, '', [], []);
-
-		} else if (LocationDataFetch.count > 0) {
-
-			$scope.shareBox = false;
-			$scope.latitudeObj = {};
-			$scope.longitudeObj = {};
-			$scope.songs = {};
-
-			$scope.latitudeObj = $rootScope.latitudeObj_root;
-			$scope.longitudeObj = $rootScope.longitudeObj_root;
-			$scope.songs = $rootScope.songs_root;
-
-			$scope.songs.forEach(function(song){
-				Favorites.checkFavorites(song);
-			});
-			$scope.holder_arr=$rootScope.holder_arr_root;
-			if($rootScope.finalcollector_arr!=null)
-			{
-			$scope.finalcollector = $rootScope.finalcollector_arr;
-			$scope.lookUpSongs = $rootScope.lookUpSongs_arr;
-			$scope.lookUpSongs.idStr=$rootScope.lookUpSongs_arr.idStr;
-			//$scope.finalcollector.idStr='';
-
-
-			}
-			else{
-				$scope.finalcollector= [];
-				$scope.lookUpSongs=[];
-				$scope.lookUpSongs.idStr='';
-			}
-
-
-			if($scope.finalcollector.length>15)
-			{
-				$scope.moreLookUp=true;
-			}
-			var lat_range =Math.abs($scope.latitudeObj.lat_max - $scope.latitudeObj.lat_min);
-
-					var lng_range =Math.abs($scope.longitudeObj.long_max - $scope.longitudeObj.long_max)
-
-					if(lat_range>lng_range)
-					{
-						var finalRange=lat_range
-					}
-					else
-					{
-						var finalRange=lng_range;
-					}
-
-					$scope.zoom=Spotify.runRange(finalRange)
-
-			$scope.stillLooking = false;
-			$rootScope.loading = false;
-			$rootScope.aboutMarked =true;
-			//alert(LocationDataFetch.count)
-			if(LocationDataFetch.count>=100000000000)
-			{
-			Spotify.createLatLng($scope.songs.location_arr, $scope.counter, $scope.zoom, $scope.latitudeObj.latitude, $scope.longitudeObj.longitude, $scope.final_loc_arr, $scope.songs.spot_arr).then(function(data){
-				LocationDataFetch.count=1;
-				$rootScope.mapdata = data;
-				$scope.stillLooking = false;
-				$rootScope.loading=false;
-				$rootScope.mapOpening=false;
-				$scope.checkForMore=true;
-				$rootScope.loading=false;
-
-				});
-
-				for (var zz = 0; zz < $scope.songs.length; zz++) {
-				$scope.songs[zz].favorite = 'off';
-
-				Favorites.checkFavorites($scope.songs[zz]);
-				}
-			}
 
 		}
 		locationdatacount = LocationDataFetch.count += 1;
@@ -1470,10 +990,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 	$scope.song_str = '';
 	$rootScope.showHint = false;
-
-
-
-
 
 	$scope.runSongAboutSearch=function(number, iterator, usergen)
 	{
@@ -2237,92 +1753,92 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 	};
 	///////////////Start here............///////////////
-	$scope.getSongs = function(songs) {
-		var deferred = $q.defer();
-		if(songs[0].artist_location==undefined)
-			{
-			var location = $routeParams.location;
-			var str='';
-			songs[0].artist_location = {};
-
-			retrieveLocation.runLocation(location.replace(/_/g,' '), 'lat', counter).then(function(result){
-
-				songs[0].artist_location.latitude = result.latitude;
-				retrieveLocation.runLocation(location.replace(/_/g,' '), 'long', counter).then(function(result)
-					{
-
-						songs[0].artist_location.longitude = result.longitude;
-
-
-						for(var x=1; x<songs.length; x++)
-						{
-							songs[x].artist_location={};
-							songs[x].artist_location.latitude = songs[0].artist_location.latitude;
-							songs[x].artist_location.longitude = songs[0].artist_location.longitude;
-						}
-
-
-						ShareSongs.getSongs(songs, $routeParams.location).then(function(url){
-							ShareSongs.getLongURL(url).then(function(result) {
-								$scope.long_url = result;
-								ShareSongs.getBitLy($scope.long_url).then(function(result) {
-
-									$scope.short_url = result;
-
-									$scope.shareBox = true;
-
-									$scope.message = 'Check out my playlist from @MusicWhereYouR, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
-									$scope.message_link = encodeURIComponent($scope.message);
-								},function(error){
-								$scope.errorMessage = true;
-								});
-
-							},function(error){
-							$scope.errorMessage = true;
-							});
-						},function(error){
-						$scope.errorMessage = true;
-						});
-					},function(error){
-					$scope.errorMessage = true;
-					});
-				},function(error){
-				$scope.errorMessage = true;
-				});
-			}
-			else
-			{
-			ShareSongs.getSongs(songs, $routeParams.location).then(function(url){;
-
-				ShareSongs.getLongURL(url).then(function(result) {
-
-					$scope.long_url = result.url;
-					if(result.sliced=='yes')
-					{
-						$scope.tooMany=true;
-
-					}
-
-					ShareSongs.getBitLy($scope.long_url).then(function(result) {
-
-						$scope.short_url = result;
-
-						$scope.shareBox = true;
-
-						$scope.message = 'Check out my playlist from @MusicWhereYouR, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
-						$scope.message_link = encodeURIComponent($scope.message);
-					},function(error){
-					$scope.errorMessage = true;
-					});
-
-				},function(error){
-				$scope.errorMessage = true;
-				});
-			},function(error){
-				$scope.errorMessage = true;
-			});
-		}
-	};
+//	$scope.getSongs = function(songs) {
+		// var deferred = $q.defer();
+		// if(songs[0].artist_location==undefined)
+		// 	{
+		// 	var location = $routeParams.location;
+		// 	var str='';
+		// 	songs[0].artist_location = {};
+		//
+		// 	retrieveLocation.runLocation(location.replace(/_/g,' '), 'lat', counter).then(function(result){
+		//
+		// 		songs[0].artist_location.latitude = result.latitude;
+		// 		retrieveLocation.runLocation(location.replace(/_/g,' '), 'long', counter).then(function(result)
+		// 			{
+		//
+		// 				songs[0].artist_location.longitude = result.longitude;
+		//
+		//
+		// 				for(var x=1; x<songs.length; x++)
+		// 				{
+		// 					songs[x].artist_location={};
+		// 					songs[x].artist_location.latitude = songs[0].artist_location.latitude;
+		// 					songs[x].artist_location.longitude = songs[0].artist_location.longitude;
+		// 				}
+		//
+		//
+		// 				ShareSongs.getSongs(songs, $routeParams.location).then(function(url){
+		// 					ShareSongs.getLongURL(url).then(function(result) {
+		// 						$scope.long_url = result;
+		// 						ShareSongs.getBitLy($scope.long_url).then(function(result) {
+		//
+		// 							$scope.short_url = result;
+		//
+		// 							$scope.shareBox = true;
+		//
+		// 							$scope.message = 'Check out my playlist from @MusicWhereYouR, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
+		// 							$scope.message_link = encodeURIComponent($scope.message);
+		// 						},function(error){
+		// 						$scope.errorMessage = true;
+		// 						});
+		//
+		// 					},function(error){
+		// 					$scope.errorMessage = true;
+		// 					});
+		// 				},function(error){
+		// 				$scope.errorMessage = true;
+		// 				});
+		// 			},function(error){
+		// 			$scope.errorMessage = true;
+		// 			});
+		// 		},function(error){
+		// 		$scope.errorMessage = true;
+		// 		});
+		// 	}
+		// 	else
+		// 	{
+		// 	ShareSongs.getSongs(songs, $routeParams.location).then(function(url){;
+		//
+		// 		ShareSongs.getLongURL(url).then(function(result) {
+		//
+		// 			$scope.long_url = result.url;
+		// 			if(result.sliced=='yes')
+		// 			{
+		// 				$scope.tooMany=true;
+		//
+		// 			}
+		//
+		// 			ShareSongs.getBitLy($scope.long_url).then(function(result) {
+		//
+		// 				$scope.short_url = result;
+		//
+		// 				$scope.shareBox = true;
+		//
+		// 				$scope.message = 'Check out my playlist from @MusicWhereYouR, a geolocation-based music discovery app. Hows the music where you are? ' + $scope.short_url
+		// 				$scope.message_link = encodeURIComponent($scope.message);
+		// 			},function(error){
+		// 			$scope.errorMessage = true;
+		// 			});
+		//
+		// 		},function(error){
+		// 		$scope.errorMessage = true;
+		// 		});
+		// 	},function(error){
+		// 		$scope.errorMessage = true;
+		// 	});
+		// }
+	//};
 
 	$scope.changeClass = function(obj) {
 		//$scope.location = $location.path().split('/')[2];

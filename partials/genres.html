@@ -1,9 +1,9 @@
 <section id="country_form"  ng-show="noCountry==true;">
 			<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="close()"></div>
 			<p>For MusicWhereYouAre to be able to find Spotify songs that are available in your location, it needs to know the country where you are located.</p>
-			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p> 
+			<p>	As a default MusicWhereYouAre has selected your country either from your geolocation or (if you do not have geolocation enabled) from the location you searched.</p>
 			<p>If you would like to change that location, please submit the two-letter country code that you would like to use as the basis of yoru search below. If you would prefer not to limit your playlist to Spotify, click the 'X' inthe top-right corner.</p>
-		
+
 			<form>
 				<input type ="text" maxlength="2"  name="check_spot"  ng-model="countryForm" ng-enter="setCountry(countryForm.toUpperCase())">
 				<button class="button_on" ng-click="setCountry(countryForm.toUpperCase())" ng-enter="setCountry(countryForm.toUpperCase())">
@@ -25,7 +25,7 @@
 
 	<div class="clear"></div>
 </section>
-			
+
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
@@ -34,9 +34,9 @@
 			Unforutnately the Echonest api has been deprecated as part of it's merging with Spotify.  Spotify's new endpoint does not make artist location publicly available which is crucial for this app to work.  Developers are currently working on a strategy to get things up and running.  If you used and liked the app in the past, please tweet @musicwhereyour and @spotify to let them know.  Thanks.  We'll see you again soon.
 
 	</p>
-	
+
 	<div class="clear"></div>
-</section>	
+</section>
 	<section class="alert" ng-show="infoMessage==true">
 			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 			<br/>
@@ -49,7 +49,7 @@
 			<a href="http://www.openstreetmap.org/" target="_blank"><img height ="15" width="15" src="genre_icons/20121123222537!Public-images-osm_logo.svg" alt="open street map "/></a><a href="http://leafletjs.com/" target="_blank"><img height ="15" width="15" src="genre_icons/leaflet.jpeg" alt="open street map "/></a>
 			<a href="http://www.bandsintown.com/api/overview" target="_blank"><img src ="genre_icons/bit.png" alt="bands in twon"/></a>
 			</footer>
-		</section>	
+		</section>
 <section class="alert"  ng-show="noSongs==true;" >
 		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
@@ -62,7 +62,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-	
+
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
@@ -112,15 +112,15 @@
 	<div class="clear"></div>
 	<div ng-hide="noPickedGenre==false">Whoa there, Hipster. <b><i>{{genre}}</i></b> is not in our database.  We will try to be cooler in the future.<br><a ng-click="noPickedGenre=false">Retry</a></div>
 	<form id="selector_genre" class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
-		
+
 		<input type="text"  name="search genre" id="findmusic" placeholder="Genre, Genre, Genre"  class="text searchy"   ng-model="genre" ng-enter="lookUpGenre(genre)" ng-show="noPickedGenre==false">
 		<div class-="clear"></div>
 			<div class="search tag_holder"  aria-hidden="true" data-icon="e" ng-click="lookUpGenre(genre)" ng-show="noPickedGenre==false"></div>
-		
+
 
 		<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
-		<ul event-delegate="li | checkGenre(genre.genre.genre)" type="click">
+		<ul event-delegate="li | checkGenres(genre.genre)" type="click">
 			<li ng-repeat="genre in Genre">
 			<div class = "checkbox {{genre.genre.state}}" >
 				<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">
@@ -140,14 +140,14 @@
 		<br>
 
 	</form>
-	
+
 </div>
 	<form novalidate id="selector_era" class="{{buttons[1].state}}" >
 		<div ng-hide="range_message==false">It's probably Rob's fault, but maybe your start year is a little past your end year.  Why don't you try to fix that and try submitting again.</div>
 		<br><div ng-swipe-left="goBack()">Add any year between 1890 and today to filter the music you see.*</div>
-		
-		
-		
+
+
+
 		<div class="years" ng-swipe-left="goBack()">{{start_year}} - {{end_year}}</div>
 		<year-slider ng-swipe-left="stayPut()"></year-slider>
 		<div class="clear"></div>
@@ -162,7 +162,7 @@
 		</button>
 
 	</form>
-	
+
 	<!--<span style="font-size:9.0px">*If you would like for there to be no end year, leave the end year field blank.</span>-->
 
 	<!--form id="selector_era" class="{{buttons[1].state}}">
@@ -249,75 +249,75 @@
 			<input ng-model='avant_garde.checked' ng-click="checkGenre('avant garde')"  type="checkbox" class="check" name="check[]" >
 			<label for="Avant_Garde"><div></div>Happy</label>
 		</div>
-		
+
 
 		<div class="checkbox" ng-class="{isSelected: blues.checked == true}">
 			<input ng-model='blues.checked' ng-click="checkGenre('blues')" type="checkbox" class="check" name="check[]" value="Blues" id="Blues">
 			<label for="Blues"><div></div>Angry</label>
 		</div>
-		
+
 		<div class = "checkbox" ng-class="{isSelected: classic_rock.checked == true}">
 			<input ng-model='classic_rock.checked' ng-click="checkGenre('classic rock')" type="checkbox" class="check" name="check[]" value="Classic_Rock" id="Classic_Rock" >
 			<label for="Classic_Rock"><div></div>Sad</label>
 		</div>
-		
+
 		<div class = "checkbox" ng-class="{isSelected: classical.checked == true}">
 			<input ng-model='classical.checked' ng-click="checkGenre('classical')" type="checkbox" class="check" name="check[]" value="Classical" id="Classical">
 			<label for="Classical"><div></div>Sexy</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: classical.checked == true}">
 			<input ng-model='classical.checked' ng-click="checkGenre('classical')" type="checkbox" class="check" name="check[]" value="Classical" id="Classical">
 			<label for="Classical"><div ></div>Quiet</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: country.checked == true}">
 			<input ng-model='country.checked' ng-click="checkGenre('country')" type="checkbox" class="check" name="check[]" value="Country" id="Country">
 			<label for="Country"><div ></div>Dark</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: drama.checked == true}">
 			<input ng-model='drama.checked' ng-click="checkGenre('drama')" type="checkbox" class="check" name="check[]" value="Drama" id="Drama">
 			<label for="Drama"><div ></div>Epic</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: electronic.checked == true}">
 			<input ng-model='electronic.checked' ng-click="checkGenre('electronic')" type="checkbox" class="check" name="check[]" value="Electronic" id="Electronic">
 			<label for="Electronic"><div ></div>Party Music</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: folk.checked == true}">
 			<input ng-model='folk.checked' ng-click="checkGenre('folk')" type="checkbox" class="check" name="check[]" value="Folk" id="Folk">
 			<label for="Folk"><div ></div>Intense</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: hip_hop.checked == true}">
 			<input ng-model='hip_hop.checked' ng-click="checkGenre('hip hop')" type="checkbox" class="check" name="check[]" value="Hip Hop" id="Hip_Hop">
 			<label for="Hip_Hop"><div ></div>Rowdy</label>
 		</div>
-		
+
 		<div class = "checkbox" ng-class="{isSelected: holiday.checked == true}">
 			<input ng-model='holiday.checked' ng-click="checkGenre('holiday')"  type="checkbox" class="check" name="check[]" value="Holiday" id="Holiday">
 			<label for="Holiday"><div ></div>Cheerful</label>
 		</div>
-		
-		
+
+
 		<div class = "checkbox" ng-class="{isSelected: indie.checked == true}">
 			<input ng-model='indie.checked' ng-click="checkGenre('indie')"  type="checkbox" class="check" name="check[]" value="Indie" id="Indie">
 			<label for="Indie"><div ></div>Carefree</label>
 		</div>
-		
+
 		<div class = "checkbox" ng-class="{isSelected: jazz.checked == true}">
 			<input ng-model='jazz.checked' ng-click="checkGenre('jazz')" type="checkbox" class="check" name="check[]" value="Jazz" id="Jazz">
 			<label for="Jazz"><div ></div>Dreamy</label>
 		</div>
-		
+
 		<div class = "checkbox" ng-class="{isSelected: latin.checked == true}">
 			<input ng-model='latin.checked' ng-click="checkGenre('latin')" type="checkbox" class="check" name="check[]" value="Latin" id="Latin">
 			<label for="Latin"><div ></div>Energetic</label>

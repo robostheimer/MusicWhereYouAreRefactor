@@ -8,13 +8,13 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
 
-		runLocation : function(location, latorlng, ratio) {
-			console.log(location)
+		runLocation : function(location) {
+			location = location.replace(/\* /g, '*' )
 			var cities,
 				city_matches = [],
 				location_regex = new RegExp(location.replace(/\*/g, ', ').toLowerCase()),
 				deferred = $q.defer();
-								console.log(location_regex)
+				console.log(location_regex)
 			//loads locations if they have not already been added
 			if(!$rootScope.locations) {
 				return $http.get('json/locations.json').then(function(data) {
@@ -25,7 +25,6 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 						city_matches.push(city.city_id);
 						}
 					});
-					console.log(city_matches)
 					return city_matches;
 				});
 			} else {
@@ -35,9 +34,8 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 					city_matches.push(city.city_id);
 					}
 				});
-
 				deferred.resolve(city_matches);
-				return deferred.promise;;
+				return deferred.promise;
 			}
 
 

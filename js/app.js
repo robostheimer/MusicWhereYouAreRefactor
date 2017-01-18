@@ -91,16 +91,17 @@ function($compileProvider)
       templateUrl: 'partials/country.html',
       controller: 'addCountry'
     }).*/
-     when('/favorites', {
+    when('/favorites', {
       templateUrl: 'partials/map.html',
       controller: 'Geolocate'
     }).
-      when('/genres', {
+
+    when('/genres', {
       templateUrl: 'partials/map.html',
       controller:'Geolocate'
     }).
 
-     when('/info', {
+    when('/info', {
       templateUrl: 'partials/map.html',
       controller: 'Geolocate',
        //animation: 'from-right'
@@ -116,41 +117,40 @@ function($compileProvider)
     }).
     when('/map/:location',
     {
-    templateUrl:'partials/map.html',
-    controller:'hashedLocation'
-
+      templateUrl:'partials/map.html',
+      controller:'hashedLocation'
     }).
     when('/jukebox/:location',
     {
-    templateUrl:'partials/jukebox.html',
-    controller:'hashedLocation',
-     animation: 'from-left'
+      templateUrl:'partials/jukebox.html',
+      controller:'hashedLocation',
+      animation: 'from-left'
     }).
     when('/roadsoda/:location',
     {
-    templateUrl:'partials/roadsoda.html',
-    controller:'hashedLocation',
-     animation: 'from-left'
+      templateUrl:'partials/roadsoda.html',
+      controller:'hashedLocation',
+      animation: 'from-left'
     }).
     when('/playlist/',
     {
-    templateUrl:'partials/map.html',
-    controller:'Geolocate',
+      templateUrl:'partials/map.html',
+      controller:'Geolocate',
     //controller:'hashedLocation',
     // animation: 'from-left'
     }).
 
     when('/playlist/:location',
     {
-    templateUrl:'partials/playlist.html',
-    controller:'hashedLocation',
-     animation: 'from-bottom'
+      templateUrl:'partials/playlist.html',
+      controller:'hashedLocation',
+      animation: 'from-bottom'
     }).
     when('/genres/:location',
     {
-    templateUrl:'partials/genres.html',
-    controller:'GenreController',
-     animation: 'from-bottom-genre'
+      templateUrl:'partials/genres.html',
+      controller:'GenreController',
+      animation: 'from-bottom-genre'
     }).
 
     when('/favorites/:location', {
@@ -181,7 +181,7 @@ function($compileProvider)
     when('/calendar/',
     {
       templateUrl: 'partials/map.html',
-     controller: 'Geolocate',
+      controller: 'Geolocate',
       animation: 'from-bottom'
     }).
 
@@ -201,32 +201,36 @@ function($compileProvider)
     when('/events/',
     {
       templateUrl: 'partials/map.html',
-     controller: 'Geolocate',
+      controller: 'Geolocate',
       animation: 'from-bottom'
     }).
-    when('/genres/:location/:genre',
+    // when('/genres/:location/:genre',
+    // {
+    //   templateUrl:'partials/genres.html',
+    //   controller:'GenreController',
+    //   animation: 'from-bottom-genre'
+    // }).
+    when('/genres/:location/',
     {
-    templateUrl:'partials/genres.html',
-    controller:'GenreController',
-    animation: 'from-bottom-genre'
+      templateUrl:'partials/genres.html',
+      controller:'GenreController',
+      animation: 'from-bottom-genre'
     }).
     when('/playlist/:location/:qs',
     {
-
-    templateUrl:'partials/playlist.html',
-    controller:'hashedLocation',
-    animation: 'from-bottom'
+      templateUrl:'partials/playlist.html',
+      controller:'hashedLocation',
+      animation: 'from-bottom'
     }).
     when('/songs_about',
     {
-
-    templateUrl:'partials/songs_about.html',
-    controller:'findSongsAbout',
-    //animation: 'from-left'
+      templateUrl:'partials/songs_about.html',
+      controller:'findSongsAbout',
+      //animation: 'from-left'
     }).
     when('/error',
     {
-    templateUrl:'partials/map.html',
+      templateUrl:'partials/map.html',
 
     }).
 
