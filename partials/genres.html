@@ -120,7 +120,7 @@
 
 		<div class="result_btn on" ng-repeat="genre in genreSans track by $index" ng-click ="toggleGenre(genre)">{{genre}} <sup>x</sup></div>
 		<div class="clear"></div>
-		<ul event-delegate="li | checkGenres(genre.genre)" type="click">
+		<ul event-delegate="li | checkGenres(genre.genre.genre)" type="click">
 			<li ng-repeat="genre in Genre">
 			<div class = "checkbox {{genre.genre.state}}" >
 				<input ng-model="genre.genre.checked" type="checkbox" class="check" name="check[]"  id="{{genre.genre.genre.toTitleCase()}}">

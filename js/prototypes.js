@@ -174,6 +174,10 @@ String.prototype.findThe=function()
 	return str;
 };
 /****************************Array****************************/
+
+Array.prototype.flatten = function() {
+	return [].concat.apply([],this);
+}
 Array.prototype.removeItem=function(str_ind, item)
 {
 	var array=this;

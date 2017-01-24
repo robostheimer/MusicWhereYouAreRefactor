@@ -6,7 +6,7 @@ function($routeParams, $http){
 	return {
 			  getGenre: function() {
 
-			var Genre=[{genre: {checked : false,isSelected : false, state: 'off',  genre: 'avant garde', similarSettings: 'avant garde**avant garde jazz**avant garde metal', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'blues', similarSettings: 'blues**blues guitar**blues revival**blues rock**blues-rock**british blues**chicago blues**classic blues**contemporary blues**country blues**delta blues**electric blues**juke joint blues louisiana blues**memphis blues**modern blues**modern electric blues**new orleans blues**slide guitar blues**soul blues**texas blues', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'classic rock', similarSettings: 'classic rock' , year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre: 'classical', similarSettings: 'classical**classical pop**contemporary classical music**crossover classical**modern classical', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'comedy', similarSettings:'comedy**comedy rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'country', similarSettings: 'country rock**alternative country**country**honky tonk**cowboy punk**classic country**modern country**hillbilly**rockabilly**bluegrass**country pop**outlaw country**pop country**progressive country**texas country', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'drama', similarSettings: 'drama', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'electronic', similarSettings: 'electronic**electro**electro hip hop**electro house**electro rock**electro-funk**electro-industrial**electro jazz**experimental electronic**indie electronic', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'folk', similarSettings: 'folk**acid folk**alternative folk**contemporary folk**country folk**electric folk**folk pop**folk revival**folk rock**folk pop**indie folk**neo folk**pop folk**psychedelic folk**stomp and holler**traditional folk**urban folk', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'hip hop', similarSettings:'hip hop**classic hip hop**rap**west coast hip hop**alternative hip hop**east coast hip hop**electro hip hop**experimental hip hop**independent hip hop**indie hip hop**jazz hip hop**old school hip hop**southern hip hop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',   genre: 'holiday', similarSettings: 'holiday', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'indie', similarSettings: 'indie rock**geek rock**lo fi**math rock**indie folk**indie hip hop**indie**indy', year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre : 'jazz', similarSettings: 'jazz**jazz blues**jazz funk**jazz fusion**jazz hip hop**jazz rock**jazz vocal**latin jazz**modern jazz**new orleans jazz**soul jazz**traditional jazz' , year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: "kid music", similarSettings:'children\'s music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'latin', similarSettings: 'latin**latin jazz**jazz latino**latin alternative**latin folk**latin hip hop**latin pop**latin music**latin rap**latin rock**latin ska', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'new age', similarSettings:'new age**new age music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'motown', similarSettings: 'motown**classic motown**soul**memphis soul**old school soul**soul music**soul', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'pop', similarSettings:'pop 60s pop**80s pop**acoustic pop**alternative pop**pop rock**dance pop**folk pop**jangle pop**pop country**pop punk**pop rap**pop folk**psychedelic pop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'punk', similarSettings: 'punk**punk rock**acoustic punk**art punk**anarcho punk**classic punk**cowpunk**dance-punk**cyberpunk**emo punk**folk punk**garage punk**hardcore punk**indie punk**old school punk**political punk**skate punk**street punk', year_end:''}},{genre : {checked : false,isSelected : false, state: 'off',  genre: 'rock', similarSettings: 'rock**punk rock**classic rock**college rock**dance rock**electro rock**folk rock**garage rock**jam band**hard rock**modern rock**psychedelic stoner rock**punk**southern rock**80s rock**90s rock**70s rock**60s rock**alternative rock**acoustic rock**acid rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'soft rock', similarSettings: 'soft rock**easy listening', year_end:''}}, {genre: {checked : false,isSelected : false, state: 'off',  genre: 'world', similarSettings: 'world world music**world beat**world fusion', year_end:''}}];
+			var Genre=[{genre: {checked : false,isSelected : false, state: 'off',  genre: 'avant garde', similarSettings: 'avant garde avant garde jazz avant garde metal', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'blues', similarSettings: 'blues blues guitar blues revival blues rock blues-rock british blues chicago blues classic blues contemporary blues country blues delta blues electric blues juke joint blues louisiana blues memphis blues modern blues modern electric blues new orleans blues slide guitar blues soul blues texas blues', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'classic rock', similarSettings: 'classic rock' , year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre: 'classical', similarSettings: 'classical classical pop contemporary classical music crossover classical modern classical', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'comedy', similarSettings:'comedy comedy rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'country', similarSettings: 'country rock alternative country country honky tonk cowboy punk classic country modern country hillbilly rockabilly bluegrass country pop outlaw country pop country progressive country texas country', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'drama', similarSettings: 'drama', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'electronic', similarSettings: 'electronic electro electro hip hop electro house electro rock electro-funk electro-industrial electro jazz experimental electronic indie electronic', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre:'folk', similarSettings: 'folk acid folk alternative folk contemporary folk country folk electric folk folk pop folk revival folk rock folk pop indie folk neo folk pop folk psychedelic folk stomp and holler traditional folk urban folk', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'hip hop', similarSettings:'hip hop classic hip hop rap west coast hip hop alternative hip hop east coast hip hop electro hip hop experimental hip hop independent hip hop indie hip hop jazz hip hop old school hip hop southern hip hop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',   genre: 'holiday', similarSettings: 'holiday', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'indie', similarSettings: 'indie rock geek rock lo fi math rock indie folk indie hip hop indie indy', year_end:''}}, {genre : {checked : false, isSelected : false, state: 'off',  genre : 'jazz', similarSettings: 'jazz jazz blues jazz funk jazz fusion jazz hip hop jazz rock jazz vocal latin jazz modern jazz new orleans jazz soul jazz traditional jazz' , year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: "kid music", similarSettings:'children\'s music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'latin', similarSettings: 'latin latin jazz jazz latino latin alternative latin folk latin hip hop latin pop latin music latin rap latin rock latin ska', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre : 'new age', similarSettings:'new age new age music', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'motown', similarSettings: 'motown classic motown soul memphis soul old school soul soul music soul', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'pop', similarSettings:'pop 60s pop 80s pop acoustic pop alternative pop pop rock dance pop folk pop jangle pop pop country pop punk pop rap pop folk psychedelic pop', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'punk', similarSettings: 'punk punk rock acoustic punk art punk anarcho punk classic punk cowpunk dance-punk cyberpunk emo punk folk punk garage punk hardcore punk indie punk old school punk political punk skate punk street punk', year_end:''}},{genre : {checked : false,isSelected : false, state: 'off',  genre: 'rock', similarSettings: 'rock punk rock classic rock college rock dance rock electro rock folk rock garage rock jam band hard rock modern rock psychedelic stoner rock punk southern rock 80s rock 90s rock 70s rock 60s rock alternative rock acoustic rock acid rock', year_end:''}}, {genre : {checked : false,isSelected : false, state: 'off',  genre: 'soft rock', similarSettings: 'soft rock easy listening', year_end:''}}, {genre: {checked : false,isSelected : false, state: 'off',  genre: 'world', similarSettings: 'world world music world beat world fusion', year_end:''}}];
 
 
 	return Genre;
@@ -62,19 +62,24 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 			classy : 'button_off'
 		}];
 
-		$scope.Genre = loadGenreCheckData.getGenre();
-		$scope.selectedGenres = $scope.Genre.filter(function(item) {
-			return item.checked;
-		})
-		console.log($scope.selectedGenres);
+
 
 		$scope.runApp = function() {
-			var location_comp = $routeParams.location;
+			var location_comp = $routeParams.location,
+				chunked_arr = [];
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-						console.log(data)
 						$rootScope.songs = data;
+						if($rootScope.songs.all_songs.length === 0) {
+							chunked_arr = $rootScope.songs.chunked_arr;
+							chunked_arr.forEach(function(chunk) {
+								Spotify.runGenres(chunk).then(function(data) {
+									$rootScope.songs.all_songs.push(data.spotify_info);
+									$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
+								})
+							});
+						}
 						$scope.loading = false;
 						$scope.mapdata.lat=data.spotify_info[0].location.lat;
 						$scope.mapdata.lng=data.spotify_info[0].location.lng;
@@ -86,28 +91,37 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		}
 
 		$scope.checkGenres = function(genre) {
+			var matches = [];
+			//$scope.selectedGenres = [];
+			//$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
+
 			$scope.Genre.forEach(function(item) {
-				if(item.genre.genre === genre.genre) {
-					$scope.selectedGenres.push(genre);
+				if(item.genre.genre === genre) {
+					//$scope.selectedGenres.push(genre);
 					item.genre.checked = true;
 					item.genre.isSelected = true;
 					item.genre.state = 'on';
+					$rootScope.songs.selectedGenres.push(item.genre.genre);
 				}
 			});
 
 
 			//run a filter songs array if there is at least one genre;
-			if($scope.selectedGenres.length > 0) {
-				console.log($scope.selectedGenres.length, $rootScope.songs)
-				$rootScope.songs.filter(function(song) {
-					console.log(song)
-					const song_genres_regex = new RegExp(song.genres.toString());
-					const genres_str = genres.toString();
-
-					return song.genres.match(genres_str);
+			if($rootScope.songs.selectedGenres.length > 0) {
+				$rootScope.songs.all_songs.forEach(function(song) {
+					if(song.genres.length > 0) {
+						$rootScope.songs.selectedGenres.forEach(function(genre) {
+							genre_regex = new RegExp(genre);
+							if(genre_regex.test(song.genres.join(' '))) {
+								matches.push(song);
+							}
+						})
+					}
 				})
 			}
-			return songs;
+			console.log($scope.songs.spotify_info )
+			$scope.songs.spotify_info = matches.removeDuplicatesArrObj('name', false)
+
 		};
 
 		$scope.runButtons = function(id) {
@@ -124,10 +138,36 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 
 				}
 			};
+
+		$scope.all_songs = [];
+
+		///HOW TO PERSIST GENRE so when you come to this screen it knows to light up selected buttons
+		$scope.Genre = loadGenreCheckData.getGenre();
+
+		// $scope.Genre.forEach(function(item) {
+		// 	if(item.genre.genre === genre.genre) {
+		// 		//$scope.selectedGenres.push(genre);
+		// 		item.genre.checked = true;
+		// 		item.genre.isSelected = true;
+		// 		item.genre.state = 'on';
+		// 		$scope.selectedGenres.push(item.genre.genre);
+		// 	}
+		// });
 		if(!$rootScope.songs)
 		{
 			$scope.runApp();
+		} else {
+			$rootScope.songs.selectedGenres.forEach(function(genre) {
+				$scope.checkGenres(genre);
+			})
+			// var chunked_arr = $rootScope.songs.chunked_arr;
+			// chunked_arr.forEach(function(chunk) {
+			// 	Spotify.runGenres(chunk).then(function(data) {
+			// 		$scope.all_songs.push(data.info);
+			// 	})
+			// });
 		}
+
 //
 // 	$rootScope.noGeo=false;
 // 	///////////////////////Fix this; this is a mess.... Turn it into a service that can be called here and in the retrieve location controller/////////////////////////////
