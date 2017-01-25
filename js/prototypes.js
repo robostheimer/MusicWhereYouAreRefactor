@@ -178,18 +178,18 @@ String.prototype.findThe=function()
 Array.prototype.flatten = function() {
 	return [].concat.apply([],this);
 }
-Array.prototype.removeItem=function(str_ind, item)
+Array.prototype.removeItem=function(item)
 {
-	var array=this;
-	if(str_ind=="ind")
-	{
-		array.splice(item, 1);
-	}
-	if(str_ind=="str")
-	{
-		array.splice(array.indexOf(item), 1)
-	}
-
+	return this.filter(function(filt) {
+		return filt !== item;
+	});
+	// let container = []
+	// this.forEach(function(arr_item) {
+	// 	if(arr_item !== item) {
+	// 		container.push(arr_item);
+	// 	}
+	// });
+	// return container;
 }
 Array.prototype.SortObjAsc=function(property, num_or_str, checkDupProperty)
  	{

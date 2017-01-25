@@ -63,49 +63,52 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		}];
 
 
-
 		$scope.runApp = function() {
 			var location_comp = $routeParams.location,
 				chunked_arr = [];
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
+					var songs = data;
+					Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
 						$rootScope.songs = data;
-						if($rootScope.songs.all_songs.length === 0) {
-							chunked_arr = $rootScope.songs.chunked_arr;
-							chunked_arr.forEach(function(chunk) {
-								Spotify.runGenres(chunk).then(function(data) {
-									$rootScope.songs.all_songs.push(data.spotify_info);
-									$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
-								})
-							});
-						}
+						$rootScope.songsCopy = angular.copy($rootScope.songs); //caches the original song data b4 genres are selected
+						$rootScope.songs.all_songs = songs.all_songs;
+						$rootScope.songs.chunked_arr = songs.chunked_arr;
+						$rootScope.songs.selectedGenres = [];
+						$scope.getAllSongs();
 						$scope.loading = false;
 						$scope.mapdata.lat=data.spotify_info[0].location.lat;
 						$scope.mapdata.lng=data.spotify_info[0].location.lng;
 						$scope.mapdata.markers=data.spotify_info;
 						$scope.newlocation = false;
 						$rootScope.mapOpening = false;
+					});
 				});
 			});
 		}
 
 		$scope.checkGenres = function(genre) {
-			var matches = [];
-			//$scope.selectedGenres = [];
-			//$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
-
 			$scope.Genre.forEach(function(item) {
 				if(item.genre.genre === genre) {
-					//$scope.selectedGenres.push(genre);
-					item.genre.checked = true;
-					item.genre.isSelected = true;
-					item.genre.state = 'on';
-					$rootScope.songs.selectedGenres.push(item.genre.genre);
+					if(!item.genre.checked) {
+						item.genre.checked = true;
+						item.genre.isSelected = true;
+						item.genre.state = 'on';
+						$rootScope.songs.selectedGenres.push(item.genre.genre);
+					} else {
+						item.genre.checked = false;
+						item.genre.isSelected = false;
+						item.genre.state = 'off';
+						$rootScope.songs.selectedGenres = $rootScope.songs.selectedGenres.removeDuplicatesArr().removeItem(item.genre.genre)
+					}
 				}
 			});
+			$scope.runGenreFilter();
+		};
 
-
+		$scope.runGenreFilter = function() {
+			var matches = [];
 			//run a filter songs array if there is at least one genre;
 			if($rootScope.songs.selectedGenres.length > 0) {
 				$rootScope.songs.all_songs.forEach(function(song) {
@@ -118,54 +121,59 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 						})
 					}
 				})
+				if(matches.length > 0) {
+					$rootScope.songs.spotify_info = matches.removeDuplicatesArrObj('name', false);
+				}
+			}  else {
+				$rootScope.songs.spotify_info = $rootScope.songsCopy.spotify_info;
 			}
-			console.log($scope.songs.spotify_info )
-			$scope.songs.spotify_info = matches.removeDuplicatesArrObj('name', false)
-
 		};
 
 		$scope.runButtons = function(id) {
 
-				for (var c = 0; c < $scope.buttons.length; c++) {
-					if ($scope.buttons[c].name == id) {
-						$scope.buttons[c].state = 'shower';
-						$scope.buttons[c].classy = 'button_on';
+			for (var c = 0; c < $scope.buttons.length; c++) {
+				if ($scope.buttons[c].name == id) {
+					$scope.buttons[c].state = 'shower';
+					$scope.buttons[c].classy = 'button_on';
 
-					} else {
-						$scope.buttons[c].state = 'hider'
-						$scope.buttons[c].classy = 'button_off';
-					}
-
+				} else {
+					$scope.buttons[c].state = 'hider'
+					$scope.buttons[c].classy = 'button_off';
 				}
-			};
+
+			}
+		};
+
+		$scope.getAllSongs = function() {
+			var deferred = $q.defer();
+			if($rootScope.songs.all_songs.length === 0) {
+				chunked_arr = $rootScope.songs.chunked_arr;
+				chunked_arr.forEach(function(chunk) {
+					Spotify.runGenres(chunk).then(function(data) {
+						$rootScope.songs.all_songs.push(data.spotify_info);
+						$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
+					})
+				});
+			}
+			deferred.resolve(true);
+			return deferred.promise;
+		};
 
 		$scope.all_songs = [];
 
-		///HOW TO PERSIST GENRE so when you come to this screen it knows to light up selected buttons
 		$scope.Genre = loadGenreCheckData.getGenre();
 
-		// $scope.Genre.forEach(function(item) {
-		// 	if(item.genre.genre === genre.genre) {
-		// 		//$scope.selectedGenres.push(genre);
-		// 		item.genre.checked = true;
-		// 		item.genre.isSelected = true;
-		// 		item.genre.state = 'on';
-		// 		$scope.selectedGenres.push(item.genre.genre);
-		// 	}
-		// });
 		if(!$rootScope.songs)
 		{
 			$scope.runApp();
 		} else {
-			$rootScope.songs.selectedGenres.forEach(function(genre) {
-				$scope.checkGenres(genre);
-			})
-			// var chunked_arr = $rootScope.songs.chunked_arr;
-			// chunked_arr.forEach(function(chunk) {
-			// 	Spotify.runGenres(chunk).then(function(data) {
-			// 		$scope.all_songs.push(data.info);
-			// 	})
-			// });
+			$scope.getAllSongs().then(function(data) {
+				if(data) {
+						$rootScope.songs.selectedGenres.forEach(function(genre) {
+							$scope.checkGenres(genre);
+						})
+					}
+			});
 		}
 
 //

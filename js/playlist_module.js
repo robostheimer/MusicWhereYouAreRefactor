@@ -1,8 +1,8 @@
 var Playlist=angular.module('Playlist', []);
 
 /*Services*/
-Playlist.service('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States', 'Spotify',
-function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, Spotify) {
+Playlist.service('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States', 'Spotify', 'ChunkSongs',
+function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, Spotify, ChunkSongs) {
 
 
 	return {
@@ -34,7 +34,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 					songs.info.push(item.artists);
 				});
-				//Flattening songs.info arrays --> turn this into a util
+
 				songs.info = songs.info.flatten();
 
 				num_groups = songs.info.length/50;
@@ -51,45 +51,24 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
 				songs.artist_ids = songs.chunked_arr[0].artists.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
+				return songs;
 
-
-
-				//
-				// var test = []
-				// songs.chunked_arr.forEach(function(chunk) {
-				// 	console.log(chunk)
-				// 	var c = songs.chunked_arr.indexOf(chunk)
-				// 	return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
-				// 		var artists = data.data.artists;
-				// 		return $http.get(`https://api.spotify.com/v1/tracks?ids=${chunk.tracks.toString()}`).then(function(data) {
-				// 			chunk.info.forEach(function(item) {
-				// 				let i = chunk.info.indexOf(item);
-				// 				item.genres = artists[i].genres;
-				// 				item.favorite = 'off';
-				// 				item.location = item.location;
-				// 				i++;
-				// 				songs.all_songs.push(item);
-				// 			});
-				// 		});
-				// 	});
-				// });
-
-				return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.artist_ids}`).then(function(data) {
-					var artists = data.data.artists;
-					return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
-						let i = 0;
-						songs.spotify_info = data.data.tracks;
-						songs.spotify_info.map(function(track) {
-							track.genres = artists[i].genres;
-							track.favorite = 'off';
-							track.location = songs.chunked_arr[0].info[i].location;
-							i++;
-						});
-						songs.selectedGenres = [];
-						return songs;
-					})
-				});
-
+					//This needs to go into a service and then get called post PlaylistCreate
+					// return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.artist_ids}`).then(function(data) {
+					// 	var artists = data.data.artists;
+					// 	return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
+					// 		let i = 0;
+					// 		songs.spotify_info = data.data.tracks;
+					// 		songs.spotify_info.map(function(track) {
+					// 			track.genres = artists[i].genres;
+					// 			track.favorite = 'off';
+					// 			track.location = songs.chunked_arr[0].info[i].location;
+					// 			i++;
+					// 		});
+					// 		songs.selectedGenres = [];
+					// 		return songs;
+					// 	})
+					// });
 				// var songs = data.data.response.songs;
 				// songs = songs.removeDuplicatesArrObj( 'title', true);
 				// songs.songsArr=[];
@@ -328,10 +307,10 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					return $http.get(`https://api.spotify.com/v1/tracks?ids=${chunk.tracks.toString()}`).then(function(data) {
 						let i = 0;
 						chunk.spotify_info = data.data.tracks;
-						//console.log(chunk)
 						chunk.spotify_info.map(function(track) {
 							track.genres = artists[i].genres;
 							track.favorite = 'off';
+							track.location = chunk.info[i].location;
 							i++;
 						});
 						return chunk;
@@ -782,78 +761,28 @@ Playlist.service("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDat
 function($q, $rootScope, $http, $sce, LocationDataFetch)
 {
 	return{
-		createChunks:function(songs, number)
+		createChunks:function(songs, num)
 		{
 				var deferred = $q.defer();
-				var remainder =songs.length%number;
-				var divider=songs.length/number;
-				var floor = Math.floor(divider);
-				var songsFinal =[];
-				var songsArrStr='';
-				if(songs.length<number)
-				{
-					var songsArr=[];
-					songs.forEach(function(item)
-					{
-						//console.log(SongSlicer[x])
-						songsArr.push(item);
-						songsArrStr+=item.tracks[0].foreign_id.split(':')[2]+',';
-
-					});
-					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
-					songsFinal.push({songs:songs, url:'https://api.spotify.com/v1/tracks/?ids='+songsArrStr, ids: songsArrStr});
-					deferred.resolve(songsFinal);
-					return deferred.promise;
+				num_groups = songs.info.length/num;
+				remainder = songs.info.length%num;
+				//turn this into a util/helper function
+				if(songs.info.length > num) {
+					for(var i=1; i<num_groups; i++) {
+								songs.chunked_arr.push({info: songs.info.slice((i-1)*num,i*num), tracks: songs.tracks.slice((i-1)*num,i*num), artists: songs.artists.slice((i-1)*num,i*num)}); // chunks song ids into an array of nested arrays with a lenght of 50
+							}
+					} else {
+						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
 				}
-				else{
-
-
-				//Cannot use ForEach because Floor is not an array, but a number//////////
-				for(var z=0; z<floor; z++)
-				{
-					var songsArr=[];
-
-
-					var SongSlicer=[];
-					//console.log(z*number+':'+number)
-					SongSlicer = songs.slice(z*number,(z*number)+number);
-
-					//console.log(SongSlicer.length)
-					SongSlicer.forEach(function(SongSlicer)
-					{
-						if(SongSlicer.tracks[0]!==undefined)
-						{
-						//console.log(SongSlicer[x])
-						songsArr.push(SongSlicer);
-						songsArrStr+=SongSlicer.tracks[0].foreign_id.split(':')[2]+',';
-						}
-					});
-					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
-					songsFinal.push({songs:songsArr, url:'https://api.spotify.com/v1/tracks/?ids='+songsArrStr, ids: songsArrStr});
-
-				}
-				if(remainder>0)
-				{
-
-					var songsArr=[];
-					var SongSlicer =songs.slice(songs.length-remainder, songs.length);
-					SongSlicer.forEach(function(SongSlicer)
-					{
-						if(SongSlicer.tracks[0]!==undefined)
-						{//console.log(SongSlicer[x])
-						songsArr.push(SongSlicer);
-						songsArrStr+=SongSlicer.tracks[0].foreign_id.split(':')[2]+',';
-						}
-
-					});
-					songsArrStr=songsArrStr.slice(0, (songsArrStr.length-1));
-					songsFinal.push({songs:songsArr, url:'https://api.spotify.com/v1/tracks/?ids='+songsArrStr, ids: songsArrStr});
-
-				}
-				deferred.resolve(songsFinal);
+				console.log(songs.chunked_arr);
+				//will need to create a mechanism to change the index based on a click or infinite scroll
+				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
+				songs.artist_ids = songs.chunked_arr[0].artists.toString();
+				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
+				console.log(songs)
+				deferred.resolve(songs);
 				return deferred.promise;
 
-				}
 		},
 	};
 }]);
@@ -984,13 +913,20 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data).then(function(data){
-						$rootScope.songs = data;
-						$scope.loading = false;
-						$scope.mapdata.lat=data.spotify_info[0].location.lat;
-						$scope.mapdata.lng=data.spotify_info[0].location.lng;
-						$scope.mapdata.markers=data.spotify_info;
-						$scope.newlocation = false;
-						$rootScope.mapOpening = false;
+					var songs = data;
+						Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
+							$rootScope.songs = data;
+							$rootScope.songs.all_songs = songs.all_songs;
+							$rootScope.songs.chunked_arr = songs.chunked_arr;
+							$rootScope.songs.selectedGenres = [];
+							$scope.loading = false;
+							$scope.mapdata.lat=data.spotify_info[0].location.lat;
+							$scope.mapdata.lng=data.spotify_info[0].location.lng;
+							$scope.mapdata.markers=data.spotify_info;
+							$scope.newlocation = false;
+							$rootScope.mapOpening = false;
+						})
+
 				});
 
 			},function(error){
@@ -1978,7 +1914,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.runApp();
 		} else {
 
-			console.log($rootScope.songs)
+			$rootScope.loading = false;
 		}
 		Favorites.addFavorites();
 
