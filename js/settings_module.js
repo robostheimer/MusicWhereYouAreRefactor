@@ -69,18 +69,15 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-					var songs = data;
+					$rootScope.songs = data;
 					Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-						$rootScope.songs = data;
+						$rootScope.songs.spotify_info = data.spotify_info;
 						$rootScope.songsCopy = angular.copy($rootScope.songs); //caches the original song data b4 genres are selected
-						$rootScope.songs.all_songs = songs.all_songs;
-						$rootScope.songs.chunked_arr = songs.chunked_arr;
-						$rootScope.songs.selectedGenres = [];
 						$scope.getAllSongs();
 						$scope.loading = false;
-						$scope.mapdata.lat=data.spotify_info[0].location.lat;
-						$scope.mapdata.lng=data.spotify_info[0].location.lng;
-						$scope.mapdata.markers=data.spotify_info;
+						$rootScope.mapdata.lat=data.spotify_info[0].location.lat;
+						$rootScope.mapdata.lng=data.spotify_info[0].location.lng;
+						$rootScope.mapdata.markers=data.spotify_info;
 						$scope.newlocation = false;
 						$rootScope.mapOpening = false;
 					});
@@ -122,6 +119,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 					}
 				})
 				if(matches.length > 0) {
+					//need to chunk these songs//
 					$rootScope.songs.spotify_info = matches.removeDuplicatesArrObj('name', false);
 				}
 			}  else {

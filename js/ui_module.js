@@ -192,27 +192,8 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 
 		$timeout(function() {
 			$scope.hints =  HintShower.showHint($scope.type_location, guess);
-			//$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude)
+			$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.lat, $rootScope.mapdata.lng)
 			$rootScope.showHint = true;
-		// $timeout(function() {
-		// 	HintShower.showHint($scope.type_location, guess).then(function(result) {
-		// 		console.log(result)
-		// 		if (result != undefined) {
-		// 			$rootScope.showHint = true;
-		// 			$scope.hints = result.finalArr;
-		// 			$scope.finalHints=$scope.hints.removeDuplicatesArrObj('fullname', false);
-		// 			$scope.finalHints = $scope.finalHints.removeDuplicatesArr();
-		// 				if($rootScope.mapdata.latitude!==0&&$rootScope.mapdata.longitude!==0)
-		// 				{
-		// 				$scope.finalHints=orderCitiesByDistance($scope.finalHints, $rootScope.mapdata.latitude, $rootScope.mapdata.longitude);
-		// 				}
-		// 				else{
-		// 					retrieveLocation.runLocation($location.path().split('/')[2]).then(function(result){
-		// 						$scope.finalHints=orderCitiesByDistance($scope.finalHints, result.latitude, result.longitude);
-		// 					})
-		// 				}
-		// 			}
-			//});
 		}, 500);
 
 		$scope.location_ = location;
@@ -229,6 +210,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 
 	$scope.controlForm = function(location) {
 		LocationDataFetch.count=0;
+		$rootScope.songs = undefined;
 		if(location!=undefined)
 		{
 			if(location[location.length-3]==' ')
@@ -278,6 +260,7 @@ function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $loc
 	$scope.closeHint = function() {
 
 		$rootScope.showHint = false;
+		$rootScope.songs = null;
 
 		$scope.location = ''
 	};

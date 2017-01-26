@@ -24,6 +24,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				songs.songs_ids='';
 				songs.artists_ids='';
 				songs.all_songs = [];
+				songs.selectedGenres = [];
 				//Massaging the data so that all artists have the proper location info attached to them
 				data.data.map(function(item) {
 					item.artists.map(function(artist) {
@@ -774,12 +775,10 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					} else {
 						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
 				}
-				console.log(songs.chunked_arr);
 				//will need to create a mechanism to change the index based on a click or infinite scroll
 				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
 				songs.artist_ids = songs.chunked_arr[0].artists.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
-				console.log(songs)
 				deferred.resolve(songs);
 				return deferred.promise;
 
@@ -913,12 +912,9 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data).then(function(data){
-					var songs = data;
+					$rootScope.songs = data;
 						Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-							$rootScope.songs = data;
-							$rootScope.songs.all_songs = songs.all_songs;
-							$rootScope.songs.chunked_arr = songs.chunked_arr;
-							$rootScope.songs.selectedGenres = [];
+							$rootScope.songs.spotify_info = data.spotify_info;
 							$scope.loading = false;
 							$scope.mapdata.lat=data.spotify_info[0].location.lat;
 							$scope.mapdata.lng=data.spotify_info[0].location.lng;
