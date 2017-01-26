@@ -764,24 +764,38 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 	return{
 		createChunks:function(songs, num)
 		{
-				var deferred = $q.defer();
-				num_groups = songs.info.length/num;
-				remainder = songs.info.length%num;
+				songs.chunked_arr =[];
+				songs.tracks = [];
+				var deferred = $q.defer(),
+				len = songs.length,
+				num_groups = Math.floor(len/num),
+				remainder = len%num;
+
 				//turn this into a util/helper function
-				if(songs.info.length > num) {
-					for(var i=1; i<num_groups; i++) {
-								songs.chunked_arr.push({info: songs.info.slice((i-1)*num,i*num), tracks: songs.tracks.slice((i-1)*num,i*num), artists: songs.artists.slice((i-1)*num,i*num)}); // chunks song ids into an array of nested arrays with a lenght of 50
-							}
+				if(len > num) {
+					if(num_groups > 1) {
+						for (var i=1; i<num_groups; i++) {
+							console.log(i-1, i*num)
+							songs.chunked_arr.push(songs.slice((i-1),(i*num)));
+						}
+						songs.chunked_arr[num_groups] = songs.slice(len-remainder, len);
+					} else if(remainder > 0) {
+						songs.chunked_arr[0] = songs.slice(0, num);
+						songs.chunked_arr[1] = songs.slice(num, num+remainder);
 					} else {
-						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
+						songs.chunked_arr[0] = songs.slice(0, num);
+					}
+				} else {
+					songs.chunked_arr = [songs];
 				}
+				songs.chunked_arr[0].forEach(function(track) {
+					songs.tracks.push(track.id);
+				})
 				//will need to create a mechanism to change the index based on a click or infinite scroll
-				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
-				songs.artist_ids = songs.chunked_arr[0].artists.toString();
+				songs.songs_ids = songs.tracks.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
 				deferred.resolve(songs);
 				return deferred.promise;
-
 		},
 	};
 }]);

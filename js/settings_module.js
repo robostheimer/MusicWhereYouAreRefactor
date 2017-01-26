@@ -119,8 +119,11 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 					}
 				})
 				if(matches.length > 0) {
-					//need to chunk these songs//
-					$rootScope.songs.spotify_info = matches.removeDuplicatesArrObj('name', false);
+					matches = matches.removeDuplicatesArrObj('name', false);
+					ChunkSongs.createChunks(matches, 50).then(function(data) {
+						$rootScope.songs.spotify_info = data.chunked_arr[0];
+						$rootScope.songs.spot_strFinal = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${data.songs_ids}`);
+					});
 				}
 			}  else {
 				$rootScope.songs.spotify_info = $rootScope.songsCopy.spotify_info;
