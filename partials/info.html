@@ -6,7 +6,7 @@
 
 	<div class="clear"></div>
 </section>
-			
+
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
@@ -15,9 +15,9 @@
 			Unforutnately the Echonest api has been deprecated as part of it's merging with Spotify.  Spotify's new endpoint does not make artist location publicly available which is crucial for this app to work.  Developers are currently working on a strategy to get things up and running.  If you used and liked the app in the past, please tweet @musicwhereyour and @spotify to let them know.  Thanks.  We'll see you again soon.
 
 	</p>
-	
+
 	<div class="clear"></div>
-</section>		
+</section>
 <section class="alert"  ng-show="noSongs==true;" >
 		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
@@ -30,7 +30,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-	
+
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
@@ -39,7 +39,7 @@
 <section class="alert"  ng-show="noGeo==true;" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
 	<p>
-		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above or enable geolocation on your device.
+		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above.
 	</p>
 
 	<div class="clear"></div>
@@ -48,16 +48,16 @@
 		<form>
 					<input type="text"  name="song_form" id="artistsearch" placeholder="Search for an artist"  class="text"   ng-model="artist" ng-enter="lookUpArtist(artist)" />
 					<div class="search"  aria-hidden="true" data-icon="e" ng-click="lookUpArtist(artist)"></div>
-					
+
 			</form>
 	<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
-		
+
 	<div ng-show="noArtist==true">There are no information about <b> {{name}}</b></div>
 	<div id="intro_image" ng-hide="noArtist==true"></div>
 	<div id="artist_holder" ng-hide="noArtist==true">
-		
-		
+
+
 		<div id='artist_info'>
 			<ul  role = "profile_tabs">
 
@@ -73,7 +73,7 @@
 				<li id="videos” ng-model="buttons.videos.state"  class="{{buttons.videos.state}}"  role="videos_tab"  ng-hide="artistinfo.videoCheck==false" >
 				<a  ng-model = "buttons.videos"  ng-click="changeClass(buttons.videos.state, buttons.videos)" class="cursor" >Videos</a>
 				</li>
-				
+
 				<li id="news” ng-model="buttons.news.state"  class="{{buttons.news.state}}"  role="news_tab" ng-hide="artistinfo.newsCheck==false">
 				<a  ng-model = "buttons.news"  ng-click="changeClass(buttons.news.state, buttons.news)" class="cursor" >News</a>
 				</li>
@@ -82,18 +82,18 @@
 				</li>
 
 				</ul>
-				
+
 			<div id='artist_loader' ng-hide='artistdata ==false'>
-				
+
 			<div id="boxes">
-				
-			<h4>{{artistinfo.name}}</h4>	
+
+			<h4>{{artistinfo.name}}</h4>
 			<div id="biobox" class="{{buttons.bio.classy}}" aria-labelledby="bio" aria-hidden='{{buttons.bio.state}}' >
-				
+
 			<p class="intro_ang"><img class="gallery" ng-src="{{artistinfo.lastfm_imgs[0].url}}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/><br>
-				<iframe ng-hide="spot_iframe_hider==true"class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe> 
+				<iframe ng-hide="spot_iframe_hider==true"class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe>
 				<br>
-				<button class ="info_button clear" ng-controller="Spotify" ng-click="SavePlaylist(spotify.spot_url_button, artistinfo.name);"><div aria-hidden="true" data-icon="c" class="button_icon"></div><div class="button_txt"> Save Playlist to Spotify</div></button></p><p>From: <span style="color:#c53526;">{{artistinfo.artist_location.location}}</span></p><p>{{artistinfo.bio.text}}</p>	
+				<button class ="info_button clear" ng-controller="Spotify" ng-click="SavePlaylist(spotify.spot_url_button, artistinfo.name);"><div aria-hidden="true" data-icon="c" class="button_icon"></div><div class="button_txt"> Save Playlist to Spotify</div></button></p><p>From: <span style="color:#c53526;">{{artistinfo.artist_location.location}}</span></p><p>{{artistinfo.bio.text}}</p>
 			<a href="{{artistinfo.bio.url}}" target="_blank"><br>{{artistinfo.bio_site}}</a>
 			</div>
 			<div id="photosbox" class="{{buttons.photos.classy}}" aria-labelledby="photos" aria-hidden='{{buttons.photos.state}}'>
@@ -101,35 +101,35 @@
 				<div class="images" >
 					<img src = "{{image.src}}"  alt = "{{artistname}}"/>
 				</div>
-			</div>	
+			</div>
 			</div>
 			<!--<div id="topsongsbox"  class="{{buttons.topsongs.classy}}" aria-labelledby="topsongs" aria-hidden='{{buttons.topsongs.state}}'>
-				
+
 				<div class="spot_iframe"><iframe theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe></div>
-				
+
 			</div>-->
 			<div id="videosbox" class="{{buttons.videos.classy}}" aria-labelledby="videos" aria-hidden='{{buttons.videos.state}}' >
 				<div ng-repeat="src in artistinfo.videoArr"><iframe class="ytframe" frameborder="0" src="{{src}}" type="text/html"></iframe></div>
 			</div>
 			<div id="newsbox" class="{{buttons.news.classy}}" aria-labelledby="news" aria-hidden='{{buttons.news.state}}'>
 				<div ng-repeat="news in artistinfo.news"><a href="{{news.url}}" target="_blank">{{news.name}}</a><br>{{news.news_summary}}... <a href="{{news.url}}" target="_blank">Read More</a><br>From: <a href ="http://{{news.url.replace('http://','').split('/')[0]}}" target="_blank">{{news.url.replace('http://','').split('/')[0]}}</a><br><br>
-</div>				
-				
+</div>
+
 			</div>
 			<div id="relatedbox" class="{{buttons.related.classy}}" aria-labelledby="related" aria-hidden='{{buttons.related.state}}'>
-				
+
 				<a href="{{related.href}}"><dl class="sim_holder" id="{{related.name}}" ng-repeat="related in relatedartists.relatedartistsfinal">
 					<div class="images">
 						<img  ng-src="{{related.lastfm_imgs[0].src}}" width="126" alt="{{related.name}}"/>
 						<div class="name" ><a class="artistlink" href="{{related.href}}">{{related.name}}</a></div>
 					</div>
-					
+
 				</dl></a>
 			</div>
 			</div>
-			
+
 			</div>
-			
+
 		</div>
 
 	</div>

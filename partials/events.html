@@ -7,7 +7,7 @@
 
 	<div class="clear"></div>
 </section>
-			
+
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
@@ -16,9 +16,9 @@
 			Unforutnately the Echonest api has been deprecated as part of it's merging with Spotify.  Spotify's new endpoint does not make artist location publicly available which is crucial for this app to work.  Developers are currently working on a strategy to get things up and running.  If you used and liked the app in the past, please tweet @musicwhereyour and @spotify to let them know.  Thanks.  We'll see you again soon.
 
 	</p>
-	
+
 	<div class="clear"></div>
-</section>		
+</section>
 <section class="alert"  ng-show="noSongs==true;" >
 		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
@@ -31,7 +31,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-	
+
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
@@ -40,8 +40,7 @@
 <section class="alert"  ng-show="noGeo==true;" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
 	<p>
-		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above or enable geolocation on your device.
-	</p>
+		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above.
 
 	<div class="clear"></div>
 </section>
@@ -54,7 +53,7 @@
 	<div class="clear"></div>
 </section>
 		<section class="alert" ng-show="infoMessage==true">
-			
+
 			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 			<br/>
 			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
@@ -73,26 +72,26 @@
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<h4><span style="color:#979797">Upcoming Concerts for</span> {{artist}}</h4><br>
 	<form  class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
-		
+
 		<input type="date"  name="search events" class="text searchy" ng-model="dates" ng-enter="lookUpDates(date1, date2)">
 		<input type="date"  name="search events" class="text searchy"   ng-model="dates" ng-enter="lookUpDates(date1, date2)">
-		
+
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
-	
+
 		<div ng-show="noEvents==true"><h3>There are no shows scheduled for {{artist}}.</h3></div>
 		<div class="event_holder">
-		
+
 	<div ng-repeat="event in shows track by $index" class="gray card"ng-show="loading==false">
-					
+
 				<div style="padding-left:10px;"><h6 class="event_description" ><a href="{{event.url}}" target="_blank">{{artist}} at {{event.venue.name}}</a> &nbsp;&nbsp;<a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{event.artists.name}}+at+{{event.venue.name}}location={{event.venue.name}},+ {{event.venue.location.city}}&dates={{event.date}}&sf=true&output=xml#f" target="_blank"><span class="icon calendar" ></span></a></h6>
 				<p class="event_description">
 					<span ng-repeat = "band in event.artists.artist track by $index" ><a href="#/info/{{location_link}}/{{band.replace('The ', '')}}">{{band}}</a><br> </span><br>
 					Date: {{event.date}}<br>
 					City: {{event.venue.city}}, {{event.venue.region}}<br>
-					
-					
-					
+
+
+
 				</p>
 				</div>
 				<div style="clear:both;"></div>
@@ -135,9 +134,9 @@
 			</form>
 			<form class="{{sm_btns[1].classy}}">
 				<textarea maxlength="160" rows="9" ng-model="message"> </textarea>
-				
+
 			<a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" ><div class="button_txt">
-				Share on Twitter » 
+				Share on Twitter »
 			</div>
 		</a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
 			</form>
@@ -152,7 +151,7 @@
 			<div class="clear"></div>
 		</div>
 		<div class="clear"></div>
-		
+
 		<div class="sharer_icon" ng-show="sharer==false" >
 			<span class='icon share' ng-click="getSongs();"></span>
 		</div>-->
