@@ -98,9 +98,9 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 			location = location.toString().toLowerCase().replace(', ', ' ');
 			location_regex = new RegExp(location);
 
-			$rootScope.locations.forEach(function(location) {
-				if(location_regex.test(location.city.toLowerCase().replace(', ', ','))) {
-					hints.push({city: location.city.replace(/,/g, ', '), href: location.city.replace(/,/g, '*'), long: location.lng, lat: location.lat});
+			$rootScope.locations.forEach(function(loc) {
+				if(loc.city.toLowerCase().replace(', ', ',').match(location) && location.length >= 3) {
+					hints.push({city: loc.city.replace(/,/g, ', '), href: loc.city.replace(/,/g, '*'), long: loc.lng, lat: loc.lat});
 				}
 			});
 			return hints;
@@ -185,16 +185,18 @@ UI.controller('formController', ['$scope', '$rootScope', 'retrieveLocation', 'ge
 function($scope, $rootScope, retrieveLocation, getLocation, $q, HashCreate, $location, HintShower, $timeout, States, $routeParams, LocationDataFetch) {
 	$rootScope.showHint = false;
 
-	var count = 0;
-	count2 = 0;
 	$scope.hintShower = function(location, guess) {
-		count = count + 1;
-
-		$timeout(function() {
-			$scope.hints =  HintShower.showHint($scope.type_location, guess);
-			$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.lat, $rootScope.mapdata.lng)
-			$rootScope.showHint = true;
-		}, 500);
+		if(location.length > 3) {
+			$timeout(function() {
+				$scope.hints =  HintShower.showHint($scope.type_location, guess);
+				$scope.hints = orderCitiesByDistance($scope.hints, $rootScope.mapdata.lat, $rootScope.mapdata.lng)
+				$rootScope.showHint = true;
+			}, 750);
+		} else {
+			$scope.type_location = "";
+			$scope.locaitons = ""
+			$scope.hints = [];
+		}
 
 		$scope.location_ = location;
 		if ($scope.location_.toTitleCase().match('St.')) {
@@ -403,77 +405,77 @@ function($scope, $location, $rootScope, runSymbolChange) {
 
 /*Directives*/
 UI.directive(
-            "eventDelegate",
-            function( $parse ) {
+	"eventDelegate",
+	function( $parse ) {
 
-                // I bind the DOM and event handlers to the scope.
-                function link( $scope, element, attributes ) {
-                    // Right now, the delegate can be defined as
-                    // either selector and an expression; or simply
-                    // as an expression.
-                    var config = attributes.eventDelegate.split( "|" );
+	    // I bind the DOM and event handlers to the scope.
+	    function link( $scope, element, attributes ) {
+	        // Right now, the delegate can be defined as
+	        // either selector and an expression; or simply
+	        // as an expression.
+	        var config = attributes.eventDelegate.split( "|" );
 					var eventtype=attributes.type;
-                    // Only an expression has been defined - default
-                    // the selector to any anchor link.
-                    if ( config.length === 1 ) {
+	        // Only an expression has been defined - default
+	        // the selector to any anchor link.
+	        if ( config.length === 1 ) {
 
-                        var selector = "a";
-                        var expression = config[ 0 ];
-                    // Both selector and expression are defined.
-                    } else {
+	            var selector = "a";
+	            var expression = config[ 0 ];
+	        // Both selector and expression are defined.
+	        } else {
 
-                        var selector = config[ 0 ];
-                        var expression = config[ 1 ];
+	            var selector = config[ 0 ];
+	            var expression = config[ 1 ];
 
-                    }
-                    // Parse the expression into an invokable
-                    // function. This way, we don't have to re-parse
-                    // it every time the event handler is triggered.
-                    var expressionHandler = $parse( expression );
-                    // Bind to the click (currently only supported
-                    // event type) to the root element and listen for
-                    // clicks on the given selector.
-                    element.on(
-                        eventtype+".eventDelegate",
-                        selector,
-                        function( event ) {
-                            // Prevent the default behavior - this is
-                            // not a "real" link.
-                            event.preventDefault();
-                            // Find the scope most local to the target
-                            // of the click event.
-                            var localScope = $( event.target ).scope();
-                            // Invoke the expression in the local scope
-                            // context to make sure we adhere to the
-                            // proper scope chain prototypal inheritance.
-                            localScope.$apply(
-                                function() {
+	        }
+	        // Parse the expression into an invokable
+	        // function. This way, we don't have to re-parse
+	        // it every time the event handler is triggered.
+	        var expressionHandler = $parse( expression );
+	        // Bind to the click (currently only supported
+	        // event type) to the root element and listen for
+	        // clicks on the given selector.
+	        element.on(
+	            eventtype+".eventDelegate",
+	            selector,
+	            function( event ) {
+	                // Prevent the default behavior - this is
+	                // not a "real" link.
+	                event.preventDefault();
+	                // Find the scope most local to the target
+	                // of the click event.
+	                var localScope = $( event.target ).scope();
+	                // Invoke the expression in the local scope
+	                // context to make sure we adhere to the
+	                // proper scope chain prototypal inheritance.
+	                localScope.$apply(
+	                    function() {
 
-                                    expressionHandler( localScope );
-                                }
-                            );
-                        }
-                    );
+	                        expressionHandler( localScope );
+	                    }
+	                );
+	            }
+	        );
 
-                    // When the scope is destroyed, clean up.
-                    $scope.$on(
-                        "$destroy",
-                        function( event ) {
+	        // When the scope is destroyed, clean up.
+	        $scope.$on(
+	            "$destroy",
+	            function( event ) {
 
-                            element.off( eventtype+".clickDelegate" );
+	                element.off( eventtype+".clickDelegate" );
 
-                        }
-                    );
-                }
+	            }
+	        );
+	    }
 
 
-                // Return the directive configuration.
-                return({
-                    link: link,
-                    restrict: "A"
-                });
+	    // Return the directive configuration.
+	    return({
+	        link: link,
+	        restrict: "A"
+	    });
 
-            });
+	});
 
 UI.directive('downloadButton',  function ($compile) {
  return {

@@ -8,6 +8,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
 		 	$rootScope.infoMessage=false;
+			$rootScope.noGeo=false;
 
 			songs = {};
 			var url = 'http://labs.echonest.com/CityServer/artists?id='+id+'&callback=JSON_CALLBACK&count=500';
