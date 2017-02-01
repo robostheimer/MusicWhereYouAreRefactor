@@ -126,7 +126,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 					});
 				}
 			}  else {
-				$rootScope.songs.spotify_info = $rootScope.songsCopy.spotify_info;
+				$rootScope.songs = $rootScope.songsCopy;
 			}
 		};
 

@@ -1204,7 +1204,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	color: #999999;
 }
 
-.navigation {
+nav {
 	margin-right: 1%;
 	margin-left: 2% %;
 	text-transform: uppercase;
@@ -1216,7 +1216,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	padding: 15px;
 	background-color: #4e5053;
 }
-.navigation section {
+nav {
 
 	cursor: pointer;
 	list-style: none;
@@ -1228,24 +1228,25 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	transform-origin: 0px 0px 0px;
 	transform: translate(0px, 0px) scale(1) translateZ(0px);
 	overflow: hidden;
+	text-align: center
 }
 
-.navigation ul {
+nav ul {
 	padding: 0;
 	margin: auto;
 	margin-bottom: 0px;
 	overflow-y: hidden;
 }
-.navigation li {
+nav li {
 	display: inline-block;
 	list-style-type: none;
 	margin-bottom: 0px;
 	cursor: pointer;
 }
-.navigation li:active, .navigation li:hover {
+.navigation li:active, nav li:hover {
 	color: #EBBD1E;
 }
-.navigation li div {
+nav li div {
 	padding-right: 8px;
 	padding-left: 8px;
 	padding-top: 5px;
@@ -1253,7 +1254,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	margin: auto;
 }
 
-.navigation li section span.item {
+nav li section span.item {
 
 }
 
@@ -1530,10 +1531,6 @@ h4, #spot_holder .spot_icon {
 #spot_holder .search {
 	padding-top: 6px;
 	padding-bottom: 0;
-}
-
-#iframe_holder {
-	margin-top: 12px;
 }
 
 .spacer {
@@ -2547,7 +2544,7 @@ p.event_description {
 		height: 87%
 	}
 	#spot_holder .cards {
-		margin-top: 125px;
+		margin-top: 90px;
 	}
 	#fav_holder .cards {
 		margin-top: 85px;

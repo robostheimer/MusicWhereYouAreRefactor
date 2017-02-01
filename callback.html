@@ -47,10 +47,10 @@ function createPlaylist(username, name, callback) {
 }
 
 function addTracksToPlaylist(username, playlist, tracks, start, callback) {
-    var maxTracksPerPlaylistAdd = 100;
+  var maxTracksPerPlaylistAdd = 100;
 	var url = 'https://api.spotify.com/v1/users/' + username +
 		'/playlists/' + playlist +
-		'/tracks'; 
+		'/tracks';
     var thisTracks = tracks.slice(start, start + maxTracksPerPlaylistAdd);
 	$.ajax(url, {
 			type: 'POST',
@@ -83,7 +83,7 @@ function doit() {
 	// parse hash
 	var hash = location.hash.replace(/#/g, '');
 	var all = hash.split('&');
-    var maxTracks = 10;
+  var maxTracks = 10;
 	var args = {};
 	all.forEach(function(keyvalue) {
 		var idx = keyvalue.indexOf('=');
@@ -105,7 +105,7 @@ function doit() {
 
 	getUsername(function(username) {
 		createPlaylist(username, g_name, function(playlist) {
-			
+
             if (playlist) {
                 addTracksToPlaylist(username, playlist, g_tracks, 0, function(ok) {
                     if (ok) {

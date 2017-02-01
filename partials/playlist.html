@@ -110,7 +110,7 @@
 
 	<div class="clear"></div>
 	<div class="fixed" >
-		<div style="color:#c53526; font-size:10px;"><span class="icontarget" ></span>  {{location_for_dom}}</div>
+		<div style="color:#c53526; font-size:10px; margin-bottom: 12px;"><span class="icontarget" ></span>  {{location_for_dom}}</div>
 		<!-- <button class="{{buttons[0].classy}}"  ng-click="runButtons('artists'); runApp(start_number, counter)" ng-swipe-left="goBack()">
 
 			<div class="button_txt">
@@ -129,7 +129,7 @@
 			<div id="iframe_holder" ng-hide="spot_iframe_hider==true" >
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.chunked_arr[0].sav, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
@@ -191,7 +191,7 @@
 				<br>
 			</div>
 
-			<div class="sharer" >
+			<!-- <div class="sharer" >
 
 				<button class="more_button" ng-hide="btnCount==0" ng-click="backSongs()" ng-enter="backSongs)">
 					<div class=button_txt>
@@ -245,11 +245,11 @@
 			</div>
 
 
-	</div>
-	<div style="width:100px; margin-left:auto; margin-right:auto" class="about_section " ng-hide="loading_tags==false"><img src="loading.gif" alt="loading"/>
-	</div>
-	<div  ng-hide="aboutShower==false"  ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[1].state}} about_section"  >
-		<div class="aboutsongs">
+	</div> -->
+	<!-- <div style="width:100px; margin-left:auto; margin-right:auto" class="about_section " ng-hide="loading_tags==false"><img src="loading.gif" alt="loading"/>
+	</div> -->
+	<!-- <div  ng-hide="aboutShower==false"  ng-class="{iframehider: spot_iframe_hider == true}" class="{{buttons[1].state}} about_section"  > -->
+		<!-- <div class="aboutsongs">
 
 
 			<div ng-repeat="song in lookUpSongs track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'about')" type="click">
@@ -281,8 +281,8 @@
 			<br>
 			<br>
 			<br>
-		</div>
-		<div class="sharer" >
+		</div> -->
+		<!-- <div class="sharer" >
 
 			<button class="more_button" ng-hide="prevLookUp==false" ng-click="prevSongsAbout(15)" ng-enter="prevSongsAbout(15)">
 				<div class=button_txt>
@@ -332,6 +332,6 @@
 			<div class="sharer_icon" ng-show="sharer==false" >
 				<span class='icon share' ng-click="getSongs(lookUpSongs);"></span>
 
-		</div>
+		</div> -->
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

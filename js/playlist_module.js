@@ -8,7 +8,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
 		 	$rootScope.infoMessage=false;
-			$rootScope.noGeo=false;
 
 			songs = {};
 			var url = 'http://labs.echonest.com/CityServer/artists?id='+id+'&callback=JSON_CALLBACK&count=500';
@@ -26,11 +25,13 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				songs.artists_ids='';
 				songs.all_songs = [];
 				songs.selectedGenres = [];
+				songs.savSpotArr = [];
 				//Massaging the data so that all artists have the proper location info attached to them
 				data.data.map(function(item) {
 					item.artists.map(function(artist) {
 						artist.location = item.city;
 						songs.tracks.push(artist.songs[0].tid);
+						songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`)
 						songs.artists.push(artist.sid)
 					});
 
@@ -44,13 +45,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				//turn this into a util/helper function
 				if(songs.info.length > 50) {
 					for(var i=1; i<num_groups; i++) {
-								songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
-							}
+							songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), sav: songs.savSpotArr.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
+						}
 					} else {
-						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
+						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, sav: songs.savSpotArr, artists: songs.artists}];
 				}
 				//will need to create a mechanism to change the index based on a click or infinite scroll
 				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
+
 				songs.artist_ids = songs.chunked_arr[0].artists.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
 				return songs;
@@ -310,7 +312,11 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						let i = 0;
 						chunk.spotify_info = data.data.tracks;
 						chunk.spotify_info.map(function(track) {
-							track.genres = artists[i].genres;
+							if(artists[i].genres) {
+								track.genres = artists[i].genres;
+							} else {
+								track.genres = []
+							}
 							track.favorite = 'off';
 							track.location = chunk.info[i].location;
 							i++;
@@ -1962,8 +1968,8 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 		var redirect_uri = '';
 		if (window.location.href.match('localhost:8888')) {
 
-			client_id = '2816af78ef834a668eab78a86ec8b4e6';
-			redirect_uri = 'http://localhost:8888/MusicWhereYouAre/app/callback.html';
+			client_id = '59a6ff9db9a642c6adfd2ee2fd33a30f';
+			redirect_uri = 'http://localhost:8888/callback.html';
 		} else {
 			client_id = '70521c59988a4ff4afa24aabc182b94a';
 			redirect_uri = 'http://musicwhereyour.com/callback.html';
