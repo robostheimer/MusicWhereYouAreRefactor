@@ -312,7 +312,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						let i = 0;
 						chunk.spotify_info = data.data.tracks;
 						chunk.spotify_info.map(function(track) {
-							if(artists[i].genres) {
+							if(artists[i]) {
 								track.genres = artists[i].genres;
 							} else {
 								track.genres = []
