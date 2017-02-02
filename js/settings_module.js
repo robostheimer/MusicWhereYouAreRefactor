@@ -123,6 +123,8 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 					ChunkSongs.createChunks(matches, 50).then(function(data) {
 						$rootScope.songs.spotify_info = data.chunked_arr[0];
 						$rootScope.songs.spot_strFinal = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${data.songs_ids}`);
+						$rootScope.songs.savSpotArr = data.savSpotArr;
+						$rootScope.mapdata.markers = $rootScope.songs.spotify_info
 					});
 				}
 			}  else {

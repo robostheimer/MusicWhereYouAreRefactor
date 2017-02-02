@@ -83,7 +83,7 @@
 		</div>
 		<section id="map-area" class="animate-show" >
 
-				<div mwya-map id="map" class="mwya-map" latitude="{{mapdata.lat}}" longitude="{{mapdata.lng}}" maptype="roadmap" scrollwheel="false" change="{{mapdata}}" ng-hide="mapOpening">
+				<div mwya-map id="map" class="mwya-map" latitude="{{mapdata.lat}}" longitude="{{mapdata.lng}}" data="{{mapdata.markers}}" maptype="roadmap" scrollwheel="false" change="{{mapdata}}" ng-hide="mapOpening">
 				</div>
 				<div style="width:100px; margin-left:auto; margin-right:auto;" class="cards" ng-show="mapOpening==true">
 					<img src="loading.gif" alt="loading"/>

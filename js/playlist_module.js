@@ -31,7 +31,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					item.artists.map(function(artist) {
 						artist.location = item.city;
 						songs.tracks.push(artist.songs[0].tid);
-						songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`)
+						songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`);
 						songs.artists.push(artist.sid)
 					});
 
@@ -45,14 +45,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				//turn this into a util/helper function
 				if(songs.info.length > 50) {
 					for(var i=1; i<num_groups; i++) {
-							songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), sav: songs.savSpotArr.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
+							songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
 						}
 					} else {
-						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, sav: songs.savSpotArr, artists: songs.artists}];
+						songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
 				}
 				//will need to create a mechanism to change the index based on a click or infinite scroll
 				songs.songs_ids = songs.chunked_arr[0].tracks.toString();
-
+				songs.savSpotArr = songs.savSpotArr.slice(0,50);
 				songs.artist_ids = songs.chunked_arr[0].artists.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
 				return songs;
@@ -773,6 +773,7 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 		{
 				songs.chunked_arr =[];
 				songs.tracks = [];
+				songs.savSpotArr = [];
 				var deferred = $q.defer(),
 				len = songs.length,
 				num_groups = Math.floor(len/num),
@@ -782,7 +783,6 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 				if(len > num) {
 					if(num_groups > 1) {
 						for (var i=1; i<num_groups; i++) {
-							console.log(i-1, i*num)
 							songs.chunked_arr.push(songs.slice((i-1),(i*num)));
 						}
 						songs.chunked_arr[num_groups] = songs.slice(len-remainder, len);
@@ -797,7 +797,9 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 				}
 				songs.chunked_arr[0].forEach(function(track) {
 					songs.tracks.push(track.id);
-				})
+					songs.savSpotArr.push(`spotify:track:${track.id}`)
+				});
+
 				//will need to create a mechanism to change the index based on a click or infinite scroll
 				songs.songs_ids = songs.tracks.toString();
 				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);

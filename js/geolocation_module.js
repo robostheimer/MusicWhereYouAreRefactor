@@ -103,7 +103,7 @@ Geolocation.directive('mwyaMap',  function () {
     	attr.$observe('change', function() {
 				marker_content='';
 
-				scope.mapdata.markers.forEach(function(item){
+				markers.forEach(function(item){
     			map.removeLayer(item);
     		});
 				if(scope.mapdata.orig_lat === undefined || scope.mapdata.orig_lng === undefined || scope.mapdata.orig_lat===0 || scope.mapdata.orig_lng === 0)

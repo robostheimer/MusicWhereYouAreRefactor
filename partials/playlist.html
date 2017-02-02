@@ -129,7 +129,7 @@
 			<div id="iframe_holder" ng-hide="spot_iframe_hider==true" >
 				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
-			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.chunked_arr[0].sav, location);">
+			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
 				<div class="button_txt">
 					Save Playlist to Spotify
