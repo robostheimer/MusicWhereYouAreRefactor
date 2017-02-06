@@ -33,15 +33,15 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						songs.tracks.push(artist.songs[0].tid);
 						songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`);
 						songs.artists.push(artist.sid)
+						songs.info.push(item);
 					});
-					songs.info.push(item);
 				});
 				//songs.info = songs.info.flatten();
 
 				num_groups = songs.info.length/50;
 				remainder = songs.info.length%50;
 				//turn this into a util/helper function
-				if(songs.info.length > 50) {
+				if (songs.info.length > 50) {
 					for(var i=1; i<num_groups; i++) {
 							songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
 						}
