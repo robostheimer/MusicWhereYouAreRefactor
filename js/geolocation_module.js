@@ -42,7 +42,7 @@ function($q, $http, $sce, HashCreate, $rootScope, $location) {
 		},
 
 		handle_errors : function(error) {
-			$rootScope.noGeo=true;
+			// $rootScope.noGeo=true;
 			$rootScope.hideiconHolder=true;
 			$rootScope.$apply();
 		},

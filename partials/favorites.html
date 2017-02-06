@@ -1,21 +1,21 @@
 <section class="alert"  ng-show="stillLooking==true;" >
-			
+
 			<p>
 				Music seems to be in short supply where you are.  We are determined to find you your very own, geolocation-based playlist so please be patient.  Soon we will let you know about the Music Where You Are (See what we did there).
 			</p>
-			
+
 			<div class="clear"></div>
 		</section>
 <section class="alert"  ng-show="errorMessage==true;" >
 
 	<p>
-		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.  
+		Uh, Oh.  Something has gone wrong.  Try refreshing yoru browser. If you continue to experience this problem, tweet @robostheimer or send an email to Robert.Ostheimer@cityblinking.com.
 
 	</p>
-	
+
 	<div class="clear"></div>
 </section>
-		
+
 <section class="alert"  ng-show="noSongs==true;" >
 		<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noSongs=false; moreHider=true"></div>
 	<p>
@@ -28,7 +28,7 @@
 	<p>
 		To avoid an existential crisis, our advice at the MWYA Situation Room is to leave wherever you are as fast as you can.
 	</p>
-	
+
 	<p>
 		If you continue to get this error, check to make sure that Geolocation enabled on your device or use the form above to type in a new location (with both a city and state name or state abbreviation). Also clear out the genres you have picked in the settings.  You can also try <a onclick="window.location.refres()">Refreshing your Browser.</a>
 	</p>
@@ -42,7 +42,7 @@
 				Unfortunately, there were too many songs in your playlist to create a Bit.ly link.  So that you can share at least part of your playlist on Twitter, we have removed songs from the bottom of your playlist. If you would like to share your complete playlist with your friends via email or even Facebook, you can copy the following link and paste it into an email or as a Facebook Status:<br><br> <textarea  rows="9" style="width:97%" >http://musicwhereyour.com/{{long_url.replace('%23','#')}} </textarea>	</p>
 </section>
 		<section class="alert" ng-show="infoMessage==true">
-			
+
 			Note: This product uses a SPOTIFY API but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 			<br/>
 			This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
@@ -59,12 +59,12 @@
 <section id="fav_holder" ng-swipe-left="goBack()" >
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
-<div class="fixed" ng-hide="getFav==false">	
-	
+<div class="fixed" ng-hide="getFav==false">
+
 	<div class="clear" style="margin-bottom:15px"></div>
-	
-	
-	
+
+
+
 	<div id="iframe_holder" ng-hide="spot_iframe_hider==true">
 		<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songsFav.spot_str}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 	</div>
@@ -84,11 +84,11 @@
 					{{song.name}}
 					<br>
 					<span class="artist">{{song.artists[0].name}}</span><br>
-					<sup>From: <a href="#/playlist/{{song.artist_location.location.split(',')[0]}}*{{song.artist_location.location.split(',')[1].replace(' ','')}}">{{song.artist_location.location}}</a></sup>
+					<sup>From: <a href="#/playlist/{{song.location_link}}">{{song.location.city}}</a></sup>
 				</p>
-				
+
 		<a class="spotter" href="spotify:track:{{song.id}}"><div class="spot_link_spot" id="spot{{song.od}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
-		
+
 		<a><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
 		<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
 		<a href="#/events/{{location_link}}/{{song.artist[0].name.replace('The ', '')}}"><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
@@ -96,7 +96,13 @@
 	</div>
 	</div>
 	</div>
-<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+<!-- <br>
 
 	<br>
 	<br>
@@ -105,8 +111,8 @@
 	<br>
 	<br>
 	<br>
-	<br>
-	<div class="sharer" >
+	<br> -->
+	<!-- <div class="sharer" >
 		<button class="more_button" ng-hide="backHider==true" ng-click="moreSongs((start_number-25), 25)" ng-enter="moreSongs((start_number-25))">
 			<div class=button_txt>
 				« Back
@@ -117,11 +123,11 @@
 				More Songs »
 			</div>
 		</button>
-		<div class="clear"></div>
-		<a class="viewall" ng-hide="viewall==true" ng-click = "viewAll()">View All Favorited Songs</a>
-		<a class="viewall"ng-hide="viewall==false" ng-click = "view25()">View 25 songs at a time</a>
+		<div class="clear"></div> -->
+		<!-- <a class="viewall" ng-hide="viewall==true" ng-click = "viewAll()">View All Favorited Songs</a>
+		<a class="viewall"ng-hide="viewall==false" ng-click = "view25()">View 25 songs at a time</a> -->
 
-		<div class="share_box animate-show" ng-hide="shareBox==false">
+		<!-- <div class="share_box animate-show" ng-hide="shareBox==false">
 			<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="closeShareBox()"></div>
 			<div class="social_media">
 
@@ -139,9 +145,9 @@
 			</form>
 			<form class="{{sm_btns[1].classy}}">
 				<textarea maxlength="160" rows="9" ng-model="message"> </textarea>
-				
+
 			<a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://cityblinking.com/MusicWhereYouAre&text={{message}}" target="_blank" ><div class="button_txt">
-				Share on Twitter » 
+				Share on Twitter »
 			</div>
 		</a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140">{{message.length}}</span></sub></span>
 			</form>
@@ -156,10 +162,10 @@
 			<div class="clear"></div>
 		</div>
 		<div class="clear"></div>
-		
+
 		<div class="sharer_icon" ng-show="sharer==false" >
 			<span class='icon share' ng-click="getSongs();"></span>
-		</div>
+		</div> -->
 
 </section>
 <!--ng-href="#/info/{{location.replace(', ','*')}}/{{song.artist_name}}-->

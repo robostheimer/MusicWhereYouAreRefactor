@@ -14,7 +14,6 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 				city_matches = [],
 				location_regex = new RegExp(location.replace(/\*/g, ', ').toLowerCase()),
 				deferred = $q.defer();
-				console.log(location_regex)
 			//loads locations if they have not already been added
 			if(!$rootScope.locations) {
 				return $http.get('json/locations.json').then(function(data) {
@@ -286,7 +285,7 @@ function($q, $rootScope, $http, $sce, $location, $routeParams, States) {
 
 				}
 				else{
-					$rootScope.noGeo=true;
+					$rootScope.noGeo=false;
 				}
 
 			});

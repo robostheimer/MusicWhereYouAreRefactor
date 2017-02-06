@@ -1,13 +1,13 @@
 var Playlist=angular.module('Playlist', []);
 
 /*Services*/
-Playlist.service('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States', 'Spotify', 'ChunkSongs',
-function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, Spotify, ChunkSongs) {
+Playlist.service('PlaylistCreate', ['$q', '$rootScope', '$http', '$sce', 'MapCreate', 'HashCreate','$location','$routeParams','States', 'Spotify', 'ChunkSongs','Favorites',
+function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routeParams, States, Spotify, ChunkSongs, Favorites) {
 
 
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
-		 	$rootScope.infoMessage=false;
+			$rootScope.noGeo=false;
 
 			songs = {};
 			var url = 'http://labs.echonest.com/CityServer/artists?id='+id+'&callback=JSON_CALLBACK&count=500';
@@ -34,11 +34,9 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`);
 						songs.artists.push(artist.sid)
 					});
-
-					songs.info.push(item.artists);
+					songs.info.push(item);
 				});
-
-				songs.info = songs.info.flatten();
+				//songs.info = songs.info.flatten();
 
 				num_groups = songs.info.length/50;
 				remainder = songs.info.length%50;
@@ -312,15 +310,20 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						let i = 0;
 						chunk.spotify_info = data.data.tracks;
 						chunk.spotify_info.map(function(track) {
+							let x = chunk.spotify_info.indexOf(track)
+							track.num_id =x;
 							if(artists[i]) {
 								track.genres = artists[i].genres;
 							} else {
 								track.genres = []
 							}
 							track.favorite = 'off';
-							track.location = chunk.info[i].location;
+							track.location = chunk.info[i].city;
+							track.location_link = chunk.info[i].city.city.replace(/,/g, '*')
 							i++;
 						});
+
+						Favorites.checkFavorites(chunk.spotify_info)
 						return chunk;
 					})
 				});
@@ -796,7 +799,9 @@ function($q, $rootScope, $http, $sce, LocationDataFetch)
 					songs.chunked_arr = [songs];
 				}
 				songs.chunked_arr[0].forEach(function(track) {
+					var x = songs.chunked_arr[0].indexOf(track);
 					songs.tracks.push(track.id);
+					track.num_id = x;
 					songs.savSpotArr.push(`spotify:track:${track.id}`)
 				});
 
@@ -949,13 +954,9 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				});
 
 			},function(error){
-
 				$scope.errorMessage = true;
 			});
-
-
 		}
-		locationdatacount = LocationDataFetch.count += 1;
 
 	};
 
@@ -1488,7 +1489,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	$scope.switchFavorite = function(id, num_id, about_or_from) {
 		//$scope.favoritesArr=[];
 		var songId = [];
-		if (localStorage.getItem('FavoriteArr') != null && localStorage.getItem('FavoriteArr') != '') {
+		if (localStorage.getItem('FavoriteArr') !== null && localStorage.getItem('FavoriteArr') !== '') {
 			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
 
 		} else {
@@ -1497,21 +1498,21 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 		if (about_or_from == 'from') {
 
-;			if ($scope.songs[num_id].favorite == 'off') {
-
-				$scope.songs[num_id].favorite = 'on';
-				songFav.push($scope.songs[num_id]);
+			if ($rootScope.songs.spotify_info[num_id].favorite === 'off') {
+				$rootScope.songs.spotify_info[num_id].favorite = 'on';
+				songFav.push($rootScope.songs.spotify_info[num_id]);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-				$scope.favorites = Favorites.addFavorites();
+				//$scope.favorites = Favorites.addFavorites();
 			}
 			else {
-					for (var x = 0; x < songFav.length; x++) {
-						songId.push(songFav[x].id);
-					}
-				var index = songId.indexOf($scope.songs[num_id].id);
+				for (var x = 0; x < songFav.length; x++) {
+					songId.push(songFav[x].id);
+				}
+
+				var index = songId.indexOf($rootScope.songs.spotify_info[num_id].id);
 				songFav.splice(index, 1);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-				$scope.songs[num_id].favorite = 'off';
+				$rootScope.songs.spotify_info[num_id].favorite = 'off';
 			}
 		}
 		else if(about_or_from=='about')
