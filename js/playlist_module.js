@@ -310,10 +310,10 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 		runGenres: function(chunk) {
 			var all_songs = [],
 				artists,
-				cacheKey = $routeParams.location.replace(/, /g, '*');
+				cacheKey = `https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`;
 
 			if (!cache.get(cacheKey)) {
-				return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
+				return $http.get(cacheKey).then(function(data) {
 					var artists = data.data.artists;
 					return $http.get(`https://api.spotify.com/v1/tracks?ids=${chunk.tracks.toString()}`).then(function(data) {
 						let i = 0;
