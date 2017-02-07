@@ -11,6 +11,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 			songs = {};
 			var url = 'http://labs.echonest.com/CityServer/artists?id='+id+'&callback=JSON_CALLBACK&count=500';
 			var deferred = $q.defer();
+
 			if(!cache.get(id)) {
 				return $http({cache:true, url:url, method:'jsonp'}).then(function(data) {
 					var songs_length;
@@ -303,13 +304,14 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 Playlist.service("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs','$cacheFactory',
 function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs, $cacheFactory){
 	var cache = $cacheFactory('spotify'),
-		cacheKey = $routeParams.location.replace(/, /g, '*')
 		deferred = $q.defer();
 
 	return{
 		runGenres: function(chunk) {
 			var all_songs = [],
-			artists;
+				artists,
+				cacheKey = $routeParams.location.replace(/, /g, '*');
+
 			if (!cache.get(cacheKey)) {
 				return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
 					var artists = data.data.artists;
