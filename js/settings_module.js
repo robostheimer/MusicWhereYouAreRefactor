@@ -86,6 +86,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 		}
 
 		$scope.checkGenres = function(genre) {
+			console.log(genre)
 			$scope.Genre.forEach(function(item) {
 				if(item.genre.genre === genre) {
 					if(!item.genre.checked) {

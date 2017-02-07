@@ -24,7 +24,8 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 						info: [],
 						chunked_arr: [],
 						all_songs: [],
-						location: ''
+						location: '',
+						selectedGenres: []
 					};
 					//Massaging the data so that all artists have the proper location info attached to them
 					songs.location = $routeParams.location;
@@ -307,13 +308,13 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 		deferred = $q.defer();
 
 	return{
-		runGenres: function(chunk) {
+		runGenres: function(chunk, genre) {
 			var all_songs = [],
 				artists,
-				cacheKey = `https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`;
+				cacheKey = `${location}_${genre}`;
 
 			if (!cache.get(cacheKey)) {
-				return $http.get(cacheKey).then(function(data) {
+				return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
 					var artists = data.data.artists;
 					return $http.get(`https://api.spotify.com/v1/tracks?ids=${chunk.tracks.toString()}`).then(function(data) {
 						let i = 0;
@@ -923,7 +924,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			// $scope.lookupSongs=[];
 			// $rootScope.aboutMarked=false;
 			// $scope.newlocation = true;
-
 			retrieveLocation.runLocation(location_comp).then(function(data) {
 				var city_data = data.join('_');
 				PlaylistCreate.runPlaylist(city_data).then(function(data){
@@ -1916,7 +1916,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		//$rootScope.locationdata = $rootScope.latitudeObj_root.location;
 		var location_comp = $routeParams.location;
 		var location_str = $routeParams.location;
-		if(!$rootScope.song || !$rootScope.songs.location  || $rootScope.songs.location !== $routeParams.location  )
+		if(!$rootScope.songs || ($rootScope.songs.location  && $rootScope.songs.location !== $routeParams.location ) )
 		{
 			$scope.runApp();
 		} else {
