@@ -304,14 +304,15 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 
 Playlist.service("Spotify",[ '$q', '$rootScope', '$http', '$sce','$routeParams','Favorites','MapCreate','HashCreate','ChunkSongs','$cacheFactory',
 function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCreate, ChunkSongs, $cacheFactory){
-	var cache = $cacheFactory('spotify'),
-		deferred = $q.defer();
+	var cache = $cacheFactory('spotify');
 
 	return{
-		runGenres: function(chunk, genre) {
+		runGenres: function(chunk) {
 			var all_songs = [],
 				artists,
-				cacheKey = `${location}_${genre}`;
+				location = $routeParams.location.replace(/, /g, '*'),
+				cacheKey = `${location}_${chunk.tracks[0]}_${chunk.tracks[chunk.tracks.length-1]}`,
+				deferred = $q.defer();
 
 			if (!cache.get(cacheKey)) {
 				return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
@@ -334,14 +335,13 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 						});
 
 						Favorites.checkFavorites(chunk.spotify_info);
-						var songs = chunk
 						cache.put(cacheKey, chunk);
 						return chunk;
 					})
 				})
 			} else {
 				chunk = cache.get(cacheKey);
-				deferred.resolve(chunk);
+				deferred.resolve(chunk)
 				return deferred.promise;
 			}
 		},
