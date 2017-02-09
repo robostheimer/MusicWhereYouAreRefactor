@@ -35,16 +35,17 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			favoritesArr=[];
 			}
 
-			favoritesArr.forEach(function(favorite)
+			obj.forEach(function(obj)
 			{
-				obj.forEach(function(obj) {
-					favorite.favorite='off';
-					if(favorite.id==obj.id)
+				obj.favorite = 'off';
+				favoritesArr.forEach(function(favorite) {
+					if(favorite.id === obj.id)
 					{
 						obj.favorite='on';
 					}
 				})
 			});
+			return obj;
 		}
 	};
 }]);
@@ -85,9 +86,10 @@ function($scope, $q, $http, runSymbolChange, $routeParams, $location, $sce, retr
 	// var songs_for_service=[];
 	// $scope.songs=[];
 	var d = new Date();
-	$scope.songsFav = Favorites.addFavorites() || {};
+	$scope.songsFav = Favorites.addFavorites() || [];
 	$scope.songsFav.spot_str = '';
 	$scope.spot_arr = [];
+	$scope.save_arr = [];
 	$scope.date = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
 
 	/*$scope.runApp = function(start_number, counter) {
@@ -532,12 +534,46 @@ $scope.runApp = function() {
 	// });
 };
 
-if(!$rootScope.songs)
-{
-	$scope.runApp();
-}
+/////////////REFACTOR!!!!!!!//////////////
+$scope.createFavoritesList = function() {
+	$scope.songs_repeater = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
+	var fav = localStorage.getItem('FavoriteArr');
+	if (fav == null)
+		fav = [];
+	if (fav.length == 2 || fav == null) {
+		$scope.getFav = false;
+		localStorage.setItem('FavoriteArr', '[]');
+	}
+	var txt = '';
+	if ($scope.songs_repeater != null) {
+		for (var x = 0; x < $scope.songs_repeater.length; x++) {
+			$scope.songs_repeater[x].num_id = x;
+			if (!txt.replace(/\W/g, '').match($scope.songs_repeater[x].id.replace(/\W/g, ''))) {
+				$scope.songsFav.push($scope.songs_repeater[x]);
+			}
+			txt += $scope.songs_repeater[x].id;
+		}
+	}
+};
 
+$scope.createSongsFav = function() {
+	if ($scope.songsFav != null) {
+		$scope.songsFav.spot_str = '';
+		for (var x = 0; x < $scope.songsFav.length; x++) {
+			$scope.spot_arr.push($scope.songsFav[x].id);
+			$scope.save_arr.push('spotify:track:' + $scope.songsFav[x].id);
+			$scope.songsFav[x].favorite = 'on';
+			$scope.songsFav[x].num_id = x;
+		}
 
+		$scope.songsFav.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.spot_arr.toString();
+		$scope.songsFav.spot_str = $sce.trustAsResourceUrl($scope.songsFav.spot_str);
+
+	} else {
+		$scope.songsFav = []
+		$scope.songsFav.spot_str = ''
+	}
+};
 $scope.switchFavorite = function(id, num_id, about_or_from) {
 	var songId = [];
 	if (localStorage.getItem('FavoriteArr') !== null && localStorage.getItem('FavoriteArr') !== '') {
@@ -547,13 +583,9 @@ $scope.switchFavorite = function(id, num_id, about_or_from) {
 		var songFav = [];
 	}
 
-		for (var x = 0; x < songFav.length; x++) {
-			songId.push(songFav[x].id);
-			songFav[x].num_id = x;
-			$scope.spot_arr.push($scope.songsFav[x].id);
-		}
+		$scope.createSongsFav();
 
-		var index = songId.indexOf($scope.songsFav[num_id].id);
+		var index = $scope.spot_arr.indexOf($scope.spot_arr[num_id].id);
 		songFav.splice(index, 1);
 		$scope.spot_arr.splice(index, 1)
 		localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
@@ -566,6 +598,16 @@ $scope.switchFavorite = function(id, num_id, about_or_from) {
 		}
 };
 
+
+if(!$rootScope.songs)
+{
+	$scope.runApp();
+	$scope.createFavoritesList();
+	$scope.createSongsFav();
+} else {
+	$scope.createFavoritesList();
+	$scope.createSongsFav();
+}
 	$scope.goBack = function() {
 
 		$location.path('playlist/' + $scope.location.replace(', ', '*'));
@@ -707,46 +749,5 @@ $scope.detectDevice = function()
 		 $location.path('country');
 		 }	*/
 
-
-	$scope.songsFav = [];
-	$scope.save_arr = [];
-
-	$scope.songs_repeater = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
-	var fav = localStorage.getItem('FavoriteArr');
-	if (fav == null)
-		fav = [];
-	if (fav.length == 2 || fav == null) {
-		$scope.getFav = false;
-		localStorage.setItem('FavoriteArr', '[]');
-	}
-	var txt = '';
-	if ($scope.songs_repeater != null) {
-		for (var x = 0; x < $scope.songs_repeater.length; x++) {
-
-			if (!txt.replace(/\W/g, '').match($scope.songs_repeater[x].id.replace(/\W/g, ''))) {
-				$scope.songsFav.push($scope.songs_repeater[x]);
-			}
-			txt += $scope.songs_repeater[x].id;
-		}
-	}
-
-	//$scope.songs.spot_str='';
-	if ($scope.songsFav != null) {
-		$scope.songsFav.spot_str = '';
-		for (var x = 0; x < $scope.songsFav.length; x++) {
-			$scope.spot_arr.push($scope.songsFav[x].id);
-			$scope.save_arr.push('spotify:track:' + $scope.songsFav[x].id);
-			$scope.songsFav[x].favorite = 'on';
-		}
-
-		$scope.songsFav.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.spot_arr.toString();
-		$scope.songsFav.spot_str = $sce.trustAsResourceUrl($scope.songsFav.spot_str);
-
-	} else {
-		$scope.songsFav = []
-		$scope.songsFav.spot_str = ''
-	}
-
-	$scope.location_link = $routeParams.location;
 
 }]);

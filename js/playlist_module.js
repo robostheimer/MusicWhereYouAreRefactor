@@ -334,7 +334,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 							i++;
 						});
 
-						Favorites.checkFavorites(chunk.spotify_info);
 						cache.put(cacheKey, chunk);
 						return chunk;
 					})
@@ -1921,7 +1920,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 			$scope.runApp();
 		} else {
 
-			$rootScope.loading = false;
+			Favorites.checkFavorites($rootScope.songs.spotify_info);
 		}
 		Favorites.addFavorites();
 
