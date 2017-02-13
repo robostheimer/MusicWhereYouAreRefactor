@@ -577,7 +577,7 @@ Array.prototype.Toggle = function(indiv, property, value1, value2){
 	 		return arr;
 	 };
 
-Array.prototype.compareArraysObj =function(array2, property)
+Array.prototype.compareAndRemoveArraysObj =function(array2, property)
 	 {
 	 	var array1=this;
 	 	array1.forEach(function(item){

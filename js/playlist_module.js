@@ -929,6 +929,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 					$rootScope.songs = data;
 						Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
 							$rootScope.songs.spotify_info = data.spotify_info;
+							Favorites.checkFavorites($rootScope.songs.spotify_info);
 							$scope.loading = false;
 							$scope.mapdata.lat=data.spotify_info[0].location.lat;
 							$scope.mapdata.lng=data.spotify_info[0].location.lng;
@@ -1915,14 +1916,14 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		//$rootScope.locationdata = $rootScope.latitudeObj_root.location;
 		var location_comp = $routeParams.location;
 		var location_str = $routeParams.location;
-		if(!$rootScope.songs || ($rootScope.songs.location  && $rootScope.songs.location !== $routeParams.location ) )
-		{
+		// if(!$rootScope.songs || ($rootScope.songs.location  && $rootScope.songs.location !== $routeParams.location ) )
+		// {
 			$scope.runApp();
-		} else {
+		// } else {
+		//
+		// 	Favorites.checkFavorites($rootScope.songs.spotify_info);
+		// }
 
-			Favorites.checkFavorites($rootScope.songs.spotify_info);
-		}
-		Favorites.addFavorites();
 
 
 
