@@ -84,8 +84,9 @@
 </section>
 
 <section id="genre_holder" style="padding-top:10px;" >
-	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
-	<button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">
+	<!-- <div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div> -->
+	<!-- Uncomment when this feature is working -->
+	<!-- <button class="{{buttons[0].classy}}"  ng-click="runButtons('genres')" ng-swipe-left="goBack()">
 
 		<div class="button_txt">
 			&nbsp;&nbsp;Settings&nbsp;&nbsp;
@@ -102,7 +103,7 @@
 		<div class="button_txt">
 			&nbsp;&nbsp;Reset Country&nbsp;&nbsp;
 		</div>
-	</button>
+	</button> -->
 	<!--<button class="{{buttons[2].classy}}" ng-click="runButtons('moods')" >
 
 	<div class="button_txt">
@@ -110,7 +111,7 @@
 	</div>
 	</button>-->
 	<div class="clear"></div>
-	<div ng-hide="noPickedGenre==false">Whoa there, Hipster. <b><i>{{genre}}</i></b> is not in our database.  We will try to be cooler in the future.<br><a ng-click="noPickedGenre=false">Retry</a></div>
+	<!-- <div ng-hide="noPickedGenre==false">Whoa there, Hipster. <b><i>{{genre}}</i></b> is not in our database.  We will try to be cooler in the future.<br><a ng-click="noPickedGenre=false">Retry</a></div> -->
 	<form id="selector_genre" class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
 
 		<input type="text"  name="search genre" id="findmusic" placeholder="Genre, Genre, Genre"  class="text searchy"   ng-model="genre" ng-enter="lookUpGenre(genre)" ng-show="noPickedGenre==false">

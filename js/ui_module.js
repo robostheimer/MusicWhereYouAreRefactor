@@ -476,6 +476,17 @@ UI.directive(
 	    });
 
 	});
+UI.directive('musicCard', function($location) {
+	return {
+		restrict : 'AE',
+		templateUrl : 'partials/directives/music-card.html',
+		link: function(scope) {
+			if(/favorite/.test($location.path())) {
+				scope.showLocation = true;
+			}
+		}
+	}
+});
 
 UI.directive('downloadButton',  function ($compile) {
  return {

@@ -79,20 +79,7 @@
 	<div class="clear"></div>
 	<div class="cards"  ng-class="{iframehider: spot_iframe_hider == true}">
 			<div ng-repeat="song in songsFav track by $index " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite | switchFavorite(song)" type="click">
-				<div class="close" id="close{{song.id}}" aria-hidden="true" data-icon="x" ng-click= "removeSong(song.id)"></div>
-				<p class="info" id="pinfo{{song.num_id}}">
-					{{song.name}}
-					<br>
-					<span class="artist">{{song.artists[0].name}}</span><br>
-					<sup>From: <a href="#/playlist/{{song.location_link}}">{{song.location.city}}</a></sup>
-				</p>
-
-		<a class="spotter" href="spotify:track:{{song.id}}"><div class="spot_link_spot" id="spot{{song.od}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div></a>
-
-		<a><div class="icon iconfavorite spot_link favorite favorite_on" ></div></a>
-		<a href="#/info/{{location_link}}/{{song.artists[0].name.replace('The ', '')}}"><div  style="font-size:25px" id="info{{index}}" class="spot_link information" aria-hidden="true" data-icon="*"></div></a>
-		<a href="#/events/{{location_link}}/{{song.artist[0].name.replace('The ', '')}}"><div  style="font-size:25px; margin-left:5px;" id="event{{index}}" class="spot_link information" aria-hidden="true" data-icon="1"></div></a>
-		<div style="clear:both;margin-bottom:-15px;"></div>
+			<music-card/>
 	</div>
 	</div>
 	</div>

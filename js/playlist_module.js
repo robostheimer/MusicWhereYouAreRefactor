@@ -8,9 +8,9 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
 			$rootScope.noGeo=false;
-			songs = {};
-			var url = 'http://labs.echonest.com/CityServer/artists?id='+id+'&callback=JSON_CALLBACK&count=500';
-			var deferred = $q.defer();
+			let songs = {},
+			url = `http://labs.echonest.com/CityServer/artists?id=${id}&callback=JSON_CALLBACK&count=500`,
+			deferred = $q.defer();
 
 			if(!cache.get(id)) {
 				return $http({cache:true, url:url, method:'jsonp'}).then(function(data) {
@@ -1402,18 +1402,18 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		$scope.spot_arr = [];
 		////*****************************Add leaveOuts to LS so songs do not come back after reload of app///******************************************
 		if (about_or_from == 'from') {
-			for (var i = 0; i < $scope.songs.length; i++) {
+			for (var i = 0; i < $rootScope.songs.spotify_info.length; i++) {
 
-				if (id == $scope.songs[i].id) {
+				if (id == $rootScope.songs.spotify_info[i].id) {
 
-					$scope.songs[i].closeButton = true;
-					$scope.leaveOut.push($scope.songs[i].id);
+					$rootScope.songs.spotify_info[i].closeButton = true;
+					$scope.leaveOut.push($rootScope.songs.spotify_info[i].id);
 					var existingLeaveOut = JSON.parse(localStorage.getItem("leaveOutArr"));
 					if (existingLeaveOut == null)
 						existingLeaveOut = [];
 						var item = {
-						title : $scope.songs[i].name,
-						id : $scope.songs[i].id
+						title : $rootScope.songs.spotify_info[i].name,
+						id : $rootScope.songs.spotify_info[i].id
 
 					};
 
@@ -1422,49 +1422,44 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 					existingLeaveOut.push(item);
 					localStorage.setItem("leaveOutArr", JSON.stringify(existingLeaveOut));
 
-				} else if (!$scope.leaveOut.toString().replace(/\W/g, '').match($scope.songs[i].id.replace(/\W/g, ''))) {
+				} else if (!$scope.leaveOut.toString().replace(/\W/g, '').match($rootScope.songs.spotify_info[i].id.replace(/\W/g, ''))) {
 
-					$scope.spot_arr.push($scope.songs[i].id);
+					$scope.spot_arr.push($rootScope.songs.spotify_info[i].id);
 
-				}
-				if(!$rootScope.songs)
-				{
-					$scope.runApp();
-				} else {
-					console.log($rootScope.songs)
 				}
 
 			}
-		} else {
-			$scope.lookUpSongs.idArr=[];
-			for (var i = 0; i < $scope.lookUpSongs.length; i++) {
-
-				if (id == $scope.lookUpSongs[i].id) {
-					$scope.lookUpSongs[i].closeButton = true;
-					$scope.leaveOut.push($scope.lookUpSongs[i].id);
-
-					var existingLeaveOut = JSON.parse(localStorage.getItem("leaveOutArr"));
-					if (existingLeaveOut == null)
-						existingLeaveOut = [];
-					var item = {
-						song : $scope.lookUpSongs[i].name,
-						id : $scope.lookUpSongs[i].id
-					};
-
-					localStorage.setItem("leaveOut", JSON.stringify(item));
-					// Save allEntries back to local storage
-					existingLeaveOut.push(item);
-					localStorage.setItem("leaveOutArr", JSON.stringify(existingLeaveOut));
-
-				} else {
-					//$scope.spot_arr.push($scope.lookUpSongs[i].id);
-					$scope.lookUpSongs.idArr.push($scope.lookUpSongs[i].id)
-
-				}
-
-
-
-			}
+		 }
+		else {
+		// 	$scope.lookUpSongs.idArr=[];
+		// 	for (var i = 0; i < $scope.lookUpSongs.length; i++) {
+		//
+		// 		if (id == $scope.lookUpSongs[i].id) {
+		// 			$scope.lookUpSongs[i].closeButton = true;
+		// 			$scope.leaveOut.push($scope.lookUpSongs[i].id);
+		//
+		// 			var existingLeaveOut = JSON.parse(localStorage.getItem("leaveOutArr"));
+		// 			if (existingLeaveOut == null)
+		// 				existingLeaveOut = [];
+		// 			var item = {
+		// 				song : $scope.lookUpSongs[i].name,
+		// 				id : $scope.lookUpSongs[i].id
+		// 			};
+		//
+		// 			localStorage.setItem("leaveOut", JSON.stringify(item));
+		// 			// Save allEntries back to local storage
+		// 			existingLeaveOut.push(item);
+		// 			localStorage.setItem("leaveOutArr", JSON.stringify(existingLeaveOut));
+		//
+		// 		} else {
+		// 			//$scope.spot_arr.push($scope.lookUpSongs[i].id);
+		// 			$scope.lookUpSongs.idArr.push($scope.lookUpSongs[i].id)
+		//
+		// 		}
+		//
+		//
+		//
+		// 	}
 
 			////$scope.parseSongData($scope.finalcollector, 'no', 'no')
 		}
@@ -1502,30 +1497,30 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$rootScope.songs.spotify_info[num_id].favorite = 'off';
 			}
 		}
-		else if(about_or_from=='about')
-		{
-			if ($scope.lookUpSongs[num_id].favorite == 'off') {
-				if(id= $scope.lookUpSongs[num_id].id)
-				$scope.lookUpSongs[num_id].favorite = 'on';
-				songFav.push($scope.lookUpSongs[num_id]);
-
-				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-				$scope.favorites = Favorites.addFavorites();
-			}
-			else {
-				for (var x = 0; x < songFav.length; x++) {
-					songId.push(songFav[x].id);
-				}
-			var index = songId.indexOf($scope.songs[num_id].id);
-
-			songFav.splice(index, 1);
-			localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-			$scope.lookUpSongs[num_id].favorite = 'off';
-			}
-
-
-
-		}
+		//else if(about_or_from=='about')
+		// {
+		// 	if ($scope.lookUpSongs[num_id].favorite == 'off') {
+		// 		if(id= $scope.lookUpSongs[num_id].id)
+		// 		$scope.lookUpSongs[num_id].favorite = 'on';
+		// 		songFav.push($scope.lookUpSongs[num_id]);
+		//
+		// 		localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
+		// 		$scope.favorites = Favorites.addFavorites();
+		// 	}
+		// 	else {
+		// 		for (var x = 0; x < songFav.length; x++) {
+		// 			songId.push(songFav[x].id);
+		// 		}
+		// 	var index = songId.indexOf($scope.songs[num_id].id);
+		//
+		// 	songFav.splice(index, 1);
+		// 	localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
+		// 	$scope.lookUpSongs[num_id].favorite = 'off';
+		// 	}
+		//
+		//
+		//
+		// }
 
 	};
 
@@ -1908,21 +1903,15 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		}];
 		var id_str = '';
 		$scope.leaveOut = [];
-		$scope.location = $routeParams.location.replace(/\*/g, ', ');
-		$scope.location_link = $routeParams.location;
 
-		/////compare a $rootScope location variable to routeParams.location + $rootScope.genres - if locations don't equal and genres do equal re-run retrieve, else nothing/
-		var locationdatacount = LocationDataFetch.count;
-		//$rootScope.locationdata = $rootScope.latitudeObj_root.location;
 		var location_comp = $routeParams.location;
-		var location_str = $routeParams.location;
-		// if(!$rootScope.songs || ($rootScope.songs.location  && $rootScope.songs.location !== $routeParams.location ) )
-		// {
+		if(!$rootScope.songs || (location_comp && $rootScope.songs.location !== location_comp ) )
+		{
 			$scope.runApp();
-		// } else {
-		//
-		// 	Favorites.checkFavorites($rootScope.songs.spotify_info);
-		// }
+		} else {
+
+			Favorites.checkFavorites($rootScope.songs.spotify_info);
+		}
 
 
 

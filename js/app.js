@@ -79,7 +79,8 @@ function($compileProvider)
    // Allow same origin resource loads.
    'self',
    // Allow loading from our assets domain.  Notice the difference between * and **.
-   'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:**']);
+   'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:**',
+  'http://ws.audioscrobbler.com/2.0/**']);
  })
 
 .config(['$routeProvider',

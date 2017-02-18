@@ -93,6 +93,17 @@ String.prototype.toTitleCase = function()
 
 };
 
+String.prototype.addSpaceAfterComma = function()
+{
+			var stringArr = this.split(',');
+
+			if(stringArr[1].indexOf(' ') < 0) {
+				stringArr[1] = ` ${stringArr[1]}`;
+			}
+
+			return stringArr.join(',');
+};
+
 
 String.prototype.strSplitter = function(splitter)
 	{
@@ -280,17 +291,12 @@ Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequ
 };
 
 Array.prototype.removeDuplicatesArr = function(){
-		var unique = [];
-		var array=this;
-  		array.forEach(function(item) {
-	        var current = item
-	        if (unique.indexOf(current) < 0)
-	        {
-	        	 unique.push(current);
-	        }
-		   });
-	    return unique;
-	};
+	let deDuped = arr.filter(function(item, index) {
+		return arr.indexOf(item) === index;
+	});
+
+	return deduped;
+};
 
 Array.prototype.savArrayDups =function(){
 	var dups={title:[], finalArr:[], };

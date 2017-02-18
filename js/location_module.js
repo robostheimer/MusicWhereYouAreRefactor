@@ -14,14 +14,18 @@ function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
 				city_matches = [],
 				location_regex = new RegExp(location.replace(/\*/g, ', ').toLowerCase()),
 				deferred = $q.defer();
+
 			//loads locations if they have not already been added
 			if(!$rootScope.locations) {
 				return $http.get('json/locations.json').then(function(data) {
 					$rootScope.locations = data.data;
 					$rootScope.locations.forEach(function(city){
+						//normalizing the city data in the locations.json to always have a comma between city and state/region
+						city.city = city.city.addSpaceAfterComma();
 						if(location_regex.test(city.city.toLowerCase()))
 						{
-						city_matches.push(city.city_id);
+							console.log(location_regex)
+							city_matches.push(city.city_id);
 						}
 					});
 					return city_matches;
