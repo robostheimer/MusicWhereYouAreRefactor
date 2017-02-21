@@ -106,11 +106,20 @@ $scope.createSongsFav = function() {
 	$scope.songsFav = jQuery.parseJSON(localStorage.getItem('FavoriteArr'));
 	if ($scope.songsFav !== null) {
 		$scope.spot_arr = $scope.getSongsIds($scope.songsFav) || [];
+<<<<<<< HEAD
 		if ($scope.songsFav.length > 0) {
 			$scope.spot_arr.forEach(function(item) {
 				$scope.save_arr.push('spotify:track:' + item);
 			})
 
+=======
+
+		if ($scope.songsFav.length > 0) {
+			for (var x = 0; x < $scope.spot_arr; x++) {
+				$scope.save_arr.push('spotify:track:' + $scope.spot_arr[x]);
+			}
+
+>>>>>>> 61e612b1bdd1533d85dc4fb69b10022f2a70edec
 			$scope.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + $scope.spot_arr.toString();
 			$scope.spot_str = $sce.trustAsResourceUrl($scope.spot_str);
 
