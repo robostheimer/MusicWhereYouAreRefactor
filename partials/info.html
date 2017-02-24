@@ -59,29 +59,6 @@
 
 
 		<div id='artist_info'>
-			<ul  role = "profile_tabs">
-
-				<li id="bio" ng-model="buttons.bio.state"  class="{{buttons.bio.state}}"  role="bio_tab"  ng-hide="artistinfo.bioCheck==false">
-				<a  ng-model = "buttons.bio"  ng-click="changeClass(buttons.bio.state, buttons.bio)" class="cursor"  >Bio</a>
-				</li>
-				<li id="photos” ng-model="buttons.photos.state"  class="{{buttons.photos.state}}" role="photos_tab"  ng-hide="artistinfo.photosCheck==false" >
-				<a  ng-model = "buttons.photos"  ng-click="changeClass(buttons.photos.state, buttons.photos)" class="cursor" >Photos</a>
-				</li>
-				<!--<li id="topsongs” ng-model="buttons.topsongs.state"  class="{{buttons.topsongs.state}}"  role="topsongs_tab">
-				<a  ng-model = "buttons.topsongs"  ng-click="changeClass(buttons.topsongs.state, buttons.topsongs)" class="cursor" >Songs</a>
-				</li>-->
-				<li id="videos” ng-model="buttons.videos.state"  class="{{buttons.videos.state}}"  role="videos_tab"  ng-hide="artistinfo.videoCheck==false" >
-				<a  ng-model = "buttons.videos"  ng-click="changeClass(buttons.videos.state, buttons.videos)" class="cursor" >Videos</a>
-				</li>
-
-				<li id="news” ng-model="buttons.news.state"  class="{{buttons.news.state}}"  role="news_tab" ng-hide="artistinfo.newsCheck==false">
-				<a  ng-model = "buttons.news"  ng-click="changeClass(buttons.news.state, buttons.news)" class="cursor" >News</a>
-				</li>
-				<li id="related” ng-model="buttons.related.state"  class="{{buttons.related.state}}"  role="related_tabs" style="border:none"">
-				<a  ng-model = "buttons.related"  ng-click="changeClass(buttons.related, buttons.related)" class="cursor" >Related Artists</a>
-				</li>
-
-				</ul>
 
 			<div id='artist_loader' ng-hide='artistdata ==false'>
 
@@ -90,44 +67,31 @@
 			<h4>{{artistinfo.name}}</h4>
 			<div id="biobox" class="{{buttons.bio.classy}}" aria-labelledby="bio" aria-hidden='{{buttons.bio.state}}' >
 
-			<p class="intro_ang"><img class="gallery" ng-src="{{artistinfo.lastfm_imgs[0].url}}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/><br>
+			<p class="intro_ang"><img class="gallery" ng-src="{{artistinfo.img}}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/><br>
 				<iframe ng-hide="spot_iframe_hider==true"class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe>
 				<br>
 				<button class ="info_button clear" ng-controller="Spotify" ng-click="SavePlaylist(spotify.spot_url_button, artistinfo.name);"><div aria-hidden="true" data-icon="c" class="button_icon"></div><div class="button_txt"> Save Playlist to Spotify</div></button>
 				<p>From: <span style="color:#c53526;">{{artistinfo.artist_location.location}}</span></p>
-				<p>{{artistinfo.bio}}</p>
-			<a href="{{artistinfo.bio.url}}" target="_blank"><br></a>
-			</div>
-			<div id="photosbox" class="{{buttons.photos.classy}}" aria-labelledby="photos" aria-hidden='{{buttons.photos.state}}'>
-				<div class="img_holder" ng-repeat="image in artistinfo.lastfm_imgs">
-				<div class="images" >
-					<img src = "{{image.src}}"  alt = "{{artistname}}"/>
+				<p ng-bind-html = "SkipValidation(artistinfo.bio)">{{artistinfo.bio}}</p>
+
+				<div id="relatedbox" class="{{buttons.related.classy}}" aria-labelledby="related" aria-hidden='{{buttons.related.state}}'>
+
+					<a href="{{related.href}}"><dl class="sim_holder" id="{{artistinfo.similar.name}}" ng-repeat="related in relatedartists.relatedartistsfinal">
+						<div class="images">
+							<img  ng-src="{{related.lastfm_imgs[0].src}}" width="126" alt="{{artistinfo.similar.name}}"/>
+							<div class="name" ><a class="artistlink" href="{{related.href}}">{{related.name}}</a></div>
+						</div>
+
+					</dl></a>
 				</div>
-			</div>
+
 			</div>
 			<!--<div id="topsongsbox"  class="{{buttons.topsongs.classy}}" aria-labelledby="topsongs" aria-hidden='{{buttons.topsongs.state}}'>
 
 				<div class="spot_iframe"><iframe theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe></div>
 
 			</div>-->
-			<div id="videosbox" class="{{buttons.videos.classy}}" aria-labelledby="videos" aria-hidden='{{buttons.videos.state}}' >
-				<div ng-repeat="src in artistinfo.videoArr"><iframe class="ytframe" frameborder="0" src="{{src}}" type="text/html"></iframe></div>
-			</div>
-			<div id="newsbox" class="{{buttons.news.classy}}" aria-labelledby="news" aria-hidden='{{buttons.news.state}}'>
-				<div ng-repeat="news in artistinfo.news"><a href="{{news.url}}" target="_blank">{{news.name}}</a><br>{{news.news_summary}}... <a href="{{news.url}}" target="_blank">Read More</a><br>From: <a href ="http://{{news.url.replace('http://','').split('/')[0]}}" target="_blank">{{news.url.replace('http://','').split('/')[0]}}</a><br><br>
-</div>
 
-			</div>
-			<div id="relatedbox" class="{{buttons.related.classy}}" aria-labelledby="related" aria-hidden='{{buttons.related.state}}'>
-
-				<a href="{{related.href}}"><dl class="sim_holder" id="{{related.name}}" ng-repeat="related in relatedartists.relatedartistsfinal">
-					<div class="images">
-						<img  ng-src="{{related.lastfm_imgs[0].src}}" width="126" alt="{{related.name}}"/>
-						<div class="name" ><a class="artistlink" href="{{related.href}}">{{related.name}}</a></div>
-					</div>
-
-				</dl></a>
-			</div>
 			</div>
 
 			</div>

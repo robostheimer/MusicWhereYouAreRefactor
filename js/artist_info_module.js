@@ -8,17 +8,27 @@ return{
      		infoRetrieve: function(artistname){
      			var artistinfo = {};
      			var artistname_echo = artistname.replace(/\*/g, ' ');
+					var img;
+					var images;
 
-     			//var feed = 'http://teacheratsea.wordpress.com/category/'+$routeParams.teachername.split('*')[0].toLowerCase()+'-'+$routeParams.teachername.split('*')[1].toLowerCase()+'/feed';
-
+					//cache this (see playlist_module)
      			var url =`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artistname}&api_key=1f91c93293d618de5c30f8cfe2e9f5e9&format=json&callback=JSON_CALLBACK`
 
 
      			return $http.jsonp(url).then(function(result)
      			{
-						debugger;
+
      			artistinfo =result.data.artist;
+
        		artistinfo.spot_url=[];
+					img = artistinfo.image.find(function(item) {
+						return item.size === "extralarge"
+					});
+
+
+					artistinfo.img = img["#text"];
+
+					console.log(artistinfo)
 					console.log(artistinfo.bio)
      			artistinfo.bio=artistinfo.bio.summary;
      			//artistinfo.bio.text='';
@@ -688,6 +698,9 @@ $scope.runApp = function() {
 	});
 };
 
+$scope.SkipValidation = function(value) {
+		return $sce.trustAsHtml(value);
+};
 
 $scope.detectDevice = function()
 	{
