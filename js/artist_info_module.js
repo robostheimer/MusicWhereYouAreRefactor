@@ -1,8 +1,8 @@
 var Info = angular.module('Info', [])
 
 /*Services*/
-Info.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location',
-function($q, $rootScope, $http, $sce, $location) {
+Info.factory("retrieveInfo", ['$q', '$rootScope', '$http', '$sce', '$location', '$routeParams',
+function($q, $rootScope, $http, $sce, $location, $routeParams) {
 return{
 
      		infoRetrieve: function(artistname){
@@ -21,113 +21,24 @@ return{
      			artistinfo =result.data.artist;
 
        		artistinfo.spot_url=[];
+
 					img = artistinfo.image.find(function(item) {
 						return item.size === "extralarge"
 					});
-
+					artistinfo.similar.artist.forEach(function(artist) {
+						artist.href = `#/info/${$routeParams.location}/${artist.name}`
+						artist.image.forEach(function(img) {
+							if (img.size === 'large') {
+								artist.img = img['#text'];
+							};
+						});
+					});
 
 					artistinfo.img = img["#text"];
-
-					console.log(artistinfo)
-					console.log(artistinfo.bio)
-     			artistinfo.bio=artistinfo.bio.summary;
-     			//artistinfo.bio.text='';
-     		// 	artistinfo.ytArr=[];
-     		// 	artistinfo.videoArr=[];
-     		// 	artistinfo.lastfm_imgs=[];
-					//
-	     	// 		artistinfo.video.forEach(function(video){
-					//
-	     	// 		if(video.url.match('youtube'))
-		     // 			{
-		     // 			artistinfo.ytArr.push(video.url);
-		     // 			}
-	     	// 		});
-					//
-	     	// 		artistinfo.news.forEach(function(news){
-		     // 			news.news_summary=news.summary.removeHTML();
-	     	// 		});
-					//
-     		// 	if(artistinfo.ytArr.length<7)
-     		// 	{
-     		// 	var yt_length = artistinfo.ytArr.length;
-     		// 	}
-     		// 	else{
-     		// 	var yt_length = 7;
-     		// 	}
-     		// 	for (var g=0; g<yt_length; g++)
-	     	// 		{
-	     	// 			artistinfo.videoArr.push($sce.trustAsResourceUrl('http://www.youtube.com/embed/'+artistinfo.ytArr[g].slice(artistinfo.ytArr[g].indexOf('?v='),artistinfo.ytArr[g].indexOf('&feature')).replace('?v=','')));
-	     	// 		};
-					//
-					//
-	     	// 		for(var i=0; i<artistinfo.biographies.length; i++)
-	     	// 		{
-					//
-	     	// 			if(artistinfo.biographies[i].site.match('last.fm'))
-	     	// 			{
-	     	// 				artistinfo.bio=result.data.response.artists[0].biographies[i];
-	     	// 				if(artistinfo.bio.text.length>2700)
-	     	// 				{
-	     	// 					artistinfo.bio.text = artistinfo.bio.text.Slicer(2700) +'... ';
-					// 			artistinfo.bio_site = 'Read More at ' +artistinfo.bio.site;
-	     	// 				}
-	     	// 				else
-		     // 				{
-		     // 					artistinfo.bio_site = 'Courtesy of ' +artistinfo.bio.site;
-		     // 				}
-	     	// 			}
-					//
-					//
-	     	// 		}
-					//
-     		// 	if(artistinfo.bio.text=='')
-     		// 	{
-     		// 		artistinfo.bio.text='No published biography exists for this band.';
-     		// 	}
-					//
-     		// 	for(var h=0; h<artistinfo.images.length; h++)
-     		// 	{
-     		// 		if(artistinfo.images[h].url.match('last.fm'))
-	     	// 				{
-	     	// 					if(artistinfo.images[h].url.match('serve'))
-	     	// 					{
-	     	// 					var img_id = artistinfo.images[h].url.split('serve/')[1]
-	     	// 					img_id=img_id.slice(artistinfo.images[h].url.split('serve/')[1].indexOf('/'),artistinfo.images[h].url.split('serve/')[1].length);
-					//
-	     	// 					artistinfo.images[h].src ='http://userserve-ak.last.fm/serve/126s'+img_id;
-					//
-					//
-	     	// 					artistinfo.lastfm_imgs.push(artistinfo.images[h]);
-	     	// 					 }
-	     	// 				}
-	     	// 			}
-	     	// 			if(artistinfo.images.length==0)
-	     	// 			{
-	     	// 				for (var y=0; y<5; y++)
-	     	// 				{
-	     	// 				artistinfo.images.push('logo4_sm.png');
-	     	// 				}
-	     	// 			}
-
+					artistinfo.bio=artistinfo.bio.summary;
      			return artistinfo;
 		});
 
-	},
-     		imagesRetrieve: function(artistname){
-     			var artistimages = {};
-
-
-     			var url ='php/wikimedia.php?q='+artistname.replace(/\*/g,' ')+'music';
-
-
-     			return $http.get(url).success(function(result)
-     			{
-
-     			artistimages =(result.data);
-
-     			return artistimages;
-		});
 
 	},
 			lookUpArtist :function(artistname)
@@ -154,7 +65,7 @@ return{
 	     			{
 
 	     				artistsongs.spot_url.push(track.id);
-	     				artistsongs.spot_url_button.push(track.id);
+	     				artistsongs.spot_url_button.push(`spotify:track:${track.id}`);
 
 	     			});
      			artistsongs.spot_url_str = $sce.trustAsResourceUrl('https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:'+artistsongs.spot_url.toString());
@@ -162,102 +73,7 @@ return{
      			});
 			},
 
-			relatedRetrieve: function(artistname)
-			{
-
-				relatedartists={};
-
-				var url ='http://developer.echonest.com/api/v4/artist/similar?api_key=3KFREGLKBDFLWSIEC&format=json&name='+artistname+'&results=10&&bucket=id:spotify-WW&bucket=images&bucket=artist_location';
-				return $http.get(url).success(function(result)
-     			{
-     			relatedartists =result.response.artists;
-     			relatedartists.relatedartistsfinal = [];
-     			relatedartists.forEach(function(artist)
-	     			{
-	     				if(artist.artist_location!=null)
-	     				{
-	     				relatedartists.relatedartistsfinal.push(artist);
-
-
-	     				}
-	     			});
-
-	     			relatedartists.relatedartistsfinal.forEach(function(relatedartist)
-	     			{
-	     				relatedartist.href = '#/info/'+$location.path().split('/')[2]+'/'+relatedartist.name.replace('The ', '');
-	     				relatedartist.lastfm_imgs =[];
-	     				relatedartist.images.forEach(function(image)
-	     				{
-	     					if(image.url.match('last.fm'))
-	     					{
-	     						if(image.url.match('serve'))
-	     						{
-	     						var img_id = image.url.split('serve/')[1]
-	     						img_id=img_id.slice(image.url.split('serve/')[1].indexOf('/'),image.url.split('serve/')[1].length);
-
-	     						image.src ='http://userserve-ak.last.fm/serve/126s'+img_id;
-
-	     						relatedartist.lastfm_imgs.push(image);
-
-	     						}
-	     					}
-	     				});
-
-	     				if(relatedartist.lastfm_imgs.length==0)
-	     				{
-	     					relatedartist.lastfm_imgs.push({src:'/MusicWhereYouAre/logo4_sm.png'});
-	     				}
-	     			});
-
-
-	     			return relatedartists;
-     			});
-			},
-
-
-			     createObjects: function() {
-
-					var buttons={};
-					buttons.bio={};
-					buttons.photos={};
-					buttons.videos={};
-					buttons.topsongs={};
-					buttons.news={};
-					buttons.related={};
-
-					buttons.bio.name='bio';
-					buttons.bio.classy= "shower";
-					buttons.bio.state='on';
-					//buttons.bio.href='#/'+$routeParams.year+'/'+$routeParams.teachername+'/blogs';
-
-					buttons.photos.name='photos';
-					buttons.photos.classy= "hider";
-					buttons.photos.state='off';
-					//buttons.photos.href=$routeParams.year+'/'+$routeParams.teachername+'/blogs';
-
-					buttons.videos.name='videos';
-					buttons.videos.classy= "hider";
-					buttons.videos.state='off';
-					//buttons.videos.href=$routeParams.year+'/'+$routeParams.teachername+'/videos';
-
-					buttons.topsongs.name='top songs';
-					buttons.topsongs.classy= "hider";
-					buttons.topsongs.state='off';
-					//buttons.topsongs.href=$routeParams.year+'/'+$routeParams.teachername+'/lessons';
-
-					buttons.news.name='news';
-					buttons.news.classy= "hider";
-					buttons.news.state='off';
-					//buttons.news.href=$routeParams.year+'/'+$routeParams.teachername+'/news';
-
-					buttons.related.name='Related Artists';
-					buttons.related.classy= "hider";
-					buttons.related.state='off';
-					//buttons.related.href=$routeParams.year+'/'+$routeParams.teachername+'/ship';
-					return buttons;
-				},
-
-};
+		};
 }]);
 
 
@@ -269,39 +85,15 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams, retrieveI
 	$rootScope.noGeo=false;
 	localStorage.path=$location.path();
 	$rootScope.loading = true;
-	$scope.buttons = retrieveInfo.createObjects();
-	$scope.buttonsArr = [$scope.buttons.bio, $scope.buttons.photos, $scope.buttons.videos, $scope.buttons.topsongs, $scope.buttons.news, $scope.buttons.related];
 	$scope.location = $routeParams.location.replace(/\*/, ', ');
 	$scope.location_link = $routeParams.location;
 	$scope.name = $routeParams.artist.removeSpecialChar();
 	$scope.artistdata = false;
 	var songs_for_service=[];
 
-	$scope.tabs = retrieveInfo.createObjects();
 	retrieveInfo.infoRetrieve($scope.name).then(function(data) {
 		$scope.artistinfo = data;
-		console.log($scope.artistinfo)
-		$scope.artistinfo.bioCheck = true;
-		$scope.artistinfo.photosCheck = true;
-		$scope.artistinfo.newsCheck = true;
-		$scope.artistinfo.videoCheck = true;
-		if ($scope.artistinfo.bio.length == 0) {
-			$scope.artistinfo.bioCheck = false;
-		}
-		// if ($scope.artistinfo.video.length == 0) {
-		// 	$scope.artistinfo.videoCheck = false;
-		// }
-		// if ($scope.artistinfo.news.length == 0) {
-		// 	$scope.artistinfo.newsCheck = false;
-		// }
-		// if ($scope.artistinfo.images.length < 1) {
-		// 	$scope.artistinfo.photosCheck = false;
-		// }
 
-		retrieveInfo.relatedRetrieve($scope.name).then(function(data) {
-			$scope.relatedartists = data.data.response.artists;
-
-		});
 
 		$scope.artistdata = true;
 
@@ -354,9 +146,6 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams, retrieveI
 	};
 	$scope.lookUpArtist = function(artist) {
 		var location = $routeParams.location
-
-
-			$location.path('info/' +location+'/'+artist.replace('The ', ''));
 	};
 // 	$scope.runApp = function(start_number, counter, type, arr, arr2, index1, index2) {
 //
@@ -711,16 +500,17 @@ $scope.detectDevice = function()
 		else{
 			$scope.spot_iframe_hider=false;
 		}
-		console.log(deviceDetector)
 	};
-		$scope.location = $routeParams.location.replace(/\*/, ', ').replace(/_/g, ' ');
-		$scope.location_link = $routeParams.location;
-		if ($rootScope.mapOpening==true ||LocationDataFetch.count==100000000000)
-			{
-			$scope.runApp(0, 1);
 
-		}
-		$scope.detectDevice();
+
+	$scope.location = $routeParams.location.replace(/\*/, ', ').replace(/_/g, ' ');
+	$scope.location_link = $routeParams.location;
+	if ($rootScope.mapOpening==true ||LocationDataFetch.count==100000000000)
+		{
+		$scope.runApp(0, 1);
+
+	}
+	$scope.detectDevice();
 
 
 

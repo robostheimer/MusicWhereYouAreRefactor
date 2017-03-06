@@ -1942,6 +1942,7 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 	$scope.songs_arr = [];
 
 	$scope.SavePlaylist = function(arr, title) {
+		console.log(arr, title)
 		var title = 'MusicWYA: ' + title;
 		var client_id = '';
 		var redirect_uri = '';

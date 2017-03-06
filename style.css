@@ -493,6 +493,11 @@ ul#chooser li, #chooser li div.inactive {
 	padding-bottom: 7%;
 	top: 0;
 }
+
+#info-area #biobox {
+	display: flex;
+}
+
 #info-area #boxes {
 	overflow-x: scroll;
 	margin-top: 20px;
@@ -503,9 +508,7 @@ ul#chooser li, #chooser li div.inactive {
 #info-area #photosbox {
 	width: 2200px;
 }
-#info-area #relatedbox {
-	width: 1470px;
-}
+
 #info-area #videosbox div {
 	float: left;
 	margin-right: 15px;
@@ -613,18 +616,26 @@ ul#chooser li, #chooser li div.inactive {
 	min-width: 126px;
 }
 #info-area div .sim_holder {
+	display: flex;
 }
-#info-area div.images img {height;126px;
+
+#info-area div.images img {
+	height;126px;
 	border: 1px solid #ccc;
+	margin-right: 15px;
 }
+
+#info-area div.images:last-child {
+	margin-right: 0;
+}
+
 #info-area div.images {
 	max-width: 127px;
 }
 #info-area div.images .name {
 	background: #c53526;
-	position: relative;
-	top: -37px;
 	padding: 3px;
+	color: white;
 }
 #info-area div.images a.artistlink {
 	color: white;
@@ -914,9 +925,12 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	float: none;
 	cursor: pointer
 }
+
 .info_button {
-	width: 220px;
+	width: 100%;
+	padding: 5px;
 }
+
 .spot_button {
 	width: 300px;
 	display: inline-block;
@@ -2132,9 +2146,7 @@ p.event_description {
 	#info-area #videosbox div iframe {
 		width: 200px;
 	}
-	.info_button {
-		width: 220px;
-	}
+
 	#search {
 		width: 75%;
 		margin-bottom: 0px;
@@ -2297,13 +2309,10 @@ p.event_description {
 	}
 
 	#info-area div .sim_holder, #info-area .img_holder {
-		float: left;
 		margin: 7px;
 		min-width: 100px;
 	}
-	#info-area iframe.spot_frame {
-		display: none
-	}
+
 	#info-area div.images img {
 		width: 126px;height;126px;
 		border: 1px solid #ccc;
@@ -2320,13 +2329,7 @@ p.event_description {
 		color: white;
 		font-size: .9em;
 	}
-	.info_button {
-		float: none;
-		width: 135px;
-		font-size: 1.05em;
-		margin-top: -15px;
-		padding: 0px;
-	}
+
 	#info-area .button_icon {
 		float: none;
 		font-size: 30px;
@@ -2486,8 +2489,7 @@ p.event_description {
 	#info-area #videosbox div iframe {
 		width: 125px;
 	}
-	#info-area div .sim_holder, #info-area .img_holder {
-		float: left;
+	#info-area div .sim_holder, #info-area .img_holder
 		margin: 7px;
 		min-width: 85px;
 	}
@@ -2504,16 +2506,8 @@ p.event_description {
 		color: white;
 		font-size: .9em;
 	}
-	#info-area iframe.spot {
-		display: none
-	}
-	.info_button {
-		float: none;
-		width: 135px;
-		font-size: 1.05em;
-		margin-top: -15px;
-		padding: 0px;
-	}
+
+
 	#info-area .button_icon {
 		float: none;
 		font-size: 30px;
