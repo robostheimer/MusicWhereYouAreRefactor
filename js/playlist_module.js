@@ -8,7 +8,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	return {
 		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
 			$rootScope.noGeo=false;
-			let songs = {},
+			songs = {},
 			url = `http://labs.echonest.com/CityServer/artists?id=${id}&callback=JSON_CALLBACK&count=500`,
 			deferred = $q.defer();
 
@@ -1942,7 +1942,6 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 	$scope.songs_arr = [];
 
 	$scope.SavePlaylist = function(arr, title) {
-		console.log(arr, title)
 		var title = 'MusicWYA: ' + title;
 		var client_id = '';
 		var redirect_uri = '';
