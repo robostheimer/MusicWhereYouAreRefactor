@@ -2021,67 +2021,67 @@ p.event_description {
 	#map {
 		margin-top: 5px;
 	}
-}
 
-#artist_info ul {
-	font-family: 'Bitter', san-serif;
-	margin: 0;
-	padding: 0;
-	margin-top: 5px;
-	margin-bottom: 15px;
-	font: Arial, Helvetica, sans-serif
-}
-#artist_info ul li, #artist_info ul li .off {
-	display: inline;
-	padding: 10px;
-	border-right: 1px solid #c53526;
-	padding-bottom: 6px;
-	padding-top: 6px;
-}
-#artist_info ul li.on, #artist_info ul li:hover {
-	background-color: #c53526;
-	border: 1px solid #ffffff;
-	color: #ffffff;
-}
-#artist_info ul li a:hover, #artist_info ul li:hover a, #artist_info ul li.on a {
-	color: white;
-}
-#artist_loader {
-	background: url(/MusicWhereYouAre/loading.gif) width :100px;
-}
 
-.hint {
-	font-family: 'Arvo', Tahoma, Arial, sans-serif;
-	font-weight: 400;
-	font-style: italic;
-	position: absolute;;
-	width: 290px;
-	background: white;
-	border: 1px solid #ccc;
-	padding: 7px;
-	font-size: 12px;
-	line-height: 165%;
-	margin-top: 30px;
-	margin-left: 10px;
-	z-index: 7000000000;
-	max-height: 300px;
-	overflow-y: scroll;
-}
-.hint a {
-	color: #333333
-}
-.hint a:hover {
-	color: #C53526
-}
-.hint .closer {
-	color: #c53526;
-	position: absolute;
-	cursor: pointer;
-	font-family: Tahoma, Arial, sans-serif;
-	font-style: normal;
-	margin-left: 275px;
-}
+	#artist_info ul {
+		font-family: 'Bitter', san-serif;
+		margin: 0;
+		padding: 0;
+		margin-top: 5px;
+		margin-bottom: 15px;
+		font: Arial, Helvetica, sans-serif
+	}
+	#artist_info ul li, #artist_info ul li .off {
+		display: inline;
+		padding: 10px;
+		border-right: 1px solid #c53526;
+		padding-bottom: 6px;
+		padding-top: 6px;
+	}
+	#artist_info ul li.on, #artist_info ul li:hover {
+		background-color: #c53526;
+		border: 1px solid #ffffff;
+		color: #ffffff;
+	}
+	#artist_info ul li a:hover, #artist_info ul li:hover a, #artist_info ul li.on a {
+		color: white;
+	}
+	#artist_loader {
+		background: url(/MusicWhereYouAre/loading.gif) width :100px;
+	}
 
+	.hint {
+		font-family: 'Arvo', Tahoma, Arial, sans-serif;
+		font-weight: 400;
+		font-style: italic;
+		position: absolute;;
+		width: 290px;
+		background: white;
+		border: 1px solid #ccc;
+		padding: 7px;
+		font-size: 12px;
+		line-height: 165%;
+		margin-top: 30px;
+		margin-left: 10px;
+		z-index: 7000000000;
+		max-height: 300px;
+		overflow-y: scroll;
+	}
+	.hint a {
+		color: #333333
+	}
+	.hint a:hover {
+		color: #C53526
+	}
+	.hint .closer {
+		color: #c53526;
+		position: absolute;
+		cursor: pointer;
+		font-family: Tahoma, Arial, sans-serif;
+		font-style: normal;
+		margin-left: 275px;
+	}
+}
 @media screen and (min-width: 1025px) and (max-width: 1280px) {
 
 	.gray, .red:hover {
