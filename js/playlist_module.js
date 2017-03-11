@@ -1608,6 +1608,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		var index1 = ($scope.btnCount*20)-20;
 		var index2 = ($scope.btnCount*20);
 		Spotify.createPlaylist($scope.holder_arr).then(function(result) {
+
 			$scope.songs = result.songs.slice(index1, index2)
 			$scope.songs.spot_arr = result.spot_arr.slice(index1, index2)
 			//$scope.songs.savSpotArr = result.savSpotArr.slice(index1, index2)
@@ -1623,7 +1624,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 				$rootScope.loading=false;
 				$rootScope.mapOpening=false;
 				$scope.checkForMore=true;
-
 				});
 				$scope.btnCount--;
 		},function(error){
@@ -1863,12 +1863,12 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	};
 	$scope.detectDevice = function()
 	{
+
 		if(deviceDetector.device=="android" || deviceDetector.device=="ipad" || deviceDetector.device=="iphone" || deviceDetector.device=='kindle')
 		{
 			$scope.spot_iframe_hider =true;
-		}
-		else{
-			$scope.spot_iframe_hider=false;
+		} else {
+		$scope.spot_iframe_hider=false;
 		}
 	}
 

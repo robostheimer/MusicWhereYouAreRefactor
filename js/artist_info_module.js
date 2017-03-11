@@ -35,7 +35,7 @@ return{
 					});
 
 					artistinfo.img = img["#text"];
-					artistinfo.bio=artistinfo.bio.summary;
+					artistinfo.bio=`<img class="gallery" src="${artistinfo.img}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/>${artistinfo.bio.summary}`;
      			return artistinfo;
 		});
 
@@ -84,14 +84,14 @@ Info.controller('loadInfo', ['$scope', '$location', '$rootScope', 'runSymbolChan
 function($scope, $location, $rootScope, runSymbolChange, $routeParams, retrieveInfo, retrieveLocation, LocationDataFetch, PlaylistCreate, Spotify, Wiki, ChunkSongs, $sce, deviceDetector) {
 	$rootScope.noGeo=false;
 	localStorage.path=$location.path();
-	$rootScope.loading = true;
 	$scope.location = $routeParams.location.replace(/\*/, ', ');
 	$scope.location_link = $routeParams.location;
-	$scope.name = $routeParams.artist.removeSpecialChar();
+	$scope.name = $routeParams.artist.replace(/&/g, 'and').replace(/\+/g, 'and');
+	console.log($scope.name)
 	$scope.artistdata = false;
 	var songs_for_service=[];
-
 	retrieveInfo.infoRetrieve($scope.name).then(function(data) {
+		$scope.loading_artist = false;
 		$scope.artistinfo = data;
 
 
@@ -106,14 +106,13 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams, retrieveI
 				$scope.artist_lookup = data.data.artists.items[0].id;
 				retrieveInfo.spotifyRetrieve($scope.artist_lookup).then(function(data) {
 				$scope.spotify = data.data;
-				$rootScope.loading = false;
+
 				$scope.noArtist =false;
 
 			});
 			}
 			else{
 					$scope.noArtist =true;
-					$rootScope.loading = false;
 
 				}
 

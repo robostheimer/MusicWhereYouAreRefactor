@@ -51,7 +51,7 @@
 
 			</form>
 
-
+<div class="loading" ng-hide="loading_artist==false"><img src="loading.gif" alt="loading"/></div>
 	<div ng-show="noArtist==true">There are no information about <b> {{name}}</b></div>
 	<div id="intro_image" ng-hide="noArtist==true"></div>
 	<div id="artist_holder" ng-hide="noArtist==true">
@@ -67,7 +67,9 @@
 
 			<div id="biobox" class="{{buttons.bio.classy}}" aria-labelledby="bio" aria-hidden='{{buttons.bio.state}}' style="display: flex" >
 				<div class="container">
-				<p ng-bind-html = "SkipValidation(artistinfo.bio)">{{artistinfo.bio}}</p>
+				<p ng-bind-html = "SkipValidation(artistinfo.bio)" >{{artistinfo.bio}}
+				</p>
+				<div class="clear"></div>
 				<div id="relatedbox" aria-labelledby="related">
 					<a href="{{related.href}}" ng-repeat="related in artistinfo.similar.artist">
 						<dl class="sim_holder" id="{{artistinfo.similar.name}}" >
@@ -81,7 +83,7 @@
 				</div>
 			</div>
 			<div class="container">
-			<p class="intro_ang"><img class="gallery" ng-src="{{artistinfo.img}}" alt="{{artistinfo.name}}" ng-hide="artistinfo.photosCheck==false"/><br>
+			<p class="intro_ang"><br>
 				<iframe ng-hide="spot_iframe_hider==true"class="spot clear" theme="light" view="coverart" ng-src="{{spotify.spot_url_str}}" frameborder="0" allowtransparency="true"  ></iframe>
 				<br>
 				<button class ="info_button clear" ng-controller="Spotify" ng-click="SavePlaylist(spotify.spot_url_button, artistinfo.name+' from MusicWhereYouAre');"><div aria-hidden="true" data-icon="c" class="button_icon"></div><div class="button_txt"> Save Playlist to Spotify</div></button>
@@ -96,7 +98,7 @@
 			</div>
 
 		</div>
-
+	</div>
 	</div>
 	<div class="close_div_info" aria-hidden="true" data-icon="P" style="font-size: 30px;" ng-click = "goBack()"></div>
 
