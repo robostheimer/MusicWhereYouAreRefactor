@@ -2371,7 +2371,6 @@ p.event_description {
 /*Look at TAS for how to reset the boxes so the items are vertical;*/
 @media screen and (max-width: 480px) {
 	.gray, .red:hover {
-
 		width: 96%
 	}
 	header {
@@ -2500,16 +2499,10 @@ p.event_description {
 	#info-area div.images img {
 		border: 1px solid #ccc;
 	}
-	#info-area div.images {
-	}
-	#info-area div.images .name {
-	}
 	#info-area div.images a.artistlink {
 		color: white;
 		font-size: .9em;
 	}
-
-
 	#info-area .button_icon {
 		float: none;
 		font-size: 30px;
@@ -2537,12 +2530,7 @@ p.event_description {
 	#info-area #artist_holder {
 		height: 87%
 	}
-	#spot_holder .cards {
-		margin-top: 90px;
-	}
-	#fav_holder .cards {
-		margin-top: 85px;
-	}
+
 	#spot_holder .about_section {
 		margin-top: 160px;
 	}
