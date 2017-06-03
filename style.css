@@ -1822,6 +1822,38 @@ p.event_description {
 	overflow: scroll;
 }
 
+.hint {
+	font-family: 'Arvo', Tahoma, Arial, sans-serif;
+	font-weight: 400;
+	font-style: italic;
+	position: absolute;;
+	width: 290px;
+	background: white;
+	border: 1px solid #ccc;
+	padding: 7px;
+	font-size: 12px;
+	line-height: 165%;
+	margin-top: 30px;
+	margin-left: 10px;
+	z-index: 7000000000;
+	max-height: 300px;
+	overflow-y: scroll;
+}
+.hint a {
+	color: #333333
+}
+.hint a:hover {
+	color: #C53526
+}
+.hint .closer {
+	color: #c53526;
+	position: absolute;
+	cursor: pointer;
+	font-family: Tahoma, Arial, sans-serif;
+	font-style: normal;
+	margin-left: 275px;
+}
+
 @media screen and (min-height: 1801px) {
 	body {
 		height: 93%
@@ -1991,6 +2023,7 @@ p.event_description {
 	}
 }
 
+
 @media screen and (min-height: 301px) and (max-height: 350px) {
 	#map-area {
 		height: 68%;
@@ -2049,39 +2082,8 @@ p.event_description {
 	#artist_loader {
 		background: url(/MusicWhereYouAre/loading.gif) width :100px;
 	}
-
-	.hint {
-		font-family: 'Arvo', Tahoma, Arial, sans-serif;
-		font-weight: 400;
-		font-style: italic;
-		position: absolute;;
-		width: 290px;
-		background: white;
-		border: 1px solid #ccc;
-		padding: 7px;
-		font-size: 12px;
-		line-height: 165%;
-		margin-top: 30px;
-		margin-left: 10px;
-		z-index: 7000000000;
-		max-height: 300px;
-		overflow-y: scroll;
-	}
-	.hint a {
-		color: #333333
-	}
-	.hint a:hover {
-		color: #C53526
-	}
-	.hint .closer {
-		color: #c53526;
-		position: absolute;
-		cursor: pointer;
-		font-family: Tahoma, Arial, sans-serif;
-		font-style: normal;
-		margin-left: 275px;
-	}
 }
+
 @media screen and (min-width: 1025px) and (max-width: 1280px) {
 
 	.gray, .red:hover {

@@ -64,27 +64,41 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 
 
 		$scope.runApp = function() {
-			var location_comp = $routeParams.location,
-				chunked_arr = [];
+			var songs = { tracks: [], idStr: '', savSpotArr:[], allArtists: [], selectedGenres: [], chunkedArr: [] },
+				location_comp = $routeParams.location;
 			retrieveLocation.runLocation(location_comp).then(function(data) {
-				var city_data = data.join('_');
-				PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-					$rootScope.songs = data;
-					Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-						$rootScope.songs.spotify_info = data.spotify_info;
-						$rootScope.songsCopy = angular.copy($rootScope.songs); //caches the original song data b4 genres are selected
-						$scope.getAllSongs();
-						$scope.loading = false;
-						$rootScope.mapdata.lat=data.spotify_info[0].location.lat;
-						$rootScope.mapdata.lng=data.spotify_info[0].location.lng;
-						$rootScope.mapdata.markers=data.spotify_info;
-						$scope.newlocation = false;
-						$rootScope.mapOpening = false;
+				var cities = data;
+				PlaylistCreate.runPlaylist(cities).then(function(data){
+					$rootScope.playlistData = data;
+					Spotify.runGenres(data, 1).then(function(artists) {
+						songs.artistIds = data.artistIds;
+						songs.chunkedArr = data.chunkedArr;
+						songs.artists = data.artists;
+						Spotify.runTopSongs(artists, 1).then((response) => {
+							response.forEach((track) => {
+								if(track.data.tracks[0]) {
+									let data = track.data.tracks[0];
+									songs.tracks.push(data);
+									songs.savSpotArr.push(`spotify:track:${data.id}`)
+									songs.idStr+=`${data.id},`;
+								}
+							});
+							$rootScope.songs = songs;
+							$scope.getAllArtists(data, 7);
+							$rootScope.songsCopy = angular.copy($rootScope.songs);
+							$rootScope.songs.chunkedArr = data.chunkedArr;
+							$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
+							$scope.loading = false;
+							$scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
+							$scope.mapdata.lng=$rootScope.songs.tracks[0].lng;
+							$scope.mapdata.markers=$rootScope.songs.tracks;
+							$scope.newlocation = false;
+							$rootScope.mapOpening = false;
+						});
 					});
 				});
 			});
-		}
-
+		};
 		$scope.checkGenres = function(genre) {
 			$scope.Genre.forEach(function(item) {
 				if(item.genre.genre === genre) {
@@ -97,37 +111,60 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 						item.genre.checked = false;
 						item.genre.isSelected = false;
 						item.genre.state = 'off';
-						$rootScope.songs.selectedGenres = $rootScope.songs.selectedGenres.removeDuplicatesArr().removeItem(item.genre.genre)
+						$rootScope.songs.selectedGenres = $rootScope.songs.selectedGenres.removeItem(item.genre.genre);
 					}
 				}
 			});
-			$scope.runGenreFilter();
+			if(!$scope.getCacheStorage(`${genre}_${$routeParams.location}`))
+			{
+				$scope.runGenreFilter(genre);
+			} else {
+				$scope.getTracksFromCache();
+			}
 		};
 
-		$scope.runGenreFilter = function() {
+		$scope.runGenreFilter = function(genre) {
 			var matches = [];
 			//run a filter songs array if there is at least one genre;
 			if($rootScope.songs.selectedGenres.length > 0) {
-				$rootScope.songs.all_songs.forEach(function(song) {
-					if(song.genres.length > 0) {
-						$rootScope.songs.selectedGenres.forEach(function(genre) {
-							genre_regex = new RegExp(genre);
-							if(genre_regex.test(song.genres.join(' '))) {
-								matches.push(song);
-							}
-						})
-					}
-				})
-				if(matches.length > 0) {
-					matches = matches.removeDuplicatesArrObj('name', false);
-					ChunkSongs.createChunks(matches, 50).then(function(data) {
-						$rootScope.songs.spotify_info = data.chunked_arr[0];
-						$rootScope.songs.spot_strFinal = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${data.songs_ids}`);
-						$rootScope.songs.savSpotArr = data.savSpotArr;
-						$rootScope.mapdata.markers = $rootScope.songs.spotify_info
-					});
+				if($rootScope.songs.allArtists.length > 0) {
+					$rootScope.songs.allArtists.forEach(function(artist) {
+						if(artist.genres.length > 0) {
+							$rootScope.songs.selectedGenres.forEach(function(genre) {
+								genre_regex = new RegExp(genre);
+								if(genre_regex.test(artist.genres.join(' '))) {
+									matches.push(artist);
+								}
+							})
+						}
+					})
 				}
-			}  else {
+				if(matches.length > 0) {
+					var songs = { tracks: [], idStr: '', spotStr:'', savSpotArr:[], selectedGenres: $rootScope.selectedGenres || [] };
+					ChunkSongs.createChunks(matches, 50).then(function(artists) {
+						$rootScope.songs.tracks = [];
+						Spotify.runTopSongs(artists).then((data) => {
+							data.forEach((track) => {
+								if(track.data.tracks[0]) {
+									let data = track.data.tracks[0];
+									songs.tracks.push(data);
+									songs.savSpotArr.push(`spotify:track:${data.id}`)
+									songs.idStr+=`${data.id},`;
+								}
+							});
+
+							$rootScope.songs.tracks = songs.tracks;
+							$scope.setCacheStorage(`${genre}_${$routeParams.location}`, songs.tracks);
+							$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
+							$scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
+							$scope.mapdata.lng=$rootScope.songs.tracks[0].lng;
+							$scope.mapdata.markers=$rootScope.songs.tracks;
+						});
+					})
+					} else {
+						$rootScope.songs = $rootScope.songsCopy;
+				}
+			} else {
 				$rootScope.songs = $rootScope.songsCopy;
 			}
 		};
@@ -147,36 +184,76 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 			}
 		};
 
-		$scope.getAllSongs = function() {
-			var deferred = $q.defer();
-			if($rootScope.songs.all_songs.length === 0) {
-				chunked_arr = $rootScope.songs.chunked_arr;
-				chunked_arr.forEach(function(chunk) {
-					Spotify.runGenres(chunk).then(function(data) {
-						$rootScope.songs.all_songs.push(data.spotify_info);
-						$rootScope.songs.all_songs = $rootScope.songs.all_songs.flatten();
-					})
-				});
+		$scope.getAllArtists = function(data, index) {
+			const num = 50;
+
+			if(data.artists.length/num < index) {
+				index = Math.round(data.artists.length/num);
+			} else {
+				index = index;
 			}
-			deferred.resolve(true);
-			return deferred.promise;
+
+			Spotify.runGenres(data, index).then(function(data) {
+				$rootScope.songs.allArtists =  data;
+				$rootScope.allArtistsCopy = angular.copy($rootScope.songs.allArtists);
+			});
 		};
 
-		$scope.all_songs = [];
 
+		$scope.setCacheStorage = function(key, value) {
+			sessionStorage.setItem(key, JSON.stringify(value));
+		}
+
+		$scope.getCacheStorage = function(key) {
+			return JSON.parse(sessionStorage.getItem(key));
+		}
+
+		$scope.removeCacheStorageItem = function(key) {
+			sessionStorage.removeItem(key);
+		}
+
+		$scope.clearCacheStorage = function() {
+			sessionStorage.clear();
+		}
+
+		$scope.getTracksFromCache = function() {
+			$rootScope.songs.tracks = [];
+			$rootScope.songs.savSpotArr = [];
+			$rootScope.songs.idStr = '';
+			$rootScope.songs.selectedGenres = $rootScope.songs.selectedGenres.removeDuplicatesArr();
+			if($rootScope.songs.selectedGenres.length > 0) {
+				$rootScope.songs.selectedGenres.forEach((genre) => {
+					 $rootScope.songs.tracks = $rootScope.songs.tracks.concat($scope.getCacheStorage(`${genre}_${$routeParams.location}`));
+				})
+
+				$rootScope.songs.tracks.forEach((track) => {
+					index = $rootScope.songs.tracks.indexOf(track);
+					if(index < 50) {
+						$rootScope.songs.savSpotArr.push(`spotify:track:${track.id}`)
+						$rootScope.songs.idStr+=`${track.id},`;
+					}
+				});
+				$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${$rootScope.songs.idStr}`);
+			} else {
+				$rootScope.songs = $rootScope.songsCopy;
+			}
+		}
 		$scope.Genre = loadGenreCheckData.getGenre();
 
 		if(!$rootScope.songs)
 		{
+			$scope.clearCacheStorage();
 			$scope.runApp();
 		} else {
-			$scope.getAllSongs().then(function(data) {
-				if(data) {
-						$rootScope.songs.selectedGenres.forEach(function(genre) {
-							$scope.checkGenres(genre);
-						})
-					}
-			});
+			//TODO: need to check for location chagne too
+			if(!$rootScope.songs.allArtists.length > 0) {
+				$scope.getAllArtists($rootScope.playlistData, 7);
+				$scope.clearCacheStorage();
+			}
+
+			$rootScope.songs.selectedGenres.forEach((genre) => {
+				$scope.checkGenres(genre)
+			})
 		}
 
 //

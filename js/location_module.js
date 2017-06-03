@@ -1,243 +1,33 @@
 var Location=angular.module('Location', []);
 /*Services*/
 
-Location.service("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope','$q',
-function( $http, $sce, $location,States, $routeParams, $rootScope, $q) {
+Location.service("retrieveLocation", ['$http', '$sce', '$location','States','$routeParams','$rootScope','$q', '$cacheFactory',
+function( $http, $sce, $location,States, $routeParams, $rootScope, $q, $cacheFactory) {
+	var cache = $cacheFactory('location');
 
-	//////////////////////MAKE WORK for LOWERCASE
-	//////////////Manipulate strings so all items look like, 'Test, TS' to the program//////////////
 	return {
-
 		runLocation : function(location) {
-			location = location.replace(/\* /g, '*' )
+			location = location.replace(/\*/g, ', ' ).replace('_', ' ');
 			var cities,
 				city_matches = [],
 				location_regex = new RegExp(location.replace(/\*/g, ', ').toLowerCase()),
 				deferred = $q.defer();
 
 			//loads locations if they have not already been added
-			if(!$rootScope.locations) {
-				return $http.get('json/locations.json').then(function(data) {
-					$rootScope.locations = data.data;
-					$rootScope.locations.forEach(function(city){
-						//normalizing the city data in the locations.json to always have a comma between city and state/region
-						city.city = city.city.addSpaceAfterComma();
-						if(location_regex.test(city.city.toLowerCase()))
-						{
-							console.log(location_regex)
-							city_matches.push(city.city_id);
-						}
+			if(!cache.get(location)) {
+				var cities = [];
+				var url = `https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+CityId%2CCity%2CLat%2CLng+FROM+18jFv1neX6lIDLe4Tg3CP9FUKhn3DuwuLy9irRXbk+WHERE+City%20CONTAINS%20IGNORING%20CASE%27${location}%27&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK`
+				return $http({cache:true, url:url, method:'jsonp'}).then((data) => {
+					data.data.rows.forEach(function(city){
+						cities.push(city[0]);
 					});
-					return city_matches;
+					return cities;
 				});
 			} else {
-				$rootScope.locations.forEach(function(city){
-					if(location_regex.test(city.city.toLowerCase()))
-					{
-					city_matches.push(city.city_id);
-					}
-				});
-				deferred.resolve(city_matches);
+				songs = cache.get(location);
+				deferred.resolve(cities);
 				return deferred.promise;
-			}
-
-
-
-		// 	console.log(location)
-		// 	$rootScope.hideiconHolder=false;
-		// 	$rootScope.noGeo=false;
-		// //	 $rootScope.lookUpSongs_arr;=[];
-		// 	//$rootScope.lookUpSongs=[];
-		// 	var location = location.replace('*',', ');
-		// 	var lat_min;
-		// 	var long_min;
-		// 	var long_max;
-		// 	var lat_max;
-		// 	var latitude;
-		// 	var longitude;
-		// 	var lats = Number();
-		// 	var longs = Number();
-		// 	var geolocation ={};
-		// 	var states = States.createStateObj();
-		// 	var location = location.replace(/'/, '')
-		//
-		// 	if (location.split(' ').length > 1 && location.match(',')) {
-		// 		var zoom = 10;
-		// 		///////city+full state//////
-		// 		if (location.split(',')[1].replace(' ', '').length > 2) {
-		// 			var locationSplit = location.split(',');
-		// 			var loc1 = locationSplit[0].toTitleCase();
-		// 			var loc2 = locationSplit[1].replace(' ', '').toTitleCase();
-		// 		}
-		// 		else
-		// 		{
-		//
-		// 			location = location.replace('_', ' ');
-		// 			var ab = location.split(', ')[1].split(' ')[0].toUpperCase();
-		// 			for (var x=0; x<states.length; x++){
-		// 				if(states[x].abbreviation==ab)
-		// 				{
-		//
-		// 					var state =(states[x].name);
-		// 					var locationSplit = location.split(', ');
-		// 					var loc1 = locationSplit[0].toTitleCase();
-		// 					var loc2 = state;
-		//
-		// 				}
-		// 			};
-		//
-		// 		}
-		// 		var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+loc2.toUpperCase()+'%27+AND+CityName = %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-		// 			var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+loc2.toUpperCase()+'%27+AND+CityName = %27'+loc1.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-		//
-		// 			if(latorlng=="lat")
-		// 			{
-		// 			return	$http.jsonp(lat_url).then(function(data){
-		// 				if (data.data.rows != null) {
-		// 					data.data.rows.forEach(function(data)
-		// 						{
-		// 							lats += parseFloat(data[0]);
-		//
-		// 						});
-		//
-		// 					geolocation.latitude=lats/data.data.rows.length;
-		// 					var miles_to_lat = distance_to_degrees_lat(3*ratio);
-		// 					var miles_to_lon = distance_to_degrees_lon(geolocation.latitude , 3*ratio);
-		// 					geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
-		//
-		//
-		// 					geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
-		// 					geolocation.location = location;
-		// 					geolocation.country = data.data.rows[0][3];
-		// 					if(localStorage.country==null)
-		// 					{
-		// 						localStorage.country = geolocation.country;
-		// 					}
-		// 				} else {
-		// 					$rootScope.noSongs=true;
-		// 				}
-		// 				return (geolocation);
-		// 			});
-		//
-		// 			}
-		//
-		// 			else
-		// 			{
-		//
-		// 			return	$http.jsonp(long_url).then(function(data){
-		//
-		// 				if (data.data.rows != null) {
-		// 					data.data.rows.forEach(function(data)
-		// 						{
-		// 							longs += parseFloat(data[0]);
-		// 							lats+= parseFloat(data[4]);
-		// 						});
-		//
-		// 					geolocation.longitude=longs/data.data.rows.length;;
-		// 					var latitude=lats/data.data.rows.length;
-		// 					var miles_to_lat = distance_to_degrees_lat(3*ratio);
-		// 					var miles_to_lon = distance_to_degrees_lon(latitude , 3*ratio);
-		// 					geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
-		// 					geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
-		// 					geolocation.location = location;
-		// 					geolocation.country = data.data.rows[0][3];
-		// 				} else {
-		// 					$rootScope.noSongs=true;
-		// 				}
-		// 				return (geolocation);
-		// 			});
-		// 			}
-		//
-		//
-		//
-		// 		}
-		//
-		// 		else {
-		// 		var zoom = 6;
-		// 		///Full State
-		// 		if(location.length==2)
-		// 		{
-		// 			var ab = location.toUpperCase();
-		//
-		//
-		// 			for(var x=0; x<states.length; x++)
-		// 			{
-		//
-		// 				if(states[x].abbreviation==ab)
-		// 				{
-		// 					var location =(states[x].name.toLowerCase());
-		//
-		//
-		// 				}
-		// 			}
-		// 		}
-		// 		else {
-		// 			var location =location;
-		// 		}
-		// 			var lat_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Lat,Region,CityName,CountryID+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+location.toUpperCase()+'%27+ORDER%20BY+Lat&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-		// 			var long_url = 'https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Long,Region,CityName,CountryID,Lat+FROM+1_7XFAaYei_-1QN5dIzQQB8eSam1CL0_0wYpr0W0G+WHERE+Region = %27'+location.toUpperCase()+'%27+ORDER%20BY+Long&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK';
-		//
-		//
-		// 			location = location.toTitleCase();
-		// 			if(latorlng=="lat")
-		// 				{
-		// 				return	$http.jsonp(lat_url).then(function(data){
-		// 				if (data.data.rows != null ) {
-		// 					data.data.rows.forEach(function(data)
-		// 						{
-		// 							lats += parseFloat(data[0]);
-		//
-		// 						});
-		// 					geolocation.latitude=lats/data.data.rows.length;
-		// 					var miles_to_lat = distance_to_degrees_lat(7*ratio);
-		// 					var miles_to_lon = distance_to_degrees_lon(latitude , 7*ratio);
-		// 					geolocation.lat_min = data.data.rows[0][0] - miles_to_lat;
-		//
-		// 					geolocation.lat_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lat;
-		// 					geolocation.location = location;
-		// 					geolocation.country = data.data.rows[0][3];
-		// 					if(localStorage.country==null)
-		// 					{
-		// 						localStorage.country = geolocation.country;
-		// 					}
-		// 				} else {
-		// 					$rootScope.noSongs=true;
-		// 				}
-		// 				return (geolocation);
-		// 			});
-		// 				}
-		// 				else
-		// 				{
-		//
-		// 				return	$http.jsonp(long_url).then(function(data){
-		// 					if (data.data.rows != null || !data.stringify.match('error')) {
-		// 						geolocation.longitude=data.data.rows[0][0];
-		// 						data.data.rows.forEach(function(data)
-		// 						{
-		// 							longs += parseFloat(data[0]);
-		// 							lats+= parseFloat(data[4]);
-		//
-		// 						});
-		//
-		// 					geolocation.longitude=longs/data.data.rows.length;;
-		// 					var latitude=lats/data.data.rows.length;
-		// 						var miles_to_lat = distance_to_degrees_lat(7*ratio);
-		// 						var miles_to_lon =distance_to_degrees_lon(latitude , 7*ratio);
-		// 						geolocation.long_min = data.data.rows[0][0] - miles_to_lon;
-		// 						geolocation.long_max=data.data.rows[(data.data.rows.length-1)][0] + miles_to_lon;
-		// 						geolocation.location = location;
-		// 						geolocation.country = data.data.rows[0][3];
-		// 					} else {
-		// 						$rootScope.noSongs=true;
-		// 					}
-		// 					return (geolocation);
-		// 				});
-		// 				}
-		//
-		//
-		// 			}
-
-
+			};
 		}
 	};
 
@@ -270,9 +60,9 @@ function($q, $rootScope, $http, $sce, $location, $routeParams, States) {
 					localStorage.country = country;
 					}
 					var obj={'city':city, 'state':state, 'country': country }
-					if (city.split(' ') > 1) {
-						city = city.replace(/ /g, '_');
-					}
+					// if (city.split(' ') > 1) {
+					// 	city = city.replace(/ /g, '_');
+					// }
 
 					// if (state.split(' ') > 1) {
 					// 	state = state.replace(/ /g, '_');

@@ -83,20 +83,48 @@ $scope.date = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
 $scope.runApp = function() {
 	var location_comp = $routeParams.location,
 		chunked_arr = [];
+	$rootScope.mapOpening = true;
+	$rootScope.loading = true;
+	var cities,
+		songs = { tracks: [], idStr: '', spotStr:'', savSpotArr:[], allArtists: [], selectedGenres: [], chunkedArr: [] },
+		spotStr = '';
 	retrieveLocation.runLocation(location_comp).then(function(data) {
-		var city_data = data.join('_');
-		PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-			$rootScope.songs = data;
-			Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-				$rootScope.songs.spotify_info = data.spotify_info;
-				$scope.loading = false;
-				$rootScope.mapdata.lat=data.spotify_info[0].location.lat;
-				$rootScope.mapdata.lng=data.spotify_info[0].location.lng;
-				$rootScope.mapdata.markers=data.spotify_info;
-				$scope.newlocation = false;
-				$rootScope.mapOpening = false;
+		cities = data;
+		PlaylistCreate.runPlaylist(cities).then(function(data){
+			$rootScope.playlistData = data;
+			songs.artistIds = data.artistIds;
+			songs.chunkedArr = data.chunkedArr;
+			songs.artists = data.artists;
+			Spotify.runGenres(data, 1).then(function(artists) {
+				Spotify.runTopSongs(artists, 1).then((data) => {
+					data.forEach((track) => {
+						if(track.data.tracks[0]) {
+							let data = track.data.tracks[0];
+							songs.tracks.push(data);
+							songs.savSpotArr.push(`spotify:track:${data.id}`)
+							songs.idStr+=`${data.id},`;
+						}
+					})
+					songs.tracks = songs.tracks.SortObjAsc('num_id', 'num');
+					$rootScope.songs = songs
+
+					$rootScope.songsCopy = angular.copy($rootScope.songs);
+
+					$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
+					Favorites.checkFavorites($rootScope.songs.tracks);
+					$scope.loading = false;
+					$scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
+					$scope.mapdata.lng=$rootScope.songs.tracks[0].lng;
+					$scope.mapdata.markers=$rootScope.songs.tracks;
+					$scope.newlocation = false;
+					$rootScope.mapOpening = false;
+					$rootScope.loading = false;
+				});
 			});
 		});
+
+	},function(error){
+		$scope.errorMessage = true;
 	});
 };
 
@@ -279,13 +307,6 @@ $scope.detectDevice = function()
 	} else {
 		$scope.location = $routeParams.location.replace(/\*/, ', ').replace(/_/g, ' ');
 		$scope.location_link = $routeParams.location;
-		if ($rootScope.mapOpening==true ||LocationDataFetch.count==100000000000)
-			{
-
-			$scope.runApp(0, 1, $scope.holder_arr);
-
-		}
-
 	}
 
 		$scope.detectDevice()

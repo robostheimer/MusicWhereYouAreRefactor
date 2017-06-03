@@ -6,253 +6,62 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 	var cache = $cacheFactory('songs_location');
 
 	return {
-		 runPlaylist : function(id, index) {//(zoom, lat, long,lat_min, lat_max, long_min, long_max, genres, era, start_number){
+		 runPlaylist : function(cities, index) {
 			$rootScope.noGeo=false;
-			songs = {},
-			url = `http://labs.echonest.com/CityServer/artists?id=${id}&callback=JSON_CALLBACK&count=500`,
-			deferred = $q.defer();
+			var citiesStr = ""
+			cities.forEach((city) => {
+				var x = cities.indexOf(city);
+				if(x < cities.length-1) {
+					citiesStr+=`'${city}',`;
+				} else {
+					citiesStr+=`'${city}'`;
+				}
+			});
 
-			if(!cache.get(id)) {
-				return $http({cache:true, url:url, method:'jsonp'}).then(function(data) {
+			songs = {},
+			url = `https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArtistId%2C+Name%2C+Sid%2CCity%2CCityId%2CLat%2CLng%2CHotttnesss+FROM+15UlsGab9-IJ7Hq4ypRYiQMWd2QkGaywgs2WMUuTJ+WHERE+CityId%20IN%20(${citiesStr})+ORDER%20BY+Hotttnesss&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK`,
+
+			deferred = $q.defer();
+			if(!cache.get(cities[0].city_id)) {
+				return $http({
+					cache:true,
+					url:url,
+					method:'jsonp'
+				}).then(function(data) {
 					var songs_length;
 					var num_groups //to help chunk into groups of 50 (max number that can be sent to spotify api);
 					var remainder //to help to chunk into groups of 50 (max number that can be sent to spotify api);
-					var songs = {
-						tracks: [],
-						savSpotArr: [],
-						artists: [],
-						info: [],
-						chunked_arr: [],
-						all_songs: [],
-						location: '',
-						selectedGenres: []
-					};
+
+					var artists = {artists:[], chunkedArr: [], artistIds: []};
 					//Massaging the data so that all artists have the proper location info attached to them
 					songs.location = $routeParams.location;
-					data.data.map(function(item) {
-						item.artists.map(function(artist) {
-							artist.location = item.city;
-							songs.tracks.push(artist.songs[0].tid);
-							songs.savSpotArr.push(`spotify:track:${artist.songs[0].tid}`);
-							songs.artists.push(artist.sid)
-							songs.info.push(item);
+					if(data.data.rows) {
+						data.data.rows.reverse().forEach((item) => {
+								artists.artists.push({
+									id: item[0],
+									name: item[1],
+									sid: item[2],
+									city: item[3],
+									cityId: item[4],
+									lat: item[5],
+									lng: item[6],
+									hotness: item[7],
+							});
+							artists.artistIds.push(item[2]);
 						});
-					});
-					//songs.info = songs.info.flatten();
+					}
 
-					num_groups = songs.info.length/50;
-					remainder = songs.info.length%50;
+					num_groups = artists.artists.length/50;
+					remainder = artists.artists.length%50;
 					//turn this into a util/helper function
-					if (songs.info.length > 50) {
+					if (artists.artists.length > 50) {
 						for(var i=1; i<num_groups; i++) {
-								songs.chunked_arr.push({info: songs.info.slice((i-1)*50,i*50), tracks: songs.tracks.slice((i-1)*50,i*50), artists: songs.artists.slice((i-1)*50,i*50)}); // chunks song ids into an array of nested arrays with a lenght of 50
+								artists.chunkedArr.push({ artists: artists.artists.slice((i-1)*50,i*50), artistIds: artists.artistIds.slice((i-1)*50,i*50) });
 							}
 						} else {
-							songs.chunked_arr = [{info: songs.info, tracks: songs.tracks, artists: songs.artists}];
+							artists.chunkedArr = [{ artists: artists.artists, artistIds: artists.artistIds }];
 					}
-					//will need to create a mechanism to change the index based on a click or infinite scroll
-					songs.songs_ids = songs.chunked_arr[0].tracks.toString();
-					songs.savSpotArr = songs.savSpotArr.slice(0,50);
-					songs.artist_ids = songs.chunked_arr[0].artists.toString();
-					songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
-					cache.put(id, songs);
-					return songs;
-
-						//This needs to go into a service and then get called post PlaylistCreate
-						// return $http.get(`https://api.spotify.com/v1/artists?ids=${songs.artist_ids}`).then(function(data) {
-						// 	var artists = data.data.artists;
-						// 	return $http.get(`https://api.spotify.com/v1/tracks?ids=${songs.songs_ids}`).then(function(data) {
-						// 		let i = 0;
-						// 		songs.spotify_info = data.data.tracks;
-						// 		songs.spotify_info.map(function(track) {
-						// 			track.genres = artists[i].genres;
-						// 			track.favorite = 'off';
-						// 			track.location = songs.chunked_arr[0].info[i].location;
-						// 			i++;
-						// 		});
-						// 		songs.selectedGenres = [];
-						// 		return songs;
-						// 	})
-						// });
-					// var songs = data.data.response.songs;
-					// songs = songs.removeDuplicatesArrObj( 'title', true);
-					// songs.songsArr=[];
-					// songs.songsArr.spot_arr = [];
-					// 	songs.songsArr.spot_playlist=[];
-					// songs.songsArr.location_arr = [];
-					// songs.songsArr.final_loc_arr=[];
-					// songs.songsArr.lat_min = lat_min;
-					// songs.songsArr.long_min = long_min;
-					// songs.songsArr.spot_str = '';
-					// var song_str = '';
-					// var location_str = '';
-					// var location_rp = $routeParams.location;
-					// if(localStorage.leaveOutArr!=null){
-					// var LeaveOut =jQuery.parseJSON(localStorage.leaveOutArr);
-					// }else{
-					// 	var LeaveOut=[];
-					// }
-					// var states = States.createStateObj();
-					// //var countries = States.createCountriesObj
-					// if(location_rp.split('*').length==1)
-					// {
-					// 	///StateAB/////////
-					// 	if(location_rp.length==2)
-					// 	{
-					//
-					// 		for(var yy=0; yy<states.length; yy++)
-					// 		{
-					//
-					// 			if(location_rp.toLowerCase() ==states[yy].abbreviation.toLowerCase())
-					// 			{
-					// 				location_rp1 = states[yy].name;
-					// 				location_rp2=states[yy].abbreviation;
-					//
-					// 			}
-					//
-					// 		}
-					// 	}
-					// 	else
-					// 	{
-					// 		//////////////State///////////
-					// 		//location_rp = location_rp.replace('*',', ');
-					// 		for(var yy=0; yy<states.length; yy++)
-					// 		{
-					//
-					// 			if(location_rp.replace(/_/g, ' ').toUpperCase() ==states[yy].name)
-					// 			{
-					// 				location_rp1 = states[yy].name;
-					// 				location_rp2=states[yy].abbreviation;
-					// 			}
-					//
-					// 			else
-					// 			{
-					// 				location_rp1 = location_rp;
-					// 				//location_rp2=location_rp;
-					//
-					//
-					// 			}
-					// 		}
-					// 	}
-					// }
-					// else
-					// {
-					// 	 var location_rpS =location_rp.split('*')[1];
-					// 	////////////////City Region/////////////////
-					// 	 if(location_rpS.length==2)
-					// 	{
-					//
-					// 		for(var yy=0; yy<states.length; yy++)
-					// 		{
-					// 			if(location_rpS ==states[yy].abbreviation)
-					// 			{
-					// 				location_rp1 = states[yy].name;
-					// 				location_rp2=states[yy].abbreviation;
-					//
-					// 			}
-					// 		}
-					// 	}
-					// 	else
-					// 	{
-					// 		//location_rp = location_rp.replace('*',', ');
-					// 		for(var yy=0; yy<states.length; yy++)
-					// 		{
-					// 			if(location_rpS.toUpperCase() ==states[yy].name)
-					// 			{
-					// 				location_rp1 = states[yy].name;
-					// 				location_rp2=states[yy].abbreviation;
-					//
-					// 			}
-					// 		}
-					//
-					// 	}
-					//
-					//
-					// }
-					//
-					//
-					// songs.forEach(function(song) {
-					// 	var x=songs.indexOf(song)
-					//
-					// 	var songtitle=song.title
-					//
-					// 	///////////////////City Region//////////////////////
-					// 		if(location_rp.split('*').length==1)
-					// 		{
-					// 		/////////////////////////check for song against Local Storage so LeaveOuts are left out///////////////////////////////////
-					// 		if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(song.id.replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(song.title.toLowerCase().replace(/\W/g,'')))
-					// 		{
-					// 			if((song.artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp1.replace(/\W/g, '').toUpperCase()))||(song.artist_location.location.replace(/\W/g, '').toUpperCase().match(location_rp2.replace(/\W/g, '').toUpperCase()))||song.tracks.length!=0)
-					// 			{
-					//
-					//
-					// 			if(song.title == null || song.artist_location == null||song.artist_location.location==null || song.id == null)
-					// 			{
-					//
-					// 			x=x+1;
-					// 			}
-					//
-					// 			if(lsIdFavArr.toString().replace(/\W/g, '').match(song.id))
-					// 				{
-					// 				song.favorite='on';
-					// 				}
-					// 			else
-					// 				{
-					// 				song.favorite='off';
-					// 				}
-					// 			song.closeButton=false;
-					//
-					// 			song.num_id=x;
-					// 			song.id=x;
-					// 			songs.songsArr.push(song);
-					// 			songs.songsArr.spot_arr.push("spotify:track:"+song.id);
-					// 			songs.songsArr.spot_playlist.push(song.id);
-					// 			songs.songsArr.spot_str+=song.id+',';
-					// 			song_str += songtitle;
-					// 				}
-					//
-					// 			}
-					// 		}
-					// 	else{
-					//
-					//
-					// 		if (!song_str.toLowerCase().replace(/\W/g,' ').match(songtitle.toLowerCase().replace(/\W/g,' '))&&!lsIdArr.toString().replace(/\W/g, '').match(song.id.replace(/\W/g,'')) && !lsTitleArr.toString().toLowerCase().replace(/\W/g, '').match(song.title.toLowerCase().replace(/\W/g,''))|| song.tracks.length!=0)
-					// 		{
-					//
-					//
-					//
-					// 		if(song.title == null || song.artist_location == null||song.artist_location.location==null || song.id == null )
-					// 		{
-					// 		x=x+1;
-					// 		}
-					//
-					// 		if(lsIdFavArr.toString().replace(/\W/g, '').match(song.id))
-					// 			{
-					//
-					// 			song.favorite='on';
-					// 			}
-					// 		else
-					// 			{
-					// 			song.favorite='off';
-					// 			}
-					// 		song.closeButton=false;
-					// 		song.num_id=x;
-					// 		//song.favorite='off'
-					// 		song.id=x;
-					// 		songs.songsArr.push(song);
-					// 		songs.songsArr.spot_arr.push("spotify:track:"+song.id);
-					// 		songs.songsArr.spot_playlist.push(song.id);
-					// 		songs.songsArr.spot_str+=song.id+',';
-					//
-					// 		song_str += songtitle;
-					//
-					//
-					// 		}
-					// 	}
-					// });
-					//
-					// songs = songs.compareArraysObj(LeaveOut, 'title');
-					//return songs;
+					return artists;
 
 				},function(error){
 					$rootScope.errorMessage=true;
@@ -264,40 +73,6 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 				return deferred.promise;
 		};
 	},
-				// 	createPlaylist:function(songlist)
-			// {
-			// 	var deferred = $q.defer();
-			// 	var songs={};
-			// 	songs.songs=[];
-			// 	songs.spot_arr=[];
-			// 	songs.savSpotArr=[];
-			// 	songs.artistlocation ='';
-			// 	songs.spot_str='';
-			// 	songs.location_arr=[];
-			// 	songlist.forEach (function(song) {
-			// 		var x = songlist.indexOf(song);
-			// 		song.artists[0].name=song.artists[0].name.findThe();
-			// 		song.num_id=x;
-			// 		songs.songs.push(song);
-			// 		Favorites.checkFavorites(song);
-			// 		songs.spot_arr.push(song.id);
-			// 		songs.savSpotArr.push('spotify:track:'+song.id);
-			// 		songs.artistlocation = $routeParams.location;
-			// 		songs.tracks=[{foreign_id: song.uri}]
-			//
-			// 		songs.location_arr.push(song.artist_location.location + '@@' + song.artist_location.latitude + ':' + song.artist_location.longitude + '&&<h5>' + song.name + '</h5><p>' + song.artists[0].name + '</p><a href="spotify:track:' + song.id + '" ><div class="spot_link"  aria-hidden="true" data-icon="c" id="infobox_spot_link"+songs.length></div></a><a><a a href="#/info/' + songs.artistlocation + '/' + song.artists[0].name.replace('The ', '') + '" ><div style="font-size:20px" class="spot_link information" id="infobox_info"+songs.length  aria-hidden="true" data-icon="*"></div></a><div style="clear:both"></div>');
-			//
-			// 	});
-			//
-			// 	//songs.location_arr.sort();
-			// 	songs.spot_str = 'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:' + songs.spot_arr.toString();
-			// 	songs.spot_strFinal = $sce.trustAsResourceUrl(songs.spot_str);
-			// 	//console.log(songs)
-			// 	deferred.resolve(songs);
-			// 	console.log(songs)
-			// 	return deferred.promise;
-			//
-			// },
 	};
 }]);
 
@@ -307,55 +82,111 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 	var cache = $cacheFactory('spotify');
 
 	return{
-		runGenres: function(chunk) {
-			var all_songs = [],
-				artists,
+		runGenres: function() {
+			var arguments = Array.prototype.slice.call(arguments),
+				args = arguments[0],
+				len = arguments[1] || args.chunkedArr.length-1,
+				allArtists = [],
 				location = $routeParams.location.replace(/, /g, '*'),
-				cacheKey = `${location}_${chunk.tracks[0]}_${chunk.tracks[chunk.tracks.length-1]}`,
+				cacheKey = `${location}_${args.chunkedArr[0].artistIds.toString()}}`,
 				deferred = $q.defer();
 
 			if (!cache.get(cacheKey)) {
-				return $http.get(`https://api.spotify.com/v1/artists?ids=${chunk.artists.toString()}`).then(function(data) {
-					var artists = data.data.artists;
-					return $http.get(`https://api.spotify.com/v1/tracks?ids=${chunk.tracks.toString()}`).then(function(data) {
-						let i = 0;
-						chunk.spotify_info = data.data.tracks;
-						chunk.spotify_info.map(function(track) {
-							let x = chunk.spotify_info.indexOf(track)
-							track.num_id =x;
-							if(artists[i]) {
-								track.genres = artists[i].genres;
-							} else {
-								track.genres = []
+				var x = 0;
+				args.chunkedArr.forEach(function(chunk) {
+					var url = `https://api.spotify.com/v1/artists?ids=${chunk.artistIds.toString()}`;
+					if(x < len) {
+						x++;
+						return $http({
+							cache:true,
+							url:url,
+							method:'get' ,
+							headers: {
+						  	'Authorization': `Bearer ${sessionStorage.access_token}`
 							}
-							track.favorite = 'off';
-							track.location = chunk.info[i].city;
-							track.location_link = chunk.info[i].city.city.replace(/,/g, '*')
-							i++;
+						}).then(function(data) {
+							var artists = data.data.artists;
+							if(artists) {
+								artists.forEach((artist) => {
+									var x = artists.indexOf(artist);
+									artist.location = chunk.artists[x].city;
+									artist.location_link = chunk.artists[x].city.replace(/, /g, '*');
+									artist.lat = chunk.artists[x].lat;
+									artist.lng = chunk.artists[x].lng;
+									allArtists.push(artist);
+								});
+							}
+							if(x === len) {
+								deferred.resolve(allArtists);
+							}
+						}, (error) => {
+							if(error.status === 401) {
+								runAuthorization();
+							}
 						});
-
-						cache.put(cacheKey, chunk);
-						return chunk;
-					})
-				})
+					}
+				});
+				return deferred.promise;
 			} else {
-				chunk = cache.get(cacheKey);
-				deferred.resolve(chunk)
+				artists = cache.get(cacheKey);
+				deferred.resolve(artists)
 				return deferred.promise;
 			}
 		},
+			runTopSongs: function() {
+			//TODO: Make it so this can accept an array or just an object (spread arguments - see LIL code)
+			// Run loops in service (as opposed to in the controller -- this will be cleaner and allow for easier promise chaining)
+			// see runGenres method above (line 82)
+				//no need for caching, want it to be up-to-date at all times
+				var args = Array.prototype.slice.call(arguments),
+					artists = args[0],
+					finalTracks = [],
+					deferred = $q.defer();
 
-		runLyricsnMusic: function(searchterm)
-		{
-			return $http.jsonp('http://api.lyricsnmusic.com/songs?api_key=548b2523656cf7b2bbf49252673c24&lyrics="'+searchterm+'"&callback=JSON_CALLBACK').then(function(result)
-			{
-
-				var LnM_songs = result.data.data
-
-
-				return LnM_songs;
+				artists.forEach((artist) => {
+					const url = `https://api.spotify.com/v1/artists/${artist.id}/top-tracks?country=US`
+					return $http({
+						cache:true,
+						url:url,
+						method:'get' ,
+						headers: {
+					  	'Authorization': `Bearer ${sessionStorage.access_token}`
+						}
+					}).then((tracks) => {
+						var x = artists.indexOf(artist),
+							len = artists.length-1;
+						if(tracks) {
+							tracks.spotStr='';
+							tracks.idStr = '';
+							tracks.data.tracks.forEach((track) => {
+								track.genres = artist.genres;
+								track.location = artist.location;
+								track.lat = artist.lat;
+								track.lng = artist.lng;
+								track.favorite = 'off';
+								track.num_id = x;
+							})
+						finalTracks.push(tracks);
+						if(x === len) {
+							deferred.resolve(finalTracks);
+						}
+					}
+				});
 			});
+			return deferred.promise;
 		},
+
+		// runLyricsnMusic: function(searchterm)
+		// {
+		// 	return $http.jsonp('http://api.lyricsnmusic.com/songs?api_key=548b2523656cf7b2bbf49252673c24&lyrics="'+searchterm+'"&callback=JSON_CALLBACK').then(function(result)
+		// 	{
+		//
+		// 		var LnM_songs = result.data.data
+		//
+		//
+		// 		return LnM_songs;
+		// 	});
+		// },
 
 		runSpotifySearch : function(searchterm, number, qs_noqs, arr)
 		{
@@ -490,7 +321,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 		},
 		createLatLng:function(location_arr, counter, zoom, latitude, longitude, spot_arr)
 		{
-			//console.log(location_arr)
 			location_arr.sort();
 			var deferred = $q.defer();
 			var location_str='';
@@ -596,9 +426,6 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 					data.lat_plus_long.push({number:number,city:item.city.$t, lat:item.latitude.$t, long:item.longitude.$t});
 					}
 				});
-
-
-
 
    					data.lat_plus_long.sort(function(a, b)
 					{
@@ -787,44 +614,44 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 Playlist.service("ChunkSongs",[ '$q', '$rootScope', '$http', '$sce','LocationDataFetch',
 function($q, $rootScope, $http, $sce, LocationDataFetch)
 {
+	//make this accept arrays (see runTopSongs above)
 	return{
-		createChunks:function(songs, num)
+		createChunks:function(artists, num)
 		{
-				songs.chunked_arr =[];
-				songs.tracks = [];
-				songs.savSpotArr = [];
+				artists.chunkedArr =[];
+				artists.tracks = [];
+				artists.savSpotArr = [];
 				var deferred = $q.defer(),
-				len = songs.length,
+				len = artists.length,
 				num_groups = Math.floor(len/num),
 				remainder = len%num;
-
 				//turn this into a util/helper function
 				if(len > num) {
 					if(num_groups > 1) {
 						for (var i=1; i<num_groups; i++) {
-							songs.chunked_arr.push(songs.slice((i-1),(i*num)));
+							artists.chunkedArr.push(artists.slice((i-1),(i*num)));
 						}
-						songs.chunked_arr[num_groups] = songs.slice(len-remainder, len);
+						artists.chunkedArr[num_groups] = artists.slice(len-remainder, len);
 					} else if(remainder > 0) {
-						songs.chunked_arr[0] = songs.slice(0, num);
-						songs.chunked_arr[1] = songs.slice(num, num+remainder);
+						artists.chunkedArr[0] = artists.slice(0, num);
+						artists.chunkedArr[1] = artists.slice(num, num+remainder);
 					} else {
-						songs.chunked_arr[0] = songs.slice(0, num);
+						artists.chunkedArr[0] = artists.slice(0, num);
 					}
 				} else {
-					songs.chunked_arr = [songs];
+					artists.chunkedArr = [artists];
 				}
-				songs.chunked_arr[0].forEach(function(track) {
-					var x = songs.chunked_arr[0].indexOf(track);
-					songs.tracks.push(track.id);
+				artists.chunkedArr[0].forEach(function(track) {
+					var x = artists.chunkedArr[0].indexOf(track);
+					artists.tracks.push(track.id);
 					track.num_id = x;
-					songs.savSpotArr.push(`spotify:track:${track.id}`)
+					artists.savSpotArr.push(`spotify:track:${track.id}`)
 				});
 
 				//will need to create a mechanism to change the index based on a click or infinite scroll
-				songs.songs_ids = songs.tracks.toString();
-				songs.spot_strFinal=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
-				deferred.resolve(songs);
+				artists.songs_ids = artists.tracks.toString();
+				artists.spotStr=$sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.songs_ids}`);
+				deferred.resolve(artists);
 				return deferred.promise;
 		},
 	};
@@ -893,8 +720,6 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 				deferred.resolve(obj)
 				return deferred.promise;
 				///////////////////////End Local Storage/////////////////////
-
-
 		}
 	};
 }]);
@@ -916,28 +741,43 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 
 	$scope.runApp = function() {
-		//if (LocationDataFetch.count == 0 || $rootScope.songs_root == undefined ||$rootScope.noSongs==true ) {
 			$rootScope.mapOpening = true;
-			// $rootScope.holder=[];
-			// $rootScope.loading=true;
-			// $scope.lookupSongs=[];
-			// $rootScope.aboutMarked=false;
-			// $scope.newlocation = true;
+			$rootScope.loading = true;
+			var cities,
+				songs = { tracks: [], idStr: '', spotStr:'', savSpotArr:[], allArtists: [], selectedGenres: [], chunkedArr: [] },
+				spotStr = '';
 			retrieveLocation.runLocation(location_comp).then(function(data) {
-				var city_data = data.join('_');
-				PlaylistCreate.runPlaylist(city_data).then(function(data){
-					$rootScope.songs = data;
-						Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-							$rootScope.songs.spotify_info = data.spotify_info;
-							Favorites.checkFavorites($rootScope.songs.spotify_info);
+				cities = data;
+				PlaylistCreate.runPlaylist(cities).then(function(data){
+					$rootScope.playlistData = data;
+					songs.artistIds = data.artistIds;
+					songs.chunkedArr = data.chunkedArr;
+					songs.artists = data.artists;
+					Spotify.runGenres(data, 1).then(function(artists) {
+						Spotify.runTopSongs(artists, 1).then((data) => {
+							data.forEach((track) => {
+								if(track.data.tracks[0]) {
+									let data = track.data.tracks[0];
+									songs.tracks.push(data);
+									songs.savSpotArr.push(`spotify:track:${data.id}`)
+									songs.idStr+=`${data.id},`;
+								}
+							})
+							songs.tracks = songs.tracks.SortObjAsc('num_id', 'num');
+							$rootScope.songs = songs
+							$rootScope.songsCopy = angular.copy($rootScope.songs);
+
+							$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
+							Favorites.checkFavorites($rootScope.songs.tracks);
 							$scope.loading = false;
-							$scope.mapdata.lat=data.spotify_info[0].location.lat;
-							$scope.mapdata.lng=data.spotify_info[0].location.lng;
-							$scope.mapdata.markers=data.spotify_info;
+							$scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
+							$scope.mapdata.lng=$rootScope.songs.tracks[0].lng;
+							$scope.mapdata.markers=$rootScope.songs.tracks;
 							$scope.newlocation = false;
 							$rootScope.mapOpening = false;
-						})
-
+							$rootScope.loading = false;
+						});
+					});
 				});
 
 			},function(error){
@@ -959,7 +799,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		/////////those items show up.
 		/////////Take the "JSON" from the local storage and create CSV to add to the Songs About DB//////////
 		///////////Once there is a backend, this will enable user-generated content - i.e. all searches will go to the DB and be held there.
-		console.log($scope.compare_location)
 		if($rootScope.aboutMarked==false || $scope.finalcollector.length<50 && $scope.lookUpSongs.length==0)
 		{
 
@@ -1469,7 +1308,6 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 	};
 
 	$scope.switchFavorite = function(id, num_id, about_or_from) {
-		//$scope.favoritesArr=[];
 		var songId = [];
 		if (localStorage.getItem('FavoriteArr') !== null && localStorage.getItem('FavoriteArr') !== '') {
 			var songFav = jQuery.parseJSON(localStorage.FavoriteArr);
@@ -1480,9 +1318,9 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 		if (about_or_from == 'from') {
 
-			if ($rootScope.songs.spotify_info[num_id].favorite === 'off') {
-				$rootScope.songs.spotify_info[num_id].favorite = 'on';
-				songFav.push($rootScope.songs.spotify_info[num_id]);
+			if ($rootScope.songs.tracks[num_id].favorite === 'off') {
+				$rootScope.songs.tracks[num_id].favorite = 'on';
+				songFav.push($rootScope.songs.tracks[num_id]);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
 				//$scope.favorites = Favorites.addFavorites();
 			}
@@ -1491,10 +1329,10 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 					songId.push(songFav[x].id);
 				}
 
-				var index = songId.indexOf($rootScope.songs.spotify_info[num_id].id);
+				var index = songId.indexOf($rootScope.songs.tracks[num_id].id);
 				songFav.splice(index, 1);
 				localStorage.setItem('FavoriteArr', JSON.stringify(songFav));
-				$rootScope.songs.spotify_info[num_id].favorite = 'off';
+				$rootScope.songs.tracks[num_id].favorite = 'off';
 			}
 		}
 		//else if(about_or_from=='about')
@@ -1905,12 +1743,11 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 		$scope.leaveOut = [];
 
 		var location_comp = $routeParams.location;
-		if(!$rootScope.songs || (location_comp && $rootScope.songs.location !== location_comp ) )
+		if(!$rootScope.songs) //|| (location_comp && $rootScope.songs.location !== location_comp ) )
 		{
 			$scope.runApp();
 		} else {
-
-			Favorites.checkFavorites($rootScope.songs.spotify_info);
+			Favorites.checkFavorites($rootScope.songs.tracks);
 		}
 
 
@@ -1961,3 +1798,21 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 		var w = window.open(url, 'asdf', 'WIDTH=400,HEIGHT=500');
 	}
 }]);
+
+function runAuthorization() {
+	debugger;
+	const client_id = '2816af78ef834a668eab78a86ec8b4e6',
+		scope = 'playlist-modify-private playlist-modify-public',
+		hash = window.location.hash;
+		let http = '';
+	if(window.location.hostname === 'localhost')
+	{
+		http = `http://localhost:8888/`;
+	} else {
+		http = `https://musicwheryour.com/`;
+	}
+
+	const authorization_url = `https://accounts.spotify.com/en/authorize?response_type=token&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${http}`;
+
+	window.open(authorization_url, '_self');
+}

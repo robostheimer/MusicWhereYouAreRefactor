@@ -3,10 +3,10 @@
   {{song.name}}
   <br>
   <span class="artist">{{song.artists[0].name}}</span><br>
-  <sup ng-show="showLocation === true">From: <a href="#/playlist/{{song.location_link}}">{{song.location.city}}</a></sup>
+  <sup ng-show="showLocation === true">From: <a href="#/playlist/{{song.location_link}}">{{song.location}}</a></sup>
 </p>
 <a class="spotter" href="spotify:track:{{song.id}}" >
-  <div class="spot_link_spot" id="spot{{song.tracks[0].foreign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div>
+  <div class="spot_link_spot" id="spot{{songforeign_id.split(':')[2]}}" style="margin-left:5px;font-size:27px;" aria-hidden="true" data-icon="c"></div>
 </a>
 <a>
   <div class="icon iconfavorite2 spot_link favorite favorite_on" ng-hide="song.favorite=='on'" ></div>

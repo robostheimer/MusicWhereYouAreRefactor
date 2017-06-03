@@ -187,7 +187,9 @@ String.prototype.findThe=function()
 /****************************Array****************************/
 
 Array.prototype.flatten = function() {
-	return [].concat.apply([],this);
+	return this.reduce(function(prev, curr) {
+  	return prev.concat(curr);
+	});
 }
 Array.prototype.removeItem=function(item)
 {
@@ -214,20 +216,18 @@ Array.prototype.SortObjAsc=function(property, num_or_str, checkDupProperty)
  	}
  	else{
  		obj.sort(function(a, b){
-
  				 var aprop=parseInt(a[property]);
 				 var bprop =parseInt(b[property]);
 				 return bprop-aprop;
 				});
  	}
- 		obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
+ 		//obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
  		return obj.reverse();
 
  };
 
 Array.prototype.SortObjDsc=function(property, num_or_str, checkDupProperty)
 	 {
-
 	 	var obj = this
 	 	if(num_or_str=='str')
 	 	{
@@ -241,12 +241,12 @@ Array.prototype.SortObjDsc=function(property, num_or_str, checkDupProperty)
 	 	else{
 	 		obj.sort(function(a, b){
 
-	 				 var aprop=parseInt(a[property]);
-					 var bprop =parseInt(b[property]);
+	 				 var aprop=a[property];
+					 var bprop =b[property];
 					 return bprop-aprop;
 					});
 	 	}
-	 		obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
+	 		//obj=obj.removeDuplicatesArrObj(checkDupProperty, false);
 	 		return obj;
 
 	 };
@@ -291,11 +291,13 @@ Array.prototype.removeDuplicatesArrObj = function(property, checkmatch, checkequ
 };
 
 Array.prototype.removeDuplicatesArr = function(){
+	var arr = this;
+
 	let deDuped = arr.filter(function(item, index) {
 		return arr.indexOf(item) === index;
 	});
 
-	return deduped;
+	return deDuped;
 };
 
 Array.prototype.savArrayDups =function(){

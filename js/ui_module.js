@@ -88,8 +88,19 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 				//}
 			//});
 			if(!$rootScope.locations) {
-				$http.get('json/locations.json').then(function(result) {
-				 $rootScope.locations = result.data;
+				var locations =[];
+				$http.get('json/locations_ft.json').then(function(result) {
+				 result.data.rows.forEach((location) => {
+					 locations.push({
+						 city_id: location[0],
+						 city: location[1],
+						 lat: location[2],
+						 lng: location[3]
+					 })
+				 });
+
+				 $rootScope.locations = locations;
+
 			 	});
 			}
 			var states = States.createStateObj(),
@@ -100,7 +111,7 @@ function($q, $rootScope, $http, $sce, $location, States, retrieveLocation) {
 
 			$rootScope.locations.forEach(function(loc) {
 				if(loc.city.toLowerCase().replace(', ', ',').match(location) && location.length >= 3) {
-					hints.push({city: loc.city.replace(/,/g, ', '), href: loc.city.replace(/,/g, '*'), long: loc.lng, lat: loc.lat});
+					hints.push({city: loc.city.replace(/,/g, ', '), href: loc.city.replace(/, /g, '*'), long: loc.lng, lat: loc.lat});
 				}
 			});
 			return hints;

@@ -30,7 +30,7 @@
 <section class="alert"  ng-hide="noGeo==false;" ng-show="noGeo==true" >
 	<div class="closey" style="margin-top:-10px;"  aria-hidden="true" data-icon="x" ng-click="noGeo=false"></div>
 	<p>
-		For MusicWhereYouAre to work, we need to know where you are.  Please choose a City and State from the form above.
+		We are having trouble locating you. Please choose a City and State from the form above to let us know where you are.  A playlist should come up in a jiffy.
 	</p>
 
 	<div class="clear"></div>
@@ -127,7 +127,7 @@
 		<div class="clear" ></div>
 		<div class="{{buttons[0].state}}" ng-hide="loading==true">
 			<div id="iframe_holder" ng-hide="spot_iframe_hider==true" >
-				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{songs.spot_strFinal}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
+				<iframe id="spot_frame" theme="light" view="coverart" ng-src="{{spotStr}}" frameborder="0" allowtransparency="true" height="80" width="300"></iframe>
 			</div>
 			<button class ="spot_button" ng-controller="Spotify" ng-click="SavePlaylist(songs.savSpotArr, location);">
 				<div aria-hidden="true" data-icon="c" class="button_icon"></div>
@@ -166,7 +166,7 @@
 
 			<div id="locationsongs">
 
-				<div ng-repeat="song in songs.spotify_info " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
+				<div ng-repeat="song in songs.tracks " class="gray card" id="song_spot{{song.id}}" ng-hide="song.closeButton==true" draggable = "true" event-delegate="a .favorite|switchFavorite(song.id, song.num_id, 'from')" type="click">
 						<music-card/>
 				</div>
 				<br>

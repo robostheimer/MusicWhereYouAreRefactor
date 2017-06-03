@@ -12,7 +12,7 @@ return{
 					var images;
 
 					//cache this (see playlist_module)
-     			var url =`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artistname}&api_key=1f91c93293d618de5c30f8cfe2e9f5e9&format=json&callback=JSON_CALLBACK`
+     			var url =`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artistname}&api_key=1f91c93293d618de5c30f8cfe2e9f5e9&format=json&callback=JSON_CALLBACK`
 
 
      			return $http.jsonp(url).then(function(result)
@@ -151,20 +151,39 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams, retrieveI
 $scope.runApp = function() {
 	var location_comp = $routeParams.location,
 		chunked_arr = [];
-	retrieveLocation.runLocation(location_comp).then(function(data) {
-		var city_data = data.join('_');
-		PlaylistCreate.runPlaylist(city_data, 0).then(function(data){
-			$rootScope.songs = data;
-			Spotify.runGenres(data.chunked_arr[0]).then(function(data) {
-				$rootScope.songs.spotify_info = data.spotify_info;
-				$scope.loading = false;
-				$rootScope.mapdata.lat=data.spotify_info[0].location.lat;
-				$rootScope.mapdata.lng=data.spotify_info[0].location.lng;
-				$rootScope.mapdata.markers=data.spotify_info;
-				$scope.newlocation = false;
-				$rootScope.mapOpening = false;
-			});
-		});
+  retrieveLocation.runLocation(location_comp).then(function(data) {
+    cities = data;
+    PlaylistCreate.runPlaylist(cities).then(function(data){
+      $rootScope.playlistData = data;
+      songs.artistIds = data.artistIds;
+      songs.chunkedArr = data.chunkedArr;
+      songs.artists = data.artists;
+      Spotify.runGenres(data, 1).then(function(artists) {
+        Spotify.runTopSongs(artists, 1).then((data) => {
+          data.forEach((track) => {
+            if(track.data.tracks[0]) {
+              let data = track.data.tracks[0];
+              songs.tracks.push(data);
+              songs.savSpotArr.push(`spotify:track:${data.id}`)
+              songs.idStr+=`${data.id},`;
+            }
+          })
+          songs.tracks = songs.tracks.SortObjAsc('num_id', 'num');
+          $rootScope.songs = songs
+          $rootScope.songsCopy = angular.copy($rootScope.songs);
+
+          $rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
+          Favorites.checkFavorites($rootScope.songs.tracks);
+          $scope.loading = false;
+          $scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
+          $scope.mapdata.lng=$rootScope.songs.tracks[0].lng;
+          $scope.mapdata.markers=$rootScope.songs.tracks;
+          $scope.newlocation = false;
+          $rootScope.mapOpening = false;
+          $rootScope.loading = false;
+        });
+      });
+    });
 	});
 };
 

@@ -1,12 +1,16 @@
 //'use strict';
 
-/* App Module */
+//gets authorization token from spotify
+if (window.location.hash.split('=')[0] === '#access_token' && !sessionStorage.access_token) {
+sessionStorage.setItem('access_token', window.location.hash.split('=')[1]);
+}
 
+/* App Module */
 var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
   'ngRoute',
   'Settings',
   'UI',
-   'Playlist',
+  'Playlist',
   'Info',
   'Favorites',
   'ui.utils',
@@ -20,7 +24,7 @@ var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
   'Social',
   'ng.deviceDetector',
   'ngResource',
-  'base64'
+  'base64',
 ]);
 
 MusicWhereYouAreApp.config(['$compileProvider',
@@ -80,7 +84,7 @@ function($compileProvider)
    'self',
    // Allow loading from our assets domain.  Notice the difference between * and **.
    'https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:**',
-  'http://ws.audioscrobbler.com/2.0/**']);
+  'https://ws.audioscrobbler.com/2.0/**']);
  })
 
 .config(['$routeProvider',
@@ -234,7 +238,6 @@ function($compileProvider)
       templateUrl:'partials/map.html',
 
     }).
-
     otherwise({
       redirectTo: '/playlist'
     });
