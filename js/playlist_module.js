@@ -1800,7 +1800,6 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 }]);
 
 function runAuthorization() {
-	debugger;
 	const client_id = '2816af78ef834a668eab78a86ec8b4e6',
 		scope = 'playlist-modify-private playlist-modify-public',
 		hash = window.location.hash;
@@ -1809,10 +1808,9 @@ function runAuthorization() {
 	{
 		http = `http://localhost:8888/`;
 	} else {
-		http = `https://musicwheryour.com/`;
+		http = `https://musicwhereyour.com/`;
 	}
 
 	const authorization_url = `https://accounts.spotify.com/en/authorize?response_type=token&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${http}`;
-
 	window.open(authorization_url, '_self');
 }
