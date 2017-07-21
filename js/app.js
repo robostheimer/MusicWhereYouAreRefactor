@@ -1,6 +1,7 @@
 //'use strict';
 
 //gets authorization token from spotify
+sessionStorage.clear();
 if (window.location.hash.split('=')[0] === '#access_token' && !sessionStorage.access_token) {
 sessionStorage.setItem('access_token', window.location.hash.split('=')[1]);
 }
