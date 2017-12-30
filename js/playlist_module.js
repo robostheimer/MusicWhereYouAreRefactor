@@ -19,7 +19,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 			});
 
 			songs = {},
-			url = `https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArtistId%2C+Name%2C+Sid%2CCity%2CCityId%2CLat%2CLng%2CHotttnesss+FROM+15UlsGab9-IJ7Hq4ypRYiQMWd2QkGaywgs2WMUuTJ+WHERE+CityId%20IN%20(${citiesStr})+ORDER%20BY+Hotttnesss&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK`,
+			url = `https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArtistId%2C+Name%2C+Sid%2CCity%2CCityId%2CLat%2CLng%2CHotness+FROM+15UlsGab9-IJ7Hq4ypRYiQMWd2QkGaywgs2WMUuTJ+WHERE+CityId%20IN%20(${citiesStr})+ORDER%20BY+Hotness&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK`,
 
 			deferred = $q.defer();
 			if(!cache.get(cities[0].city_id)) {
@@ -32,7 +32,7 @@ function($q, $rootScope, $http, $sce, MapCreate, HashCreate, $location, $routePa
 					var num_groups //to help chunk into groups of 50 (max number that can be sent to spotify api);
 					var remainder //to help to chunk into groups of 50 (max number that can be sent to spotify api);
 
-					var artists = {artists:[], chunkedArr: [], artistIds: []};
+					var artists =  {artists:[], chunkedArr: [], artistIds: [] };
 					//Massaging the data so that all artists have the proper location info attached to them
 					songs.location = $routeParams.location;
 					if(data.data.rows) {
@@ -1806,7 +1806,7 @@ function runAuthorization() {
 		let http = '';
 	if(window.location.hostname === 'localhost')
 	{
-		http = `http://localhost:8888/`;
+		http = `http://localhost:8000/index.html`;
 	} else {
 		http = `https://musicwhereyour.com/`;
 	}

@@ -2,8 +2,6 @@
 var Geolocation = angular.module('Geolocation', []);
 Geolocation.service("getLocation", ['$q', '$http', '$sce', 'HashCreate','$rootScope','$location',
 function($q, $http, $sce, HashCreate, $rootScope, $location) {
-
-
 	var zoom = 11;
 	var currentLat = 41.5;
 	var currentLong = -91.6;
