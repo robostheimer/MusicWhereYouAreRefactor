@@ -497,6 +497,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 	}
 
 	$scope.checkGenres = function(genres) {
+		debugger;
 		//run a filter songs array if there is at least one genre;
 		if(genres.length > 0) {
 			$rootScope.songs.filter(function(song) {

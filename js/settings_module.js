@@ -141,7 +141,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 				}
 				if(matches.length > 0) {
 					var songs = { tracks: [], idStr: '', spotStr:'', savSpotArr:[], selectedGenres: $rootScope.selectedGenres || [] };
-					ChunkSongs.createChunks(matches, 50).then(function(artists) {
+					ChunkSongs.createChunks(matches, 50).then(function(artists) {		
 						$rootScope.songs.tracks = [];
 						Spotify.runTopSongs(artists).then((data) => {
 							data.forEach((track) => {
@@ -242,13 +242,11 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 
 		if(!$rootScope.songs)
 		{
-			$scope.clearCacheStorage();
 			$scope.runApp();
 		} else {
 			//TODO: need to check for location chagne too
 			if(!$rootScope.songs.allArtists.length > 0) {
 				$scope.getAllArtists($rootScope.playlistData, 7);
-				$scope.clearCacheStorage();
 			}
 
 			$rootScope.songs.selectedGenres.forEach((genre) => {
