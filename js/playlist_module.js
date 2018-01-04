@@ -91,6 +91,10 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				cacheKey = `${location}_${args.chunkedArr[0].artistIds.toString()}}`,
 				deferred = $q.defer();
 
+			if(!sessionStorage.access_token) {
+				runAuthorization();
+			}
+
 			if (!cache.get(cacheKey)) {
 				var x = 0;
 				args.chunkedArr.forEach(function(chunk) {
@@ -120,7 +124,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 								deferred.resolve(allArtists);
 							}
 						}, (error) => {
-							if(error.status === 401) {
+							if(error.status) {
 								runAuthorization();
 							}
 						});
@@ -138,6 +142,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 			// Run loops in service (as opposed to in the controller -- this will be cleaner and allow for easier promise chaining)
 			// see runGenres method above (line 82)
 				//no need for caching, want it to be up-to-date at all times
+				
 				var args = Array.prototype.slice.call(arguments),
 					artists = args[0],
 					finalTracks = [],
@@ -171,7 +176,7 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 							deferred.resolve(finalTracks);
 						}
 					}
-				});
+				})
 			});
 			return deferred.promise;
 		},
@@ -735,10 +740,7 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams, Spotify) 
 /*Controllers*/
 
 Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation', 'LocationDataFetch', '$location', '$routeParams', '$q', 'runSymbolChange', 'PlaylistCreate', 'Wiki', 'MapCreate', 'States', '$sce', 'Favorites', 'ShareSongs', 'getLocation', 'Spotify','HashCreate','ChunkSongs','deviceDetector','Twitter',function($scope, $rootScope, retrieveLocation, LocationDataFetch, $location, $routeParams, $q, runSymbolChange, PlaylistCreate, Wiki, MapCreate, States, $sce, Favorites, ShareSongs, getLocation, Spotify, HashCreate, ChunkSongs, deviceDetector, Twitter) {
-
 	$scope.location_for_dom = $location.path().split('/')[2].replace(/_/g, ' ').replace(/\*/g, ', ')
-	// //Twitter.getOAuth();
-
 
 	$scope.runApp = function() {
 			$rootScope.mapOpening = true;
@@ -1744,7 +1746,7 @@ Playlist.controller('hashedLocation', ['$scope', '$rootScope', 'retrieveLocation
 
 		var location_comp = $routeParams.location;
 		if(!$rootScope.songs) //|| (location_comp && $rootScope.songs.location !== location_comp ) )
-		{
+		{ 
 			$scope.runApp();
 		} else {
 			Favorites.checkFavorites($rootScope.songs.tracks);
@@ -1782,10 +1784,10 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 		var title = 'MusicWYA: ' + title;
 		var client_id = '';
 		var redirect_uri = '';
-		if (window.location.href.match('localhost:8888')) {
+		if (window.location.href.match('localhost:8000')) {
 
 			client_id = '59a6ff9db9a642c6adfd2ee2fd33a30f';
-			redirect_uri = 'http://localhost:8888/callback.html';
+			redirect_uri = 'http://localhost:8000/callback.html';
 		} else {
 			client_id = '70521c59988a4ff4afa24aabc182b94a';
 			redirect_uri = 'http://musicwhereyour.com/callback.html';
@@ -1802,7 +1804,10 @@ function($scope, $location, $rootScope, runSymbolChange, $routeParams) {
 function runAuthorization() {
 	const client_id = '2816af78ef834a668eab78a86ec8b4e6',
 		scope = 'playlist-modify-private playlist-modify-public',
+		//TODO: Create Session Storage Service
 		hash = window.location.hash;
+		sessionStorage.setItem('city', hash);
+		debugger;
 		let http = '';
 	if(window.location.hostname === 'localhost')
 	{
