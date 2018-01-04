@@ -1,11 +1,5 @@
 //'use strict';
 
-//gets authorization token from spotify
-//sessionStorage.clear();
-if (window.location.hash.split('=')[0] === '#access_token' && !sessionStorage.access_token) {
-sessionStorage.setItem('access_token', window.location.hash.split('=')[1]);
-}
-
 /* App Module */
 var MusicWhereYouAreApp = angular.module('MusicWhereYouAreApp', [
   'ngRoute',
@@ -243,3 +237,10 @@ function($compileProvider)
       redirectTo: '/playlist'
     });
   }]);
+
+
+//gets authorization token from spotify
+//sessionStorage.clear();
+if (window.location.hash.split('=')[0] === '#access_token' && !sessionStorage.access_token) {
+  sessionStorage.setItem('access_token', window.location.hash.split('=')[1]);
+}
