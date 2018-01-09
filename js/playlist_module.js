@@ -91,9 +91,9 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				cacheKey = `${location}_${args.chunkedArr[0].artistIds.toString()}}`,
 				deferred = $q.defer();
 
-			if(!sessionStorage.access_token) {
-				runAuthorization();
-			}
+			// if(!sessionStorage.access_token) {
+			// 	runAuthorization();
+			// }
 
 			if (!cache.get(cacheKey)) {
 				var x = 0;

@@ -20,9 +20,9 @@ function($q, $rootScope, $http, $sce, $location, States, $routeParams) {
 			},
 
 			getArtistEvents: function(artist)
-			{
-				return $http.jsonp('https://rest.bandsintown.com/artists/'+artist+'/events?app_id=MusicWhereYouAre').then(function(results){
-
+			{	
+				return $http.get('https://rest.bandsintown.com/artists/'+artist+'/events?app_id=MusicWhereYouAre').then(function(results){
+	
 					return results.data;
 				},function(error) {
 					$rootScope.showLastFMError=true;

@@ -71,14 +71,14 @@
 
 	<div class="closey"  aria-hidden="true" data-icon="x" ng-click="goBack()"></div>
 	<h4><span style="color:#979797">Upcoming Concerts for</span> {{artist}}</h4><br>
-	<form  class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
+	<!-- <form  class="{{buttons[0].state}}"  ng-swipe-left="goBack()" >
 
 		<input type="date"  name="search events" class="text searchy" ng-model="dates" ng-enter="lookUpDates(date1, date2)">
 		<input type="date"  name="search events" class="text searchy"   ng-model="dates" ng-enter="lookUpDates(date1, date2)">
 
 		<div style="width:100px; margin:auto;font-family:'Arvo',Tahoma,Arial, sans-serif" ng-show="loading==true"><img src="loading.gif" alt="loading"/></div>
 		<div class="clear"></div>
-
+	</form> -->
 		<div ng-show="noEvents==true"><h3>There are no shows scheduled for {{artist}}.</h3></div>
 		<div class="event_holder">
 
