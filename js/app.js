@@ -240,7 +240,11 @@ function($compileProvider)
 
 
 //gets authorization token from spotify
+<<<<<<< HEAD
 sessionStorage.clear();
+=======
+//sessionStorage.clear();
+>>>>>>> 5863807aa4e4469ba597039a1052dd77c91921a5
 if (window.location.hash.split('=')[0] === '#access_token' && !sessionStorage.access_token) {
   sessionStorage.setItem('access_token', window.location.hash.split('=')[1]);
 }

@@ -91,9 +91,15 @@ function($q, $rootScope, $http, $sce, $routeParams, Favorites, MapCreate, HashCr
 				cacheKey = `${location}_${args.chunkedArr[0].artistIds.toString()}}`,
 				deferred = $q.defer();
 
+<<<<<<< HEAD
 			// if(!sessionStorage.access_token) {
 			// 	runAuthorization();
 			// }
+=======
+			if(!sessionStorage.access_token) {
+				runAuthorization();
+			}
+>>>>>>> 5863807aa4e4469ba597039a1052dd77c91921a5
 
 			if (!cache.get(cacheKey)) {
 				var x = 0;
@@ -1807,6 +1813,10 @@ function runAuthorization() {
 		//TODO: Create Session Storage Service
 		hash = window.location.hash;
 		sessionStorage.setItem('city', hash);
+<<<<<<< HEAD
+=======
+		debugger;
+>>>>>>> 5863807aa4e4469ba597039a1052dd77c91921a5
 		let http = '';
 	if(window.location.hostname === 'localhost')
 	{
