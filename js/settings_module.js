@@ -153,7 +153,7 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 								}
 							});
 
-							$rootScope.songs.tracks = songs.tracks;
+							$rootScope.songs.tracks = $rootScope.songsCopy.removeDuplicatesArrObj('title', true);
 							$scope.setCacheStorage(`${genre}_${$routeParams.location}`, songs.tracks);
 							$rootScope.spotStr = $sce.trustAsResourceUrl(`https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${songs.idStr}`);
 							$scope.mapdata.lat=$rootScope.songs.tracks[0].lat;
@@ -162,10 +162,10 @@ function($scope, $routeParams, retrieveLocation, LocationDataFetch, PlaylistCrea
 						});
 					})
 					} else {
-						$rootScope.songs = $rootScope.songsCopy;
+					$rootScope.songs = $rootScope.songsCopy.removeDuplicatesArrObj('title', true);
 				}
 			} else {
-				$rootScope.songs = $rootScope.songsCopy;
+				$rootScope.songs = $rootScope.songsCopy.removeDuplicatesArrObj('title', true);
 			}
 		};
 
